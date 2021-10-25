@@ -6,10 +6,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import ge.gogichaishvili.lotto.databinding.FragmentMainBinding
+import ge.gogichaishvili.lotto.main.presentation.viewmodels.MainViewModel
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 
 class MainFragment : Fragment() {
 
+    //shared viewModel
+    private val mainActivityVM: MainViewModel by sharedViewModel()
 
     //Binding
     private var _binding: FragmentMainBinding? = null
@@ -29,5 +34,13 @@ class MainFragment : Fragment() {
         return _binding?.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+       mainActivityVM.createBag()
+
+
+
+    }
 
 }
