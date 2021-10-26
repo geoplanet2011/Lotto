@@ -37,9 +37,9 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-       mainActivityVM.createBag()
-
-
+        binding.btnGenerate.setOnClickListener {
+            mainActivityVM.getNumberFromBag() //get number from bag
+        }
 
     }
 
