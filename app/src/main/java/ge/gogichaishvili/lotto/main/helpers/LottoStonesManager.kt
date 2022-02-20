@@ -7,7 +7,7 @@ object LottoStonesManager {
     private var bag = (1..90).toMutableList()     //create bag (with all numbers)
     private var lottoNumbers: MutableList<Int> = ArrayList()
     private var bagModel = LottoStonesModel(false, lottoNumbers)
-    private const val maxNumber = 3
+    private const val maxNumber = 5
 
     fun getNumberFromBag(): LottoStonesModel {
 
@@ -33,6 +33,10 @@ object LottoStonesManager {
                 print(e.message)
             }
         }
+
+
+        //println("shuffle bag ${bagModel.lottoNumbers.toList()}")
+
 
         return bagModel
     }

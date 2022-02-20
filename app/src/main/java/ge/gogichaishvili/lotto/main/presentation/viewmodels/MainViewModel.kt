@@ -31,7 +31,7 @@ class MainViewModel() : BaseViewModel() {
 
     fun generateCard(context: Context, linearLayout: LinearLayout) {
         viewModelScope.launch(Dispatchers.Main.immediate) {
-           val result = LottoCardManager.generateCard(context, linearLayout)
+           val result = LottoCardManager.generateCard(context, linearLayout, _requestStateLiveData)
             _generateCardRequestStateLiveData.postValue(result)
         }
     }

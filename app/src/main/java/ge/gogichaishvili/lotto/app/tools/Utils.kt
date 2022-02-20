@@ -112,6 +112,14 @@ object Utils {
         mediaPlayer?.start()
     }
 
+
+    //play simple sound
+    fun playAudio(context: Context, sound: Int) {
+        val mediaPlayer = MediaPlayer.create(context, sound)
+        mediaPlayer?.start()
+    }
+
+
     //check valid password
     fun isValidPassword(password: String?): Boolean {
         val pattern: Pattern

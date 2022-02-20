@@ -6,15 +6,14 @@ import android.graphics.Paint
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.RectShape
 import android.view.Gravity
-import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import ge.gogichaishvili.lotto.R
 import ge.gogichaishvili.lotto.main.data.LottoCardModel
 import ge.gogichaishvili.lotto.main.data.LottoStonesModel
 import android.widget.FrameLayout
-import androidx.appcompat.content.res.AppCompatResources.getDrawable
-import androidx.core.view.marginLeft
+import ge.gogichaishvili.lotto.app.tools.SingleLiveEvent
+import ge.gogichaishvili.lotto.app.tools.Utils
 
 
 object LottoCardManager {
@@ -41,18 +40,22 @@ object LottoCardManager {
 
     private var cardModel = LottoCardModel(false, fullTicketNumberList)
 
-    fun generateCard(context: Context, linearLayout: LinearLayout) : LottoCardModel {
+    fun generateCard(
+        context: Context,
+        linearLayout: LinearLayout,
+        lottoStones: SingleLiveEvent<LottoStonesModel>?
+    ): LottoCardModel {
 
-      isDraw = false
+        isDraw = false
 
         //------------------------------------------- create table programmatically
         val table = TableLayout(context)
 
-      /*  table.layoutParams =
-            TableLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            )*/
+        /*  table.layoutParams =
+              TableLayout.LayoutParams(
+                  ViewGroup.LayoutParams.WRAP_CONTENT,
+                  ViewGroup.LayoutParams.WRAP_CONTENT
+              )*/
 
         val parameter =
             TableLayout.LayoutParams(
@@ -197,14 +200,23 @@ object LottoCardManager {
                 frameLayout.addView(iv)
 
                 tv.setOnClickListener {
-                    Toast.makeText(context, tv.text, Toast.LENGTH_SHORT).show()
 
-                    iv.layoutParams = FrameLayout.LayoutParams(
-                        tv.width - 5,
-                        tv.height - 5
-                    ).apply {gravity = Gravity.CENTER}
+                    if (tv.text.isNotEmpty() || tv.text.isNotBlank()) {
+                        Utils.playAudio(context, R.raw.lotto)
+                        if (lottoStones != null) {
+                            if (tv.text.toString().toInt() in lottoStones.value!!.lottoNumbers) {
 
-                    iv.setBackgroundResource(R.drawable.chip)
+                                iv.layoutParams = FrameLayout.LayoutParams(
+                                    tv.width - 10,
+                                    tv.height - 10
+                                ).apply { gravity = Gravity.CENTER }
+
+                                iv.setBackgroundResource(R.drawable.chip)
+                            }
+                        }
+                    }
+
+
 
                 }
 
@@ -250,7 +262,6 @@ object LottoCardManager {
     }
 
 
-
     private fun resetCard() {
         oneList.clear()
         tenList.clear()
@@ -274,7 +285,6 @@ object LottoCardManager {
 
         fullTicketNumberList.clear()
     }
-
 
 
 }
