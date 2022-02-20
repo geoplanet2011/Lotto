@@ -1,10 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <color name="background_white">#FFFFFFFF</color>
+    <color name="english_color">#020202</color>
+
+
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
+
     <color name="white">#FFFFFFFF</color>
+    <color name="dark_white">#C5C5C5</color>
+    <color name="black">#FF000000</color>
+
+    <color name="button_bg_blue">#425D8C</color>
+    <color name="exit_btn_bg_color">#DA4235</color>
+    <color name="background_circle_color">#E1E9FF</color>
+    <color name="hint_color">#666666</color>
+    <color name="text_blue">#4A6085</color>
+    <color name="text_green">#87BD79</color>
+    <color name="text_light_black">#050506</color>
+    <color name="bottom_menu_text_color">#78839C</color>
+    <color name="text_grey">#9090A1</color>
+    <color name="circle_text_color">#7989A4</color>
+
+    <color name="progressbar_green">#ABD1A1</color>
+    <color name="progressbar_yellow">#EBC877</color>
+    <color name="progressbar_red">#E33829</color>
+
+    <color name="switch_color">#182541</color>
+
+    <color name="abc_color">#E4E4E4</color>
+
+
+    <color name="shadow">#40CCCCCC</color>
+
+    <color name="toolbar_color_blue">#808FA9</color>
+
+    <color name="card_bg_lightRed">#EB7369</color>
+
+
+    <color name="light_green">#d3e8cc</color>
+    <color name="light_yellow">#efebd2</color>
+    <color name="elegant_red">#6c0406</color>
+
+    <color name="bottom_background">#ECEEF3</color>
+
+    <color name="placeholder_bg">#dddddd</color>
+
+    <color name="test_yellow">#F89406</color>
+    <color name="test_green">#82AF6F</color>
+    <color name="test_red">#D15B47</color>
+    <color name="test_yellow_bg">#FCF8E3</color>
+    <color name="test_yellow_text">#8A6D3B</color>
+    <color name="test_yellow_btn">#FEE188</color>
+    <color name="test_gray_btn">#ABBAC3</color>
+
+
 </resources>

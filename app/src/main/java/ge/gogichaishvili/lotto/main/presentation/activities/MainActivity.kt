@@ -9,7 +9,7 @@ import ge.gogichaishvili.lotto.R
 import ge.gogichaishvili.lotto.databinding.ActivityMainBinding
 import ge.gogichaishvili.lotto.main.presentation.fragments.MainFragment
 import ge.gogichaishvili.lotto.main.presentation.viewmodels.MainViewModel
-import ge.gogichaishvili.lotto.utils.Utils.hideSystemUI
+import ge.gogichaishvili.lotto.app.utils.Utils.hideSystemUI
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {

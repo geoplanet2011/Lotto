@@ -1,0 +1,91 @@
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:interpolator="@android:anim/linear_interpolator"
+    android:duration="600">
+
+
+    <!--          animation 1 for old method          -->
+    <!-- <scale
+         android:fromXScale="0.7"
+         android:fromYScale="0.7"
+         android:toXScale="1.0"
+         android:toYScale="1.0"
+         android:pivotX="50%"
+         android:pivotY="100%"
+         android:duration="700"/>
+
+     <translate
+         android:fromYDelta="40%"
+         android:toYDelta="0%"
+         android:duration="700"/>-->
+
+
+
+    <!--          animation 2          -->
+   <!-- <translate
+        android:fromYDelta="100"
+        android:toYDelta="0" />
+    <scale
+        android:fromXScale="70%"
+        android:fromYScale="70%"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:toXScale="100%"
+        android:toYScale="100%" />
+    <alpha
+        android:fromAlpha="0.0"
+        android:toAlpha="1.0" />-->
+
+
+    <!--           slide from bottom animation           -->
+  <!--  <translate
+        android:fromYDelta="50%"
+        android:interpolator = "@android:anim/accelerate_decelerate_interpolator"
+        android:toYDelta="0"/>
+    <alpha
+        android:fromAlpha="0"
+        android:interpolator = "@android:anim/accelerate_decelerate_interpolator"
+        android:toAlpha="1" />-->
+
+
+    <!--           fall down animation           -->
+   <!-- <translate
+        android:fromYDelta="-20%"
+        android:interpolator = "@android:anim/accelerate_decelerate_interpolator"
+        android:toYDelta="0"/>
+    <alpha
+        android:fromAlpha="0"
+        android:interpolator = "@android:anim/accelerate_decelerate_interpolator"
+        android:toAlpha="1" />
+    <scale
+        android:fromXScale="105%"
+        android:fromYScale="105%"
+        android:interpolator = "@android:anim/accelerate_decelerate_interpolator"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:toXScale="100%"
+        android:toYScale="100%" />-->
+
+
+    <!--           slide from right animation           -->
+      <translate
+          android:fromXDelta="100%"
+          android:interpolator = "@android:anim/accelerate_decelerate_interpolator"
+          android:toYDelta="0"/>
+      <alpha
+          android:fromAlpha="0.5"
+          android:interpolator = "@android:anim/accelerate_decelerate_interpolator"
+          android:toAlpha="1" />
+
+
+    <!--           slide from left animation           -->
+   <!--  <translate
+         android:fromXDelta="-100%"
+         android:interpolator = "@android:anim/accelerate_decelerate_interpolator"
+         android:toYDelta="0"/>
+     <alpha
+         android:fromAlpha="0.5"
+         android:interpolator = "@android:anim/accelerate_decelerate_interpolator"
+         android:toAlpha="1" />-->
+
+
+</set>
