@@ -14,21 +14,24 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class GameBoardViewModel (
-    //private val pref: SharedPreferenceManager
+    private val lottoManager: LottoStonesManager
 ) : BaseViewModel() {
 
     private val _requestStateLiveData = SingleLiveEvent<LottoDrawResult>()
     val requestStateLiveData: LiveData<LottoDrawResult> get() = _requestStateLiveData
 
-    private val _generateCardRequestStateLiveData = SingleLiveEvent<LottoCardModel>()
-    val generateLottoCardRequestStateLiveData: LiveData<LottoCardModel> get() = _generateCardRequestStateLiveData
-
     fun getNumberFromBag() {
         viewModelScope.launch(Dispatchers.Main.immediate) {
-            val result = LottoStonesManager.getNumberFromBag()
+            val result = lottoManager.getNumberFromBag()
             _requestStateLiveData.postValue(result)
         }
     }
+
+
+    private val _generateCardRequestStateLiveData = SingleLiveEvent<LottoCardModel>()
+    val generateLottoCardRequestStateLiveData: LiveData<LottoCardModel> get() = _generateCardRequestStateLiveData
+
+
 
     fun generateCard(context: Context, linearLayout: LinearLayout) {
         viewModelScope.launch(Dispatchers.Main.immediate) {

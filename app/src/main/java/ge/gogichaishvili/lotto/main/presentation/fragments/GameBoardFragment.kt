@@ -1,5 +1,6 @@
 package ge.gogichaishvili.lotto.main.presentation.fragments
 
+import android.annotation.SuppressLint
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -39,26 +40,20 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
         super.onViewCreated(view, savedInstanceState)
 
 
-        mViewModel.generateCard(requireContext(), binding.llCards)
-
+        //mViewModel.generateCard(requireContext(), binding.llCards)
 
 
         getLottoStones()
 
-        //observe
         mViewModel.requestStateLiveData.observe(requireActivity(), Observer { it ->
-
-            addLottoStones(it)
-
-
+            handleLottoDrawResult(it)
         })
 
 
+        /* mViewModel.generateLottoCardRequestStateLiveData.observe(requireActivity(), Observer {
 
-        mViewModel.generateLottoCardRequestStateLiveData.observe(requireActivity(), Observer {
 
-
-        })
+         })*/
 
     }
 
@@ -67,97 +62,82 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
         timer.schedule(object : TimerTask() {
             override fun run() {
                 activity?.runOnUiThread(Runnable {
-                    mViewModel.getNumberFromBag() //get number from bag
+                    mViewModel.getNumberFromBag()
                 })
             }
 
         }, 0, 2000)
     }
 
+    private fun handleLottoDrawResult(result: LottoDrawResult) {
+        if (result.isEmpty) {
+            println("bag is empty")
+        } else {
+            val newNumber = result.numbers.last()
+            addLottoStoneButton(newNumber)
+        }
+    }
 
-    private fun addLottoStones(lottoDrawResult: LottoDrawResult) {
-        //create dynamic lotto stone
-        val lottoStone = Button(requireContext())
-
-        val params: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
-            150,
-            150
-        )
-        params.setMargins(10, 0, 10, 0)
-        lottoStone.layoutParams = params
-        lottoStone.setBackgroundResource(R.drawable.barrel_small)
-        //lottoStone.text = it.lottoNumbers.last().toString()
-
-        //add lotto stones in layout
-        lottoDrawResult.numbers .forEach { lottoNumber ->
-
-            lottoStone.text = lottoNumber.toString()
-            if (lottoStone.parent != null) {
-                (lottoStone.parent as ViewGroup).removeView(lottoStone)
+    @SuppressLint("DiscouragedApi")
+    private fun addLottoStoneButton(number: Int) {
+        val lottoStone = Button(requireContext()).apply {
+            layoutParams = LinearLayout.LayoutParams(150, 150).apply {
+                setMargins(10, 0, 10, 0)
             }
+            setBackgroundResource(R.drawable.barrel_small)
+            text = number.toString()
+            visibility = View.INVISIBLE
+        }
 
-            //if lotto stone numbers > 3 then remove last lotto stone
-            if (binding.llStones.childCount > 3) {
+        if (binding.llStones.childCount > 3) {
+            removeOldestLottoStone()
+        }
 
-                val lastLottoNumberID =
-                    binding.llStones.childCount - 1   //get last lotto stone number id
+        binding.llStones.addView(lottoStone, 0)
+        animateLottoStoneAppearance(lottoStone)
 
-                val lastLottoNumberView =
-                    binding.llStones.getChildAt(lastLottoNumberID)  //get last lotto stone view
+        playSoundForNumber(number)
+    }
 
-                val animation: Animation =
-                    AnimationUtils.loadAnimation(requireContext(), R.anim.scale_down)
-                animation.fillBefore = true
-                animation.fillAfter = true
-                lastLottoNumberView.startAnimation(animation)
-
-                animation.setAnimationListener(object : Animation.AnimationListener {
-                    override fun onAnimationStart(p0: Animation?) {
-
-                    }
-
-                    override fun onAnimationRepeat(p0: Animation?) {
-
-                    }
-
+    private fun removeOldestLottoStone() {
+        val lastLottoNumberID = binding.llStones.childCount - 1
+        val lastLottoNumberView = binding.llStones.getChildAt(lastLottoNumberID)
+        lastLottoNumberView.startAnimation(
+            AnimationUtils.loadAnimation(
+                requireContext(),
+                R.anim.scale_down
+            ).apply {
+                setAnimationListener(object : Animation.AnimationListener {
+                    override fun onAnimationStart(p0: Animation?) {}
+                    override fun onAnimationRepeat(p0: Animation?) {}
                     override fun onAnimationEnd(p0: Animation?) {
-
                         binding.llStones.removeView(lastLottoNumberView)
                     }
                 })
+            })
+    }
 
-            }
-
-            //add lotto stone
-            lottoStone.visibility = View.INVISIBLE
-            binding.llStones.addView(lottoStone, 0)
-
-            val animation2: Animation =
-                AnimationUtils.loadAnimation(requireContext(), R.anim.scale_up)
-            animation2.fillBefore = true
-            animation2.fillAfter = true
-            lottoStone.startAnimation(animation2)
-            animation2.setAnimationListener(object : Animation.AnimationListener {
+    private fun animateLottoStoneAppearance(lottoStone: Button) {
+        val animation = AnimationUtils.loadAnimation(requireContext(), R.anim.scale_up).apply {
+            setAnimationListener(object : Animation.AnimationListener {
                 override fun onAnimationStart(p0: Animation?) {
                     lottoStone.visibility = View.VISIBLE
                 }
 
-                override fun onAnimationRepeat(p0: Animation?) {
-
-                }
-
-                override fun onAnimationEnd(p0: Animation?) {
-                    animation2.cancel()
-
-                }
+                override fun onAnimationRepeat(p0: Animation?) {}
+                override fun onAnimationEnd(p0: Animation?) {}
             })
-
-            //sound
-            val soundFileName = "a" + lottoDrawResult.numbers .last().toString()
-            val resID = resources.getIdentifier(soundFileName, "raw", activity?.packageName)
-            Utils.playSound(activity, resID) //play sound
-
         }
+        lottoStone.startAnimation(animation)
+    }
+
+    @SuppressLint("DiscouragedApi")
+    private fun playSoundForNumber(number: Int) {
+        val soundFileName = "a$number"
+        val resID = resources.getIdentifier(soundFileName, "raw", activity?.packageName)
+        Utils.playSound(activity, resID)
     }
 
 }
+
+

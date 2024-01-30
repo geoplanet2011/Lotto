@@ -26,14 +26,11 @@
     <LinearLayout
         android:id="@+id/ll_stones"
         android:layout_width="0dp"
-        android:animateLayoutChanges="true"
-
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        android:orientation="horizontal"
+        android:animateLayoutChanges="true"
         android:gravity="center|start"
-
-
+        android:orientation="horizontal"
         app:layout_constraintEnd_toStartOf="@id/rightGuide"
         app:layout_constraintStart_toEndOf="@id/leftGuide"
         app:layout_constraintTop_toTopOf="parent" />
@@ -42,19 +39,16 @@
         android:id="@+id/rl_stones"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
         app:layout_constraintEnd_toStartOf="@id/rightGuide"
         app:layout_constraintStart_toEndOf="@id/leftGuide"
-        app:layout_constraintTop_toTopOf="parent"/>
-
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:id="@+id/ll_cards"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:gravity="center"
-
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/rightGuide"
         app:layout_constraintStart_toEndOf="@id/leftGuide"

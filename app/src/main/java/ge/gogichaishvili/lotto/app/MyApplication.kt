@@ -1,6 +1,7 @@
 package ge.gogichaishvili.lotto.app
 
 import android.app.Application
+import ge.gogichaishvili.lotto.app.di.ManagerModule
 import ge.gogichaishvili.lotto.app.di.NetworkModule
 import ge.gogichaishvili.lotto.app.di.RepositoryModule
 import ge.gogichaishvili.lotto.app.di.ViewModelModules
@@ -22,6 +23,7 @@ class MyApplication : Application() {
                 listOf(
                     ViewModelModules.modules,
                     RepositoryModule.module,
+                    ManagerModule.module,
                     NetworkModule.modules
                 )
             )
