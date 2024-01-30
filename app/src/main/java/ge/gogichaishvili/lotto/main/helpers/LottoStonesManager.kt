@@ -1,48 +1,32 @@
 package ge.gogichaishvili.lotto.main.helpers
 
-import ge.gogichaishvili.lotto.main.models.LottoStonesModel
+import ge.gogichaishvili.lotto.main.models.LottoDrawResult
 
 object LottoStonesManager {
 
     private var bag = (1..90).toMutableList()
-    private var lottoNumbers: MutableList<Int> = ArrayList()
-    private var bagModel = LottoStonesModel(false, lottoNumbers)
+    private var drawnNumbers: MutableList<Int> = ArrayList()
     private const val maxNumber = 3
 
-    fun getNumberFromBag(): LottoStonesModel {
-
+    fun getNumberFromBag(): LottoDrawResult {
+        if (bag.isEmpty()) return LottoDrawResult(isEmpty = true)
         bag.shuffle()
-
-        /*bag.forEach {
-            println("shuffle bag $it")
-        }*/
-
-        if (bag.isEmpty()) {
-            bagModel.isEmpty = true
-        } else {
-            val random = bag.random()
-
-            try {
-                bag.remove(random)
-                bagModel.lottoNumbers.add(random)
-                if (bagModel.lottoNumbers.size >= maxNumber) {
-                    bagModel.lottoNumbers.removeAt(0)
-                }
-            } catch (e: Exception) {
-                print(e.message)
-            }
+        val number = bag.random().also { bag.remove(it) }
+        drawnNumbers.add(number)
+        if (drawnNumbers.size > maxNumber) {
+            drawnNumbers.removeAt(0)
         }
-
-        return bagModel
+        return LottoDrawResult(isEmpty = false, numbers = drawnNumbers.toList())
     }
 
-
-   /* fun resetBag () {
-        bag.clear()
+    fun resetBag() {
         bag = (1..90).toMutableList()
-        lottoNumbers.clear()
-        bagModel.isFinish = false
-        bagModel.lottoNumbers.clear()
-    }*/
+        drawnNumbers.clear()
+    }
 
 }
+
+
+
+
+
