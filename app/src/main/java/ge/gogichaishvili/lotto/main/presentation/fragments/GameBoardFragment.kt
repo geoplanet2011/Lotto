@@ -14,6 +14,7 @@ import androidx.lifecycle.Observer
 import ge.gogichaishvili.lotto.R
 import ge.gogichaishvili.lotto.app.tools.Utils
 import ge.gogichaishvili.lotto.databinding.FragmentGameBoardBinding
+
 import ge.gogichaishvili.lotto.main.models.LottoDrawResult
 import ge.gogichaishvili.lotto.main.presentation.fragments.base.BaseFragment
 import ge.gogichaishvili.lotto.main.presentation.viewmodels.GameBoardViewModel
@@ -39,21 +40,17 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        mViewModel.generateCard(requireContext(), binding.llCards)
+        mViewModel.generateLottoCardRequestStateLiveData.observe(requireActivity(), Observer {
 
-        //mViewModel.generateCard(requireContext(), binding.llCards)
+        })
 
 
         getLottoStones()
-
         mViewModel.requestStateLiveData.observe(requireActivity(), Observer { it ->
             handleLottoDrawResult(it)
         })
 
-
-        /* mViewModel.generateLottoCardRequestStateLiveData.observe(requireActivity(), Observer {
-
-
-         })*/
 
     }
 

@@ -39,12 +39,159 @@ object LottoCardManager {
 
     var allTickets: MutableList<Int> = ArrayList() //all ticket
 
-
-    //var onAnswerSelected: ((TicketAnswer) -> Unit)? = null
-
     private var cardModel = LottoCardModel(fullTicketNumberList)
 
     private var counter: Int = 0
+
+    private fun createTable(context: Context): TableLayout {
+        val table = TableLayout(context)
+        val params = TableLayout.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        params.setMargins(20, 20, 20, 20)
+        table.layoutParams = params
+        table.isShrinkAllColumns = true
+        table.isStretchAllColumns = true
+        val tableBorder = ShapeDrawable(RectShape())
+        tableBorder.paint.style = Paint.Style.STROKE
+        tableBorder.paint.strokeWidth = 5f
+        tableBorder.paint.color = Color.BLACK
+        table.background = tableBorder
+        return table
+    }
+
+    private fun shuffleLists() {
+        oneList.shuffle()
+        tenList.shuffle()
+        twentyList.shuffle()
+        thirtyList.shuffle()
+        fortyList.shuffle()
+        fiftyList.shuffle()
+        sixtyList.shuffle()
+        seventyList.shuffle()
+        eightyList.shuffle()
+    }
+
+    private fun getRandomNumberFromList(list: MutableList<Int>): Int {
+        val number = list.random()
+        list.remove(number)
+        return number
+    }
+
+    private fun createRandomNumberList(): MutableList<Int> {
+        val one = getRandomNumberFromList(oneList)
+        val ten = getRandomNumberFromList(tenList)
+        val twenty = getRandomNumberFromList(twentyList)
+        val thirty = getRandomNumberFromList(thirtyList)
+        val forty = getRandomNumberFromList(fortyList)
+        val fifty = getRandomNumberFromList(fiftyList)
+        val sixty = getRandomNumberFromList(sixtyList)
+        val seventy = getRandomNumberFromList(seventyList)
+        val eighty = getRandomNumberFromList(eightyList)
+
+        return mutableListOf(one, ten, twenty, thirty, forty, fifty, sixty, seventy, eighty)
+    }
+
+    private fun deleteNumbersFromList(randomNumberList: MutableList<Int>) {
+        for (index in 1..4) {
+            indexList.shuffle()
+            val result = indexList.random()
+            deleteIndexList.add(result)
+            indexList.remove(result)
+            randomNumberList[result] = 0
+        }
+    }
+
+    private fun resetIndexList() {
+        deleteIndexList.clear()
+        indexList.clear()
+        indexList.addAll(0..8)
+        indexList.shuffle()
+    }
+
+    private fun createRow(
+        context: Context,
+        lottoStones: SingleLiveEvent<LottoDrawResult>?
+    ): TableRow {
+        val row = TableRow(context)
+
+        shuffleLists()
+        val randomNumberList = createRandomNumberList()
+        deleteNumbersFromList(randomNumberList)
+        resetIndexList()
+
+        fullTicketNumberList.addAll(randomNumberList) // Create full ticket
+
+        for (j in 1..9) {
+            val value: Int = randomNumberList[j - 1]
+
+            val tv = TextView(context)
+            tv.gravity = Gravity.CENTER
+
+            if (value != 0) {
+                tv.text = value.toString()
+            }
+
+            tv.textSize = 24f
+            tv.setTextColor(Color.BLACK)
+            val border = ShapeDrawable(RectShape())
+            border.paint.style = Paint.Style.STROKE
+            border.paint.strokeWidth = 2f
+            border.paint.color = Color.BLACK
+            tv.background = border
+            tv.isClickable = true
+            val iv = ImageView(context)
+            val frameLayout = FrameLayout(context)
+            frameLayout.addView(tv)
+            frameLayout.addView(iv)
+
+            tv.setOnClickListener {
+
+                if (tv.text.isNotEmpty() || tv.text.isNotBlank()) {
+                    Utils.playAudio(context, R.raw.lotto)
+                    if (lottoStones != null) {
+                        if (tv.text.toString()
+                                .toInt() in lottoStones.value!!.numbers
+                        ) {
+
+                            iv.layoutParams = FrameLayout.LayoutParams(
+                                tv.width - 10,
+                                tv.height - 10
+                            ).apply { gravity = Gravity.CENTER }
+
+                            iv.setBackgroundResource(R.drawable.chip)
+
+                            tv.isClickable = false
+                        }
+                    }
+                }
+
+            }
+
+            row.addView(frameLayout)
+
+            val params: ViewGroup.LayoutParams = frameLayout.layoutParams
+            params.width = 100
+            params.height = 100
+            frameLayout.layoutParams = params
+        }
+
+        return row
+    }
+
+
+    private fun isCardValid(): Boolean {
+        return !(((fullTicketNumberList[0] + fullTicketNumberList[9] + fullTicketNumberList[18]) == 0) ||
+                ((fullTicketNumberList[1] + fullTicketNumberList[10] + fullTicketNumberList[19]) == 0) ||
+                ((fullTicketNumberList[2] + fullTicketNumberList[11] + fullTicketNumberList[20]) == 0) ||
+                ((fullTicketNumberList[3] + fullTicketNumberList[12] + fullTicketNumberList[21]) == 0) ||
+                ((fullTicketNumberList[4] + fullTicketNumberList[13] + fullTicketNumberList[22]) == 0) ||
+                ((fullTicketNumberList[5] + fullTicketNumberList[14] + fullTicketNumberList[23]) == 0) ||
+                ((fullTicketNumberList[6] + fullTicketNumberList[15] + fullTicketNumberList[24]) == 0) ||
+                ((fullTicketNumberList[7] + fullTicketNumberList[16] + fullTicketNumberList[25]) == 0) ||
+                ((fullTicketNumberList[8] + fullTicketNumberList[17] + fullTicketNumberList[26]) == 0))
+    }
 
     fun generateCard(
         context: Context,
@@ -54,229 +201,27 @@ object LottoCardManager {
 
         while (counter < 3) {
 
-
-
-            //------------------------------------------- create table programmatically
-            val table = TableLayout(context)
-
-            /*  table.layoutParams =
-              TableLayout.LayoutParams(
-                  ViewGroup.LayoutParams.WRAP_CONTENT,
-                  ViewGroup.LayoutParams.WRAP_CONTENT
-              )*/
-
-            val parameter =
-                TableLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-                )
-            parameter.setMargins(20, 20, 20, 20)
-            table.layoutParams = parameter
-
-            table.isShrinkAllColumns = true
-            table.isStretchAllColumns = true
-            //table.setPadding(15, 15, 15, 15)
-
-            val tableBorder = ShapeDrawable(RectShape())
-            tableBorder.paint.style = Paint.Style.STROKE
-            tableBorder.paint.strokeWidth = 5f
-            tableBorder.paint.color = Color.BLACK
-            table.background = tableBorder
+            val table = createTable(context)
 
             for (i in 1..3) {
-                val row = TableRow(context)
-
-                //shuffle lists
-                oneList.shuffle()
-                tenList.shuffle()
-                twentyList.shuffle()
-                thirtyList.shuffle()
-                fortyList.shuffle()
-                fiftyList.shuffle()
-                sixtyList.shuffle()
-                seventyList.shuffle()
-                eightyList.shuffle()
-
-                //get and remove random numbers from lists
-                val one = oneList.random()
-                oneList.remove(one)
-
-                val ten = tenList.random()
-                tenList.remove(ten)
-
-                val twenty = twentyList.random()
-                twentyList.remove(twenty)
-
-                val thirty = thirtyList.random()
-                thirtyList.remove(thirty)
-
-                val forty = fortyList.random()
-                fortyList.remove(forty)
-
-                val fifty = fiftyList.random()
-                fiftyList.remove(fifty)
-
-                val sixty = sixtyList.random()
-                sixtyList.remove(sixty)
-
-                val seventy = seventyList.random()
-                seventyList.remove(seventy)
-
-                val eighty = eightyList.random()
-                eightyList.remove(eighty)
-
-                //create random number list
-                randomNumberList.clear()
-                randomNumberList.add(one)
-                randomNumberList.add(ten)
-                randomNumberList.add(twenty)
-                randomNumberList.add(thirty)
-                randomNumberList.add(forty)
-                randomNumberList.add(fifty)
-                randomNumberList.add(sixty)
-                randomNumberList.add(seventy)
-                randomNumberList.add(eighty)
-
-                //delete 4 numbers from 9 (update number to 0 )
-                for (index in 1..4) {
-                    indexList.shuffle()
-                    val result = indexList.random()
-
-                    deleteIndexList.add(result)
-                    indexList.remove(result)
-
-                    randomNumberList[result] = 0
-                }
-
-                deleteIndexList.clear()
-                indexList.clear()
-                indexList.add(0)
-                indexList.add(1)
-                indexList.add(2)
-                indexList.add(3)
-                indexList.add(4)
-                indexList.add(5)
-                indexList.add(6)
-                indexList.add(7)
-                indexList.add(8)
-                indexList.shuffle()
-
-                fullTicketNumberList.addAll(randomNumberList) //create full ticket
-
-                for (j in 1..9) {
-
-                    val value: Int = randomNumberList[j - 1]
-
-
-                    val tv = TextView(context)
-                    tv.gravity = Gravity.CENTER
-
-                    if (value != 0) {
-                        tv.text = value.toString()
-                    }
-
-                    tv.textSize = 24f
-                    tv.setTextColor(Color.BLACK)
-
-                    /* if (j == 1) {
-                         val params: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
-                             LinearLayout.LayoutParams.WRAP_CONTENT,
-                             LinearLayout.LayoutParams.WRAP_CONTENT
-                         )
-                         params.setMargins(10, 0, 10, 0)
-                         tv.layoutParams = params
-
-                         tv.setPadding(18, 0, 18, 0);
-                     }*/
-
-
-                    //tv.setTypeface(null, Typeface.BOLD)
-
-                    val border = ShapeDrawable(RectShape())
-                    border.paint.style = Paint.Style.STROKE
-                    border.paint.strokeWidth = 2f
-                    border.paint.color = Color.BLACK
-
-                    tv.background = border
-                    tv.isClickable = true
-
-                    val iv = ImageView(context)
-
-                    val frameLayout = FrameLayout(context)
-
-                    frameLayout.addView(tv)
-                    frameLayout.addView(iv)
-
-                    tv.setOnClickListener {
-
-                        if (tv.text.isNotEmpty() || tv.text.isNotBlank()) {
-                            Utils.playAudio(context, R.raw.lotto)
-                            if (lottoStones != null) {
-                                if (tv.text.toString()
-                                        .toInt() in lottoStones.value!!.numbers
-                                ) {
-
-                                    iv.layoutParams = FrameLayout.LayoutParams(
-                                        tv.width - 10,
-                                        tv.height - 10
-                                    ).apply { gravity = Gravity.CENTER }
-
-                                    iv.setBackgroundResource(R.drawable.chip)
-
-                                    tv.isClickable = false
-
-                                    //onAnswerSelected?.invoke(answer)
-                                }
-                            }
-                        }
-
-
-                    }
-
-
-                    row.addView(frameLayout)
-
-                    val params: ViewGroup.LayoutParams = frameLayout.layoutParams
-                    params.width = 100
-                    params.height = 100
-                    frameLayout.layoutParams = params
-
-                }
+                val row = createRow(context, lottoStones)
                 table.addView(row)
             }
 
-            //check empty values
-            if (
-                ((fullTicketNumberList[0] + fullTicketNumberList[9] + fullTicketNumberList[18]) == 0) ||
-                ((fullTicketNumberList[1] + fullTicketNumberList[10] + fullTicketNumberList[19]) == 0) ||
-                ((fullTicketNumberList[2] + fullTicketNumberList[11] + fullTicketNumberList[20]) == 0) ||
-                ((fullTicketNumberList[3] + fullTicketNumberList[12] + fullTicketNumberList[21]) == 0) ||
-                ((fullTicketNumberList[4] + fullTicketNumberList[13] + fullTicketNumberList[22]) == 0) ||
-                ((fullTicketNumberList[5] + fullTicketNumberList[14] + fullTicketNumberList[23]) == 0) ||
-                ((fullTicketNumberList[6] + fullTicketNumberList[15] + fullTicketNumberList[24]) == 0) ||
-                ((fullTicketNumberList[7] + fullTicketNumberList[16] + fullTicketNumberList[25]) == 0) ||
-                ((fullTicketNumberList[8] + fullTicketNumberList[17] + fullTicketNumberList[26]) == 0)
-
-            ) {
-                println("don't create card!")
-                //if (allTickets.isNotEmpty()) allTickets.removeLast()
-            } else {
+            if (isCardValid()) {
                 linearLayout.addView(table)
-                allTickets.addAll(fullTicketNumberList) //create all tickets
+                allTickets.addAll(fullTicketNumberList)
                 counter++
-                println("card created successfully!")
-
+                println("card  created successfully!")
+            } else {
+                println("card not created")
             }
 
             cardModel.fullTicketNumberList = fullTicketNumberList
             resetCard()
         }
 
-        println("aaaaa " + allTickets.size.toString() + "  bbb "+ allTickets.toString())
-
-
         return cardModel
-
     }
 
 
@@ -309,6 +254,7 @@ object LottoCardManager {
 
         fullTicketNumberList.clear()
     }
+
 
 
 }

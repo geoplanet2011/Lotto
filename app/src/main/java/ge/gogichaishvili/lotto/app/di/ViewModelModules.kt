@@ -8,14 +8,12 @@ import org.koin.dsl.module
 object ViewModelModules {
     val modules = module {
 
-
         viewModel {
             MainActivityViewModel()
         }
 
-
         viewModel {
-            GameBoardViewModel(lottoManager = get())
+            GameBoardViewModel(lottoManager = get(), lottoCardManager = get())
         }
 
     }
