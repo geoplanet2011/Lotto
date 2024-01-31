@@ -14,10 +14,8 @@ import ge.gogichaishvili.lotto.app.tools.Utils
 import ge.gogichaishvili.lotto.main.models.LottoCardModel
 import ge.gogichaishvili.lotto.main.models.LottoDrawResult
 
-
 object LottoCardManager {
 
-    //create lists
     private var oneList = (1..9).toMutableList()
     private var tenList = (10..19).toMutableList()
     private var twentyList = (20..29).toMutableList()
@@ -43,6 +41,31 @@ object LottoCardManager {
 
     private var counter: Int = 0
 
+    fun generateCard(
+        context: Context,
+        linearLayout: LinearLayout,
+        lottoStones: SingleLiveEvent<LottoDrawResult>?
+    ): LottoCardModel {
+        while (counter < 3) {
+            val table = createTable(context)
+            for (i in 1..3) {
+                val row = createRow(context, lottoStones)
+                table.addView(row)
+            }
+            if (isCardValid()) {
+                linearLayout.addView(table)
+                allTickets.addAll(fullTicketNumberList)
+                counter++
+                println("card  created successfully!")
+            } else {
+                println("card not created")
+            }
+            cardModel.fullTicketNumberList = fullTicketNumberList
+            resetCard()
+        }
+        return cardModel
+    }
+
     private fun createTable(context: Context): TableLayout {
         val table = TableLayout(context)
         val params = TableLayout.LayoutParams(
@@ -59,6 +82,65 @@ object LottoCardManager {
         tableBorder.paint.color = Color.BLACK
         table.background = tableBorder
         return table
+    }
+
+    private fun createRow(
+        context: Context,
+        lottoStones: SingleLiveEvent<LottoDrawResult>?
+    ): TableRow {
+        val row = TableRow(context)
+        shuffleLists()
+        val randomNumberList = createRandomNumberList()
+        deleteNumbersFromList(randomNumberList)
+        resetIndexList()
+        fullTicketNumberList.addAll(randomNumberList) // Create full ticket
+        for (j in 1..9) {
+            val value: Int = randomNumberList[j - 1]
+            val tv = TextView(context)
+            tv.gravity = Gravity.CENTER
+            if (value != 0) {
+                tv.text = value.toString()
+            }
+            tv.textSize = 24f
+            tv.setTextColor(Color.BLACK)
+            val border = ShapeDrawable(RectShape())
+            border.paint.style = Paint.Style.STROKE
+            border.paint.strokeWidth = 2f
+            border.paint.color = Color.BLACK
+            tv.background = border
+            tv.isClickable = true
+            val iv = ImageView(context)
+            val frameLayout = FrameLayout(context)
+            frameLayout.addView(tv)
+            frameLayout.addView(iv)
+            tv.setOnClickListener {
+                if (tv.text.isNotEmpty() || tv.text.isNotBlank()) {
+                    Utils.playAudio(context, R.raw.lotto)
+                    if (lottoStones != null) {
+                        if (tv.text.toString()
+                                .toInt() in lottoStones.value!!.numbers
+                        ) {
+
+                            iv.layoutParams = FrameLayout.LayoutParams(
+                                tv.width - 10,
+                                tv.height - 10
+                            ).apply { gravity = Gravity.CENTER }
+
+                            iv.setBackgroundResource(R.drawable.chip)
+
+                            tv.isClickable = false
+                        }
+                    }
+                }
+
+            }
+            row.addView(frameLayout)
+            val params: ViewGroup.LayoutParams = frameLayout.layoutParams
+            params.width = 100
+            params.height = 100
+            frameLayout.layoutParams = params
+        }
+        return row
     }
 
     private fun shuffleLists() {
@@ -89,7 +171,6 @@ object LottoCardManager {
         val sixty = getRandomNumberFromList(sixtyList)
         val seventy = getRandomNumberFromList(seventyList)
         val eighty = getRandomNumberFromList(eightyList)
-
         return mutableListOf(one, ten, twenty, thirty, forty, fifty, sixty, seventy, eighty)
     }
 
@@ -110,77 +191,6 @@ object LottoCardManager {
         indexList.shuffle()
     }
 
-    private fun createRow(
-        context: Context,
-        lottoStones: SingleLiveEvent<LottoDrawResult>?
-    ): TableRow {
-        val row = TableRow(context)
-
-        shuffleLists()
-        val randomNumberList = createRandomNumberList()
-        deleteNumbersFromList(randomNumberList)
-        resetIndexList()
-
-        fullTicketNumberList.addAll(randomNumberList) // Create full ticket
-
-        for (j in 1..9) {
-            val value: Int = randomNumberList[j - 1]
-
-            val tv = TextView(context)
-            tv.gravity = Gravity.CENTER
-
-            if (value != 0) {
-                tv.text = value.toString()
-            }
-
-            tv.textSize = 24f
-            tv.setTextColor(Color.BLACK)
-            val border = ShapeDrawable(RectShape())
-            border.paint.style = Paint.Style.STROKE
-            border.paint.strokeWidth = 2f
-            border.paint.color = Color.BLACK
-            tv.background = border
-            tv.isClickable = true
-            val iv = ImageView(context)
-            val frameLayout = FrameLayout(context)
-            frameLayout.addView(tv)
-            frameLayout.addView(iv)
-
-            tv.setOnClickListener {
-
-                if (tv.text.isNotEmpty() || tv.text.isNotBlank()) {
-                    Utils.playAudio(context, R.raw.lotto)
-                    if (lottoStones != null) {
-                        if (tv.text.toString()
-                                .toInt() in lottoStones.value!!.numbers
-                        ) {
-
-                            iv.layoutParams = FrameLayout.LayoutParams(
-                                tv.width - 10,
-                                tv.height - 10
-                            ).apply { gravity = Gravity.CENTER }
-
-                            iv.setBackgroundResource(R.drawable.chip)
-
-                            tv.isClickable = false
-                        }
-                    }
-                }
-
-            }
-
-            row.addView(frameLayout)
-
-            val params: ViewGroup.LayoutParams = frameLayout.layoutParams
-            params.width = 100
-            params.height = 100
-            frameLayout.layoutParams = params
-        }
-
-        return row
-    }
-
-
     private fun isCardValid(): Boolean {
         return !(((fullTicketNumberList[0] + fullTicketNumberList[9] + fullTicketNumberList[18]) == 0) ||
                 ((fullTicketNumberList[1] + fullTicketNumberList[10] + fullTicketNumberList[19]) == 0) ||
@@ -193,38 +203,6 @@ object LottoCardManager {
                 ((fullTicketNumberList[8] + fullTicketNumberList[17] + fullTicketNumberList[26]) == 0))
     }
 
-    fun generateCard(
-        context: Context,
-        linearLayout: LinearLayout,
-        lottoStones: SingleLiveEvent<LottoDrawResult>?
-    ): LottoCardModel {
-
-        while (counter < 3) {
-
-            val table = createTable(context)
-
-            for (i in 1..3) {
-                val row = createRow(context, lottoStones)
-                table.addView(row)
-            }
-
-            if (isCardValid()) {
-                linearLayout.addView(table)
-                allTickets.addAll(fullTicketNumberList)
-                counter++
-                println("card  created successfully!")
-            } else {
-                println("card not created")
-            }
-
-            cardModel.fullTicketNumberList = fullTicketNumberList
-            resetCard()
-        }
-
-        return cardModel
-    }
-
-
     private fun resetCard() {
         oneList.clear()
         tenList.clear()
@@ -235,7 +213,6 @@ object LottoCardManager {
         sixtyList.clear()
         seventyList.clear()
         eightyList.clear()
-
         oneList = (1..9).toMutableList()
         tenList = (10..19).toMutableList()
         twentyList = (20..29).toMutableList()
@@ -245,16 +222,11 @@ object LottoCardManager {
         sixtyList = (60..69).toMutableList()
         seventyList = (70..79).toMutableList()
         eightyList = (80..90).toMutableList()
-
         indexList.clear()
         indexList = (0..8).toMutableList()
         deleteIndexList.clear()
-
         randomNumberList.clear()
-
         fullTicketNumberList.clear()
     }
-
-
 
 }
