@@ -41,19 +41,20 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
         super.onViewCreated(view, savedInstanceState)
 
         mViewModel.generateCard(requireContext(), binding.llCards)
-        mViewModel.generateLottoCardRequestStateLiveData.observe(requireActivity(), Observer {
+        mViewModel.lineCompletionEvent.observe(viewLifecycleOwner) {
 
-        })
+        }
+        mViewModel.cardCompletionEvent.observe(viewLifecycleOwner) {
 
+        }
 
         getLottoStones()
         mViewModel.requestStateLiveData.observe(requireActivity(), Observer { it ->
             handleLottoDrawResult(it)
+            mViewModel.lottoCardManager.setHints(it.numbers, binding.llCards)
         })
 
-
     }
-
 
     private fun getLottoStones() {
         timer.schedule(object : TimerTask() {
@@ -85,14 +86,11 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
             text = number.toString()
             visibility = View.INVISIBLE
         }
-
         if (binding.llStones.childCount > 3) {
             removeOldestLottoStone()
         }
-
         binding.llStones.addView(lottoStone, 0)
         animateLottoStoneAppearance(lottoStone)
-
         playSoundForNumber(number)
     }
 

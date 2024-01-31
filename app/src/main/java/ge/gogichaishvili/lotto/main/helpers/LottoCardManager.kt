@@ -1,11 +1,13 @@
 package ge.gogichaishvili.lotto.main.helpers
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.RectShape
 import android.view.Gravity
+import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import ge.gogichaishvili.lotto.R
@@ -40,6 +42,17 @@ object LottoCardManager {
     private var cardModel = LottoCardModel(fullTicketNumberList)
 
     private var counter: Int = 0
+
+    private var onLineCompleteListener: (() -> Unit)? = null
+    private var onCardCompleteListener: (() -> Unit)? = null
+
+    fun setOnLineCompleteListener(listener: () -> Unit) {
+        onLineCompleteListener = listener
+    }
+
+    fun setOnCardCompleteListener(listener: () -> Unit) {
+        onCardCompleteListener = listener
+    }
 
     fun generateCard(
         context: Context,
@@ -100,6 +113,7 @@ object LottoCardManager {
             tv.gravity = Gravity.CENTER
             if (value != 0) {
                 tv.text = value.toString()
+                tv.isClickable = true
             }
             tv.textSize = 24f
             tv.setTextColor(Color.BLACK)
@@ -108,11 +122,18 @@ object LottoCardManager {
             border.paint.strokeWidth = 2f
             border.paint.color = Color.BLACK
             tv.background = border
-            tv.isClickable = true
             val iv = ImageView(context)
             val frameLayout = FrameLayout(context)
             frameLayout.addView(tv)
             frameLayout.addView(iv)
+            val defaultLayoutParams = FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+            defaultLayoutParams.setMargins(10, 10, 10, 10)
+            defaultLayoutParams.gravity = Gravity.CENTER
+            iv.layoutParams = defaultLayoutParams
+
             tv.setOnClickListener {
                 if (tv.text.isNotEmpty() || tv.text.isNotBlank()) {
                     Utils.playAudio(context, R.raw.lotto)
@@ -121,10 +142,10 @@ object LottoCardManager {
                                 .toInt() in lottoStones.value!!.numbers
                         ) {
 
-                            iv.layoutParams = FrameLayout.LayoutParams(
-                                tv.width - 10,
-                                tv.height - 10
-                            ).apply { gravity = Gravity.CENTER }
+                            /* iv.layoutParams = FrameLayout.LayoutParams(
+                                 tv.width - 10,
+                                 tv.height - 10
+                             ).apply { gravity = Gravity.CENTER }*/
 
                             iv.setBackgroundResource(R.drawable.chip)
 
@@ -133,6 +154,9 @@ object LottoCardManager {
                     }
                 }
 
+            }
+            if (tv.text.isEmpty()) {
+                tv.isClickable = false
             }
             row.addView(frameLayout)
             val params: ViewGroup.LayoutParams = frameLayout.layoutParams
@@ -229,4 +253,54 @@ object LottoCardManager {
         fullTicketNumberList.clear()
     }
 
+    fun setHints(numbers: List<Int>?, viewGroup: ViewGroup) {
+        val parentLayout: ViewGroup = viewGroup
+        for (i in 0 until parentLayout.childCount) {
+            val childView: View = parentLayout.getChildAt(i)
+            if (childView is TableLayout) {
+                for (j in 0 until childView.childCount) {
+                    val tableRow: View = childView.getChildAt(j)
+                    if (tableRow is TableRow) {
+                        for (k in 0 until tableRow.childCount) {
+                            val frameLayout: View = tableRow.getChildAt(k)
+                            if (frameLayout is FrameLayout) {
+                                for (m in 0 until frameLayout.childCount) {
+                                    val textView: View = frameLayout.getChildAt(m)
+                                    if (textView is TextView) {
+                                        val text = textView.text.toString()
+                                        val textNumber = text.toIntOrNull()
+                                        if (numbers != null) {
+                                            if (textNumber != null && textNumber in numbers) {
+
+                                                if (frameLayout.getChildAt(m + 1) is ImageView) {
+                                                    val imageView =
+                                                        frameLayout.getChildAt(m + 1) as ImageView
+
+                                                    if (textView.isClickable) {
+                                                        imageView.setBackgroundResource(R.drawable.light)
+                                                    }
+                                                }
+
+                                            } else {
+                                                if (frameLayout.getChildAt(m + 1) is ImageView) {
+                                                    val imageView =
+                                                        frameLayout.getChildAt(m + 1) as ImageView
+                                                    if (textView.isClickable) {
+                                                        imageView.background = null
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
 }
+

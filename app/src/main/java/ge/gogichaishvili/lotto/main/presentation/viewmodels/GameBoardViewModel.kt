@@ -3,19 +3,19 @@ package ge.gogichaishvili.lotto.main.presentation.viewmodels
 import android.content.Context
 import android.widget.LinearLayout
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import ge.gogichaishvili.lotto.app.tools.SingleLiveEvent
 import ge.gogichaishvili.lotto.main.helpers.LottoCardManager
 import ge.gogichaishvili.lotto.main.helpers.LottoStonesManager
-import ge.gogichaishvili.lotto.main.models.LottoCardModel
 import ge.gogichaishvili.lotto.main.models.LottoDrawResult
 import ge.gogichaishvili.lotto.main.presentation.viewmodels.base.BaseViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class GameBoardViewModel (
+class GameBoardViewModel(
     private val lottoManager: LottoStonesManager,
-    private val lottoCardManager: LottoCardManager
+    val lottoCardManager: LottoCardManager
 ) : BaseViewModel() {
 
     private val _requestStateLiveData = SingleLiveEvent<LottoDrawResult>()
@@ -28,17 +28,37 @@ class GameBoardViewModel (
         }
     }
 
-
-    private val _generateCardRequestStateLiveData = SingleLiveEvent<LottoCardModel>()
-    val generateLottoCardRequestStateLiveData: LiveData<LottoCardModel> get() = _generateCardRequestStateLiveData
-
-
-
     fun generateCard(context: Context, linearLayout: LinearLayout) {
         viewModelScope.launch(Dispatchers.Main.immediate) {
-            val result = lottoCardManager.generateCard(context, linearLayout, _requestStateLiveData)
-            _generateCardRequestStateLiveData.postValue(result)
+            lottoCardManager.generateCard(context, linearLayout, _requestStateLiveData)
         }
     }
+
+    val lineCompletionEvent = MutableLiveData<Unit>()
+    val cardCompletionEvent = MutableLiveData<Unit>()
+
+    init {
+
+       /* _requestStateLiveData.observeForever {
+            onLiveDataChanged()
+        }*/
+
+        setupLottoCardManager()
+
+    }
+
+    private fun setupLottoCardManager() {
+        lottoCardManager.setOnLineCompleteListener {
+            lineCompletionEvent.postValue(Unit)
+        }
+
+        lottoCardManager.setOnCardCompleteListener {
+            cardCompletionEvent.postValue(Unit)
+        }
+    }
+
+   /* private fun onLiveDataChanged() {
+        lottoCardManager.loadImagesForRowWithNumbers(_requestStateLiveData.value?.numbers)
+    }*/
 
 }
