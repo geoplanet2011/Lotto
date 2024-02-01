@@ -1,6 +1,5 @@
 package ge.gogichaishvili.lotto.main.helpers
 
-import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Paint
@@ -9,7 +8,13 @@ import android.graphics.drawable.shapes.RectShape
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TableLayout
+import android.widget.TableRow
+import android.widget.TextView
+import androidx.core.view.children
 import ge.gogichaishvili.lotto.R
 import ge.gogichaishvili.lotto.app.tools.SingleLiveEvent
 import ge.gogichaishvili.lotto.app.tools.Utils
@@ -62,7 +67,7 @@ object LottoCardManager {
         while (counter < 3) {
             val table = createTable(context)
             for (i in 1..3) {
-                val row = createRow(context, lottoStones)
+                val row = createRow(context, lottoStones, table)
                 table.addView(row)
             }
             if (isCardValid()) {
@@ -99,22 +104,24 @@ object LottoCardManager {
 
     private fun createRow(
         context: Context,
-        lottoStones: SingleLiveEvent<LottoDrawResult>?
+        lottoStones: SingleLiveEvent<LottoDrawResult>?,
+        tableLayout: TableLayout
     ): TableRow {
         val row = TableRow(context)
+        var clickableCount = 0
         shuffleLists()
         val randomNumberList = createRandomNumberList()
         deleteNumbersFromList(randomNumberList)
         resetIndexList()
-        fullTicketNumberList.addAll(randomNumberList) // Create full ticket
+        fullTicketNumberList.addAll(randomNumberList)
         for (j in 1..9) {
             val value: Int = randomNumberList[j - 1]
             val tv = TextView(context)
             tv.gravity = Gravity.CENTER
             if (value != 0) {
                 tv.text = value.toString()
-                tv.isClickable = true
             }
+            tv.isClickable = true
             tv.textSize = 24f
             tv.setTextColor(Color.BLACK)
             val border = ShapeDrawable(RectShape())
@@ -142,14 +149,14 @@ object LottoCardManager {
                                 .toInt() in lottoStones.value!!.numbers
                         ) {
 
-                            /* iv.layoutParams = FrameLayout.LayoutParams(
-                                 tv.width - 10,
-                                 tv.height - 10
-                             ).apply { gravity = Gravity.CENTER }*/
-
                             iv.setBackgroundResource(R.drawable.chip)
 
                             tv.isClickable = false
+                            clickableCount++
+                            if (clickableCount >= 5) {
+                                onLineCompleteListener?.invoke()
+                                checkCardCompletion(tableLayout)
+                            }
                         }
                     }
                 }
@@ -271,7 +278,6 @@ object LottoCardManager {
                                         val textNumber = text.toIntOrNull()
                                         if (numbers != null) {
                                             if (textNumber != null && textNumber in numbers) {
-
                                                 if (frameLayout.getChildAt(m + 1) is ImageView) {
                                                     val imageView =
                                                         frameLayout.getChildAt(m + 1) as ImageView
@@ -280,7 +286,6 @@ object LottoCardManager {
                                                         imageView.setBackgroundResource(R.drawable.light)
                                                     }
                                                 }
-
                                             } else {
                                                 if (frameLayout.getChildAt(m + 1) is ImageView) {
                                                     val imageView =
@@ -298,6 +303,35 @@ object LottoCardManager {
                     }
                 }
             }
+        }
+    }
+
+
+
+    private fun checkCardCompletion(tableLayout: TableLayout) {
+        var completedLines = 0
+
+        for (i in 0 until tableLayout.childCount) {
+            val row = tableLayout.getChildAt(i) as TableRow
+            var clickableTextViews = 0
+
+            for (j in 0 until row.childCount) {
+                val frameLayout = row.getChildAt(j) as? FrameLayout
+                frameLayout?.children?.filterIsInstance<TextView>()?.forEach { textView ->
+                    if (textView.text.isNotEmpty() && !textView.isClickable) {
+                        clickableTextViews++
+                    }
+                }
+            }
+
+            if (clickableTextViews >= 5) {
+                completedLines++
+            }
+        }
+
+        if (completedLines == tableLayout.childCount) {
+            onCardCompleteListener?.invoke()
+            println("კარდი მთლიანად შეივსება!")
         }
     }
 

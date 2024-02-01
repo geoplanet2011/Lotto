@@ -10,6 +10,7 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import ge.gogichaishvili.lotto.R
 import ge.gogichaishvili.lotto.app.tools.Utils
@@ -42,10 +43,10 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
 
         mViewModel.generateCard(requireContext(), binding.llCards)
         mViewModel.lineCompletionEvent.observe(viewLifecycleOwner) {
-
+           //Toast.makeText(requireContext(), "ხაზი შევსებულია!", Toast.LENGTH_SHORT).show()
         }
         mViewModel.cardCompletionEvent.observe(viewLifecycleOwner) {
-
+            Toast.makeText(requireContext(), "ბილეთი შევსებულია!", Toast.LENGTH_SHORT).show()
         }
 
         getLottoStones()
