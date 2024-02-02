@@ -15,6 +15,8 @@ import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
 import androidx.core.view.children
+import androidx.core.view.forEach
+import androidx.lifecycle.MutableLiveData
 import ge.gogichaishvili.lotto.R
 import ge.gogichaishvili.lotto.app.tools.SingleLiveEvent
 import ge.gogichaishvili.lotto.app.tools.Utils
@@ -41,6 +43,8 @@ object LottoCardManager {
     private val fullTicketNumberList: MutableList<Int> = ArrayList()
 
     private var clickedNumberList: MutableList<Int> = ArrayList()  //choose lotto numbers in cards
+
+    var previousNumbers: List<Int> = emptyList()
 
     var allTickets: MutableList<Int> = ArrayList() //all ticket
 
@@ -334,6 +338,32 @@ object LottoCardManager {
             println("კარდი მთლიანად შეივსება!")
         }
     }
+
+
+    fun setLoss(removedNumbers: List<Int>, viewGroup: ViewGroup) {
+        viewGroup.forEach { childView ->
+            if (childView is TableLayout) {
+                childView.forEach { tableRow ->
+                    if (tableRow is TableRow) {
+                        tableRow.forEach { frameLayout ->
+                            if (frameLayout is FrameLayout) {
+                                frameLayout.forEach { view ->
+                                    if (view is TextView) {
+                                        val textNumber = view.text.toString().toIntOrNull()
+                                        if (textNumber != null && textNumber in removedNumbers) {
+                                            view.setTextColor(Color.RED)
+                                            view.isClickable = false
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 
 
 }

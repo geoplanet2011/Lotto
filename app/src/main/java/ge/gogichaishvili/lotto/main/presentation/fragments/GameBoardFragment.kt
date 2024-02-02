@@ -43,7 +43,7 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
 
         mViewModel.generateCard(requireContext(), binding.llCards)
         mViewModel.lineCompletionEvent.observe(viewLifecycleOwner) {
-           //Toast.makeText(requireContext(), "ხაზი შევსებულია!", Toast.LENGTH_SHORT).show()
+           Toast.makeText(requireContext(), "ხაზი შევსებულია!", Toast.LENGTH_SHORT).show()
         }
         mViewModel.cardCompletionEvent.observe(viewLifecycleOwner) {
             Toast.makeText(requireContext(), "ბილეთი შევსებულია!", Toast.LENGTH_SHORT).show()
@@ -53,6 +53,13 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
         mViewModel.requestStateLiveData.observe(requireActivity(), Observer { it ->
             handleLottoDrawResult(it)
             mViewModel.lottoCardManager.setHints(it.numbers, binding.llCards)
+
+            val removedNumbers = mViewModel.lottoCardManager.previousNumbers - it.numbers.toSet()
+            if (removedNumbers.isNotEmpty()) {
+                mViewModel.lottoCardManager.setLoss(removedNumbers, binding.llCards)
+            }
+            mViewModel.lottoCardManager.previousNumbers = it.numbers
+
         })
 
     }
