@@ -1,6 +1,7 @@
 package ge.gogichaishvili.lotto.main.presentation.fragments
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -20,8 +21,6 @@ import ge.gogichaishvili.lotto.main.presentation.fragments.base.BaseFragment
 import ge.gogichaishvili.lotto.main.presentation.viewmodels.GameBoardViewModel
 import java.util.Timer
 import java.util.TimerTask
-import android.graphics.Color
-import android.graphics.Typeface
 
 class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::class) {
 
