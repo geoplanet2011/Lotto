@@ -12,6 +12,4 @@ class MainActivityViewModel(
     //private val pref: SharedPreferenceManager
 ) : BaseViewModel() {
 
-
-
 }

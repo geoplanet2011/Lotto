@@ -12,11 +12,8 @@ import java.util.concurrent.TimeUnit
 object NetworkModule {
 
     val modules = module {
-
         single { provideOkHttpClient(requestInterceptor = get()) }
-
     }
-
 
     private fun provideOkHttpClient(requestInterceptor: RequestInterceptor): OkHttpClient {
         val clientBuilder = OkHttpClient.Builder()
@@ -34,7 +31,6 @@ object NetworkModule {
 
         return clientBuilder.build()
     }
-
 
     fun provideRetrofit(client: OkHttpClient, baseUrl: String): Retrofit {
         return Retrofit.Builder()

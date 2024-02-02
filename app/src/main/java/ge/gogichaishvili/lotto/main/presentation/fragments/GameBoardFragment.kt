@@ -15,12 +15,13 @@ import androidx.lifecycle.Observer
 import ge.gogichaishvili.lotto.R
 import ge.gogichaishvili.lotto.app.tools.Utils
 import ge.gogichaishvili.lotto.databinding.FragmentGameBoardBinding
-
 import ge.gogichaishvili.lotto.main.models.LottoDrawResult
 import ge.gogichaishvili.lotto.main.presentation.fragments.base.BaseFragment
 import ge.gogichaishvili.lotto.main.presentation.viewmodels.GameBoardViewModel
 import java.util.Timer
 import java.util.TimerTask
+import android.graphics.Color
+import android.graphics.Typeface
 
 class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::class) {
 
@@ -43,7 +44,7 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
 
         mViewModel.generateCard(requireContext(), binding.llCards)
         mViewModel.lineCompletionEvent.observe(viewLifecycleOwner) {
-           Toast.makeText(requireContext(), "ხაზი შევსებულია!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "ხაზი შევსებულია!", Toast.LENGTH_SHORT).show()
         }
         mViewModel.cardCompletionEvent.observe(viewLifecycleOwner) {
             Toast.makeText(requireContext(), "ბილეთი შევსებულია!", Toast.LENGTH_SHORT).show()
@@ -52,6 +53,7 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
         getLottoStones()
         mViewModel.requestStateLiveData.observe(requireActivity(), Observer { it ->
             handleLottoDrawResult(it)
+
             mViewModel.lottoCardManager.setHints(it.numbers, binding.llCards)
 
             val removedNumbers = mViewModel.lottoCardManager.previousNumbers - it.numbers.toSet()
@@ -92,6 +94,8 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
             }
             setBackgroundResource(R.drawable.barrel_small)
             text = number.toString()
+            textSize = 22f
+            setTextColor(Color.rgb(112, 40, 31))
             visibility = View.INVISIBLE
         }
         if (binding.llStones.childCount > 3) {

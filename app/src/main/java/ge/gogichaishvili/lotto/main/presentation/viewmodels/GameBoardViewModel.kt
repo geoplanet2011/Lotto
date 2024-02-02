@@ -38,13 +38,7 @@ class GameBoardViewModel(
     val cardCompletionEvent = MutableLiveData<Unit>()
 
     init {
-
-       /* _requestStateLiveData.observeForever {
-            onLiveDataChanged()
-        }*/
-
         setupLottoCardManager()
-
     }
 
     private fun setupLottoCardManager() {
@@ -56,9 +50,5 @@ class GameBoardViewModel(
             cardCompletionEvent.postValue(Unit)
         }
     }
-
-   /* private fun onLiveDataChanged() {
-        lottoCardManager.loadImagesForRowWithNumbers(_requestStateLiveData.value?.numbers)
-    }*/
 
 }

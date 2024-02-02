@@ -6,7 +6,7 @@ import android.media.MediaPlayer
 import android.os.IBinder
 import ge.gogichaishvili.lotto.R
 
-class SoundService: Service() {
+class SoundService : Service() {
     var player: MediaPlayer? = null
 
     override fun onBind(intent: Intent?): IBinder? {

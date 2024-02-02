@@ -10,7 +10,6 @@ import ge.gogichaishvili.lotto.main.presentation.fragments.MainFragment
 import ge.gogichaishvili.lotto.main.presentation.viewmodels.MainActivityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-
 class MainActivity : AppCompatActivity() {
 
     private val viewModel: MainActivityViewModel by viewModel()
@@ -25,7 +24,6 @@ class MainActivity : AppCompatActivity() {
 
         _binding = ActivityMainBinding.inflate(LayoutInflater.from(this))
         setContentView(_binding?.root)
-
 
         supportFragmentManager.beginTransaction()
             .replace(

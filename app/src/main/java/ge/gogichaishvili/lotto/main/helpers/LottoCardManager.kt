@@ -16,11 +16,9 @@ import android.widget.TableRow
 import android.widget.TextView
 import androidx.core.view.children
 import androidx.core.view.forEach
-import androidx.lifecycle.MutableLiveData
 import ge.gogichaishvili.lotto.R
 import ge.gogichaishvili.lotto.app.tools.SingleLiveEvent
 import ge.gogichaishvili.lotto.app.tools.Utils
-import ge.gogichaishvili.lotto.main.models.LottoCardModel
 import ge.gogichaishvili.lotto.main.models.LottoDrawResult
 
 object LottoCardManager {
@@ -42,15 +40,7 @@ object LottoCardManager {
 
     private val fullTicketNumberList: MutableList<Int> = ArrayList()
 
-    private var clickedNumberList: MutableList<Int> = ArrayList()  //choose lotto numbers in cards
-
-    var previousNumbers: List<Int> = emptyList()
-
-    var allTickets: MutableList<Int> = ArrayList() //all ticket
-
-    private var cardModel = LottoCardModel(fullTicketNumberList)
-
-    private var counter: Int = 0
+    var previousNumbers: List<Int> = emptyList() //for loss numbers
 
     private var onLineCompleteListener: (() -> Unit)? = null
     private var onCardCompleteListener: (() -> Unit)? = null
@@ -63,11 +53,13 @@ object LottoCardManager {
         onCardCompleteListener = listener
     }
 
+    private var counter: Int = 0
+
     fun generateCard(
         context: Context,
         linearLayout: LinearLayout,
         lottoStones: SingleLiveEvent<LottoDrawResult>?
-    ): LottoCardModel {
+    ) {
         while (counter < 3) {
             val table = createTable(context)
             for (i in 1..3) {
@@ -76,16 +68,13 @@ object LottoCardManager {
             }
             if (isCardValid()) {
                 linearLayout.addView(table)
-                allTickets.addAll(fullTicketNumberList)
                 counter++
                 println("card  created successfully!")
             } else {
                 println("card not created")
             }
-            cardModel.fullTicketNumberList = fullTicketNumberList
             resetCard()
         }
-        return cardModel
     }
 
     private fun createTable(context: Context): TableLayout {
@@ -141,7 +130,7 @@ object LottoCardManager {
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
             )
-            defaultLayoutParams.setMargins(10, 10, 10, 10)
+            defaultLayoutParams.setMargins(5, 5, 5, 5)
             defaultLayoutParams.gravity = Gravity.CENTER
             iv.layoutParams = defaultLayoutParams
 
@@ -310,8 +299,6 @@ object LottoCardManager {
         }
     }
 
-
-
     private fun checkCardCompletion(tableLayout: TableLayout) {
         var completedLines = 0
 
@@ -335,10 +322,9 @@ object LottoCardManager {
 
         if (completedLines == tableLayout.childCount) {
             onCardCompleteListener?.invoke()
-            println("კარდი მთლიანად შეივსება!")
+            println("ბილეთი მთლიანად შევსებულია!")
         }
     }
-
 
     fun setLoss(removedNumbers: List<Int>, viewGroup: ViewGroup) {
         viewGroup.forEach { childView ->
@@ -363,8 +349,6 @@ object LottoCardManager {
             }
         }
     }
-
-
 
 }
 

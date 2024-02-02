@@ -2,9 +2,7 @@ package ge.gogichaishvili.lotto.app.network
 
 import okhttp3.Interceptor
 import okhttp3.Response
-import android.os.Build
-import android.os.LocaleList
-import java.util.*
+import java.util.Locale
 
 class RequestInterceptor() :
     Interceptor {
@@ -35,15 +33,5 @@ class RequestInterceptor() :
 
         return response
     }
-
-
-    //get language list
-    /* private fun getLanguage(): String {
-         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-             LocaleList.getDefault().toLanguageTags()
-         } else {
-             Locale.getDefault().language
-         }
-     }*/
 
 }
