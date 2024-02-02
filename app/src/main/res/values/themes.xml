@@ -43,20 +43,26 @@
     </style>
 
 
-    <!-- Splash screen theme -->
+  <!--  &lt;!&ndash; Splash screen theme &ndash;&gt;
     <style name="Splash" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Splashscreen right way bg -->
+        &lt;!&ndash; Splashscreen right way bg &ndash;&gt;
         <item name="android:windowBackground">@drawable/splashscreen</item>
-        <!--<item name="android:background">#FFFFFF</item>-->
+        &lt;!&ndash;<item name="android:background">#FFFFFF</item>&ndash;&gt;
         <item name="android:windowAnimationStyle">@null</item>
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
-        <!-- Bottom navigation Status bar color. -->
+        &lt;!&ndash; Bottom navigation Status bar color. &ndash;&gt;
         <item name="android:navigationBarColor">@android:color/transparent</item>
-    </style>
+    </style>-->
 
+    <!-- Splash Screen Theme -->
+    <style name="Theme.MyApp.SplashScreen" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/white</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/chip</item>
+        <item name="postSplashScreenTheme">@style/Base.Theme.Lotto</item>
+    </style>
 
     <!-- spinner style date picker -->
     <style name="SpinnerDatePickerDialog" parent="@android:style/Theme.Holo.Light.Dialog">

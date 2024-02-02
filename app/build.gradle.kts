@@ -108,4 +108,7 @@ dependencies {
     //user permission
     implementation ("com.karumi:dexter:6.2.3")
 
+    //Splashscreen
+    implementation("androidx.core:core-splashscreen:1.1.0-alpha02")
+
 }
