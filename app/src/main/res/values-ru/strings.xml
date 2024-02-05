@@ -5,4 +5,6 @@
     <string name="save">Сохранить</string>
     <string name="enter_player_name">Пожалуйста, введите свое имя игрока</string>
     <string name="saved">Успешно сохранено</string>
+    <string name="close">Закрыть</string>
+    <string name="lose">К сожалению, вы проиграли!</string>
 </resources>

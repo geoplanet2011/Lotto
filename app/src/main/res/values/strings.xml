@@ -5,4 +5,6 @@
     <string name="save">Save</string>
     <string name="enter_player_name">Please enter your player name</string>
     <string name="saved">Successfully saved</string>
+    <string name="close">Close</string>
+    <string name="lose">Unfortunately you lost!</string>
 </resources>

@@ -1,5 +1,6 @@
 package ge.gogichaishvili.lotto.main.presentation.activities
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.WindowManager
@@ -23,6 +24,7 @@ class MainActivity : AppCompatActivity() {
 
         installSplashScreen()
 
+        requestedOrientation = (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         _binding = ActivityMainBinding.inflate(LayoutInflater.from(this))

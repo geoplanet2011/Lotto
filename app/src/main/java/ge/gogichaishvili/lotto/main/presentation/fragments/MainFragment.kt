@@ -48,6 +48,15 @@ class MainFragment : BaseFragment<MainActivityViewModel>(MainActivityViewModel::
                 ).commit()
         }
 
+        binding.exitBtn.setOnClickListener {
+            activity?.finishAndRemoveTask()
+        }
+
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }

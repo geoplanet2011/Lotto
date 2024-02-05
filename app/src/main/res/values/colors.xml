@@ -4,4 +4,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="hint_color">#40CCCCCC</color>
     <color name="hint">#40100F0F</color>
+    <color name="red">#b1070d</color>
 </resources>
