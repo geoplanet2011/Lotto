@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Lotto</string>
+    <string name="username">Пользователь</string>
+    <string name="save">Сохранить</string>
+    <string name="enter_player_name">Пожалуйста, введите свое имя игрока</string>
+    <string name="saved">Успешно сохранено</string>
+</resources>

@@ -20,6 +20,7 @@
 
         <!-- for Dark Mode -->
         <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
+
     </style>
 
     <style name="Theme.Lotto" parent="Base.Theme.Lotto" />
@@ -60,8 +61,9 @@
     <!-- Splash Screen Theme -->
     <style name="Theme.MyApp.SplashScreen" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/white</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/chip</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/applogo</item>
         <item name="postSplashScreenTheme">@style/Base.Theme.Lotto</item>
+        <item name="windowSplashScreenAnimationDuration">200</item>
     </style>
 
     <!-- spinner style date picker -->

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Lotto</string>
+    <string name="username">მომხმარებელი</string>
+    <string name="save">შენახვა</string>
+    <string name="enter_player_name">გთხოვთ, შეიყვანოთ თქვენი მოთამაშის სახელი</string>
+    <string name="saved">წარმატებით შენახულია</string>
+</resources>

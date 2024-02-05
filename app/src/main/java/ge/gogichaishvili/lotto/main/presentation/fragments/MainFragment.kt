@@ -8,6 +8,7 @@ import ge.gogichaishvili.lotto.R
 import ge.gogichaishvili.lotto.databinding.FragmentMainBinding
 import ge.gogichaishvili.lotto.main.presentation.fragments.base.BaseFragment
 import ge.gogichaishvili.lotto.main.presentation.viewmodels.MainActivityViewModel
+import ge.gogichaishvili.lotto.settings.presentation.fragments.SettingsFragment
 
 class MainFragment : BaseFragment<MainActivityViewModel>(MainActivityViewModel::class) {
 
@@ -34,6 +35,16 @@ class MainFragment : BaseFragment<MainActivityViewModel>(MainActivityViewModel::
                     GameBoardFragment()
                 ).addToBackStack(
                     GameBoardFragment::class.java.name
+                ).commit()
+        }
+
+        binding.settingsBtn.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(
+                    R.id.fragmentContainerView,
+                    SettingsFragment()
+                ).addToBackStack(
+                    SettingsFragment::class.java.name
                 ).commit()
         }
 
