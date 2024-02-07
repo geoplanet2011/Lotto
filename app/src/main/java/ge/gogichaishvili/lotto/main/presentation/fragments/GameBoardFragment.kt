@@ -49,6 +49,9 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
         binding.ivPlayer.setImageResource(player.avatar)
         binding.ivOpponent.setImageResource(opponent.avatar)
 
+        binding.btnChange.setOnClickListener {
+            mViewModel.redrawCard(requireContext(), binding.llCards)
+        }
 
         mViewModel.generateCard(requireContext(), binding.llCards)
         mViewModel.lineCompletionEvent.observe(viewLifecycleOwner) {

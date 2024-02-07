@@ -28,4 +28,6 @@
     <string name="lasha">Сергей</string>
     <string name="beka">Игорь</string>
     <string name="tornike">Артём</string>
+    <string name="change">Изменить</string>
+    <string name="start">Начинать</string>
 </resources>

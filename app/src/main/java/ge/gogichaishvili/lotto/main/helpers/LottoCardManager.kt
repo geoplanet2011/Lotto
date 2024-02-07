@@ -360,5 +360,15 @@ object LottoCardManager {
         }
     }
 
+
+    fun redrawCards(context: Context, linearLayout: LinearLayout, lottoStones: SingleLiveEvent<LottoDrawResult>?) {
+        linearLayout.removeAllViews()
+        counter = 0
+        resetCard()
+        generateCard(context, linearLayout, lottoStones)
+    }
+
+
+
 }
 

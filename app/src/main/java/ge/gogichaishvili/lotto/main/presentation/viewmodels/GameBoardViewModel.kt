@@ -40,6 +40,12 @@ class GameBoardViewModel(
         }
     }
 
+    fun redrawCard(context: Context, linearLayout: LinearLayout) {
+        viewModelScope.launch(Dispatchers.Main.immediate) {
+            lottoCardManager.redrawCards(context, linearLayout, _requestStateLiveData)
+        }
+    }
+
     val lineCompletionEvent = MutableLiveData<Unit>()
     val cardCompletionEvent = MutableLiveData<Unit>()
 
