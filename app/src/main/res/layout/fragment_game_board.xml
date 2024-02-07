@@ -112,8 +112,23 @@
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="16sp"
-        app:layout_constraintEnd_toStartOf="@id/rightGuide"
+        app:layout_constraintEnd_toStartOf="@+id/btn_start"
         app:layout_constraintStart_toEndOf="@id/leftGuide"
+        app:layout_constraintTop_toBottomOf="@+id/ll_cards" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_start"
+        android:layout_width="150dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/rounded_button_blue"
+        android:elevation="1dp"
+        android:text="@string/start"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toStartOf="@id/rightGuide"
+        app:layout_constraintStart_toEndOf="@+id/btn_change"
         app:layout_constraintTop_toBottomOf="@+id/ll_cards" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

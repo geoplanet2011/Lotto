@@ -53,27 +53,12 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
             mViewModel.redrawCard(requireContext(), binding.llCards)
         }
 
+        binding.btnStart.setOnClickListener {
+            getLottoStones()
+        }
+
         mViewModel.generateCard(requireContext(), binding.llCards)
-        mViewModel.lineCompletionEvent.observe(viewLifecycleOwner) {
-            Toast.makeText(requireContext(), "ხაზი შევსებულია!", Toast.LENGTH_SHORT).show()
-        }
-        mViewModel.cardCompletionEvent.observe(viewLifecycleOwner) {
-            Toast.makeText(requireContext(), "ბილეთი შევსებულია!", Toast.LENGTH_SHORT).show()
-        }
 
-        getLottoStones()
-        mViewModel.requestStateLiveData.observe(requireActivity(), Observer { it ->
-            handleLottoDrawResult(it)
-
-            mViewModel.lottoCardManager.setHints(it.numbers, binding.llCards)
-
-            val removedNumbers = mViewModel.lottoCardManager.previousNumbers - it.numbers.toSet()
-            if (removedNumbers.isNotEmpty()) {
-                mViewModel.lottoCardManager.setLoss(removedNumbers, binding.llCards)
-            }
-            mViewModel.lottoCardManager.previousNumbers = it.numbers
-
-        })
 
     }
 
@@ -154,6 +139,29 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
         val soundFileName = "a$number"
         val resID = resources.getIdentifier(soundFileName, "raw", activity?.packageName)
         Utils.playSound(activity, resID)
+    }
+
+    override fun bindObservers() {
+        mViewModel.lineCompletionEvent.observe(viewLifecycleOwner) {
+            Toast.makeText(requireContext(), "ხაზი შევსებულია!", Toast.LENGTH_SHORT).show()
+        }
+        mViewModel.cardCompletionEvent.observe(viewLifecycleOwner) {
+            Toast.makeText(requireContext(), "ბილეთი შევსებულია!", Toast.LENGTH_SHORT).show()
+        }
+
+
+        mViewModel.requestStateLiveData.observe(requireActivity(), Observer { it ->
+            handleLottoDrawResult(it)
+
+            mViewModel.lottoCardManager.setHints(it.numbers, binding.llCards)
+
+            val removedNumbers = mViewModel.lottoCardManager.previousNumbers - it.numbers.toSet()
+            if (removedNumbers.isNotEmpty()) {
+                mViewModel.lottoCardManager.setLoss(removedNumbers, binding.llCards)
+            }
+            mViewModel.lottoCardManager.previousNumbers = it.numbers
+
+        })
     }
 
 }
