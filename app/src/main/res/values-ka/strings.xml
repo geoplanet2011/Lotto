@@ -7,4 +7,25 @@
     <string name="saved">წარმატებით შენახულია</string>
     <string name="close">დახურვა</string>
     <string name="lose">სამწუხაროდ, თქვენ წააგეთ!</string>
+    <string name="gold">ოქრო</string>
+    <string name="giorgi">გიორგი</string>
+    <string name="dato">დავითი</string>
+    <string name="ana">ანა</string>
+    <string name="mari">მარიამი</string>
+    <string name="nika">ნიკოლოზი</string>
+    <string name="tatia">თათია</string>
+    <string name="eka">ეკატერინე</string>
+    <string name="irakli">ირაკლი</string>
+    <string name="lizi">ლიზი</string>
+    <string name="salome">სალომე</string>
+    <string name="elene">ელენე</string>
+    <string name="lili">ლილი</string>
+    <string name="natia">ნათია</string>
+    <string name="tea">თეა</string>
+    <string name="ilia">ილია</string>
+    <string name="andria">ანდრია</string>
+    <string name="luka">ლუკა</string>
+    <string name="lasha">ლაშა</string>
+    <string name="beka">ბექა</string>
+    <string name="tornike">თორნიკე</string>
 </resources>

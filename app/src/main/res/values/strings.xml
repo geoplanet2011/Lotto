@@ -7,4 +7,25 @@
     <string name="saved">Successfully saved</string>
     <string name="close">Close</string>
     <string name="lose">Unfortunately you lost!</string>
+    <string name="gold">Gold</string>
+    <string name="giorgi">George</string>
+    <string name="dato">David</string>
+    <string name="ana">Victoria</string>
+    <string name="mari">Mari</string>
+    <string name="nika">Nick</string>
+    <string name="tatia">Emily</string>
+    <string name="eka">Catherine</string>
+    <string name="irakli">John</string>
+    <string name="lizi">Scarlett</string>
+    <string name="salome">Evelyn</string>
+    <string name="elene">Charlotte</string>
+    <string name="natia">Isabella</string>
+    <string name="tea">Sophia</string>
+    <string name="ilia">Henry</string>
+    <string name="andria">Alexander</string>
+    <string name="luka">Lucas</string>
+    <string name="lasha">James</string>
+    <string name="beka">William</string>
+    <string name="tornike">Oliver</string>
+    <string name="lili">Lily</string>
 </resources>

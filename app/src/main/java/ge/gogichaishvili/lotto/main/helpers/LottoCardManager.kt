@@ -3,6 +3,7 @@ package ge.gogichaishvili.lotto.main.helpers
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.RectShape
 import android.view.Gravity
@@ -87,11 +88,20 @@ object LottoCardManager {
         table.layoutParams = params
         table.isShrinkAllColumns = true
         table.isStretchAllColumns = true
-        val tableBorder = ShapeDrawable(RectShape())
+
+        /*val tableBorder = ShapeDrawable(RectShape())
         tableBorder.paint.style = Paint.Style.STROKE
         tableBorder.paint.strokeWidth = 5f
         tableBorder.paint.color = Color.BLACK
-        table.background = tableBorder
+        table.background = tableBorder*/
+
+        val backgroundWithBorder = GradientDrawable().apply {
+            shape = GradientDrawable.RECTANGLE
+            setColor(Color.WHITE)
+            setStroke(3, Color.BLACK)
+        }
+        table.background = backgroundWithBorder
+
         return table
     }
 

@@ -12,7 +12,6 @@ import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.DialogFragment
 import ge.gogichaishvili.lotto.R
 import ge.gogichaishvili.lotto.app.tools.getSerializableCompat
-import ge.gogichaishvili.lotto.app.tools.parcelable
 import ge.gogichaishvili.lotto.app.tools.vibratePhone
 import ge.gogichaishvili.lotto.databinding.FragmentCustomDialogBinding
 
@@ -47,7 +46,7 @@ class CustomDialogFragment : DialogFragment() {
 
         vibratePhone()
 
-        val text = arguments?.getSerializableCompat( "DATA", String::class.java ) as String
+        val text = arguments?.getSerializableCompat("DATA", String::class.java) as String
         if (text == getString(R.string.lose)) {
             binding.ivLogo.setImageResource(R.drawable.lose)
         }

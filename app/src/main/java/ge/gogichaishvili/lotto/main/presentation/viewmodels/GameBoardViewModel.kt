@@ -5,17 +5,23 @@ import android.widget.LinearLayout
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import ge.gogichaishvili.lotto.app.tools.SharedPreferenceManager
 import ge.gogichaishvili.lotto.app.tools.SingleLiveEvent
 import ge.gogichaishvili.lotto.main.helpers.LottoCardManager
 import ge.gogichaishvili.lotto.main.helpers.LottoStonesManager
+import ge.gogichaishvili.lotto.main.helpers.OpponentManager
 import ge.gogichaishvili.lotto.main.models.LottoDrawResult
+import ge.gogichaishvili.lotto.main.models.OpponentAvatarModel
+import ge.gogichaishvili.lotto.main.models.PlayerData
 import ge.gogichaishvili.lotto.main.presentation.viewmodels.base.BaseViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class GameBoardViewModel(
     private val lottoManager: LottoStonesManager,
-    val lottoCardManager: LottoCardManager
+    val lottoCardManager: LottoCardManager,
+    private val pref: SharedPreferenceManager,
+    private val opponentManager: OpponentManager
 ) : BaseViewModel() {
 
     private val _requestStateLiveData = SingleLiveEvent<LottoDrawResult>()
@@ -49,6 +55,14 @@ class GameBoardViewModel(
         lottoCardManager.setOnCardCompleteListener {
             cardCompletionEvent.postValue(Unit)
         }
+    }
+
+    fun getPlayerInfo(): PlayerData {
+        return pref.getPlayerInfo()
+    }
+
+    fun getOpponentInfo(): OpponentAvatarModel {
+        return opponentManager.getOpponentInfo()
     }
 
 }

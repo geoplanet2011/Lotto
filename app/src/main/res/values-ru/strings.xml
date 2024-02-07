@@ -7,4 +7,25 @@
     <string name="saved">Успешно сохранено</string>
     <string name="close">Закрыть</string>
     <string name="lose">К сожалению, вы проиграли!</string>
+    <string name="gold">Золото</string>
+    <string name="giorgi">Георгий</string>
+    <string name="dato">Алексей</string>
+    <string name="ana">Анна</string>
+    <string name="mari">Лариса</string>
+    <string name="nika">Константин</string>
+    <string name="tatia">Наталья</string>
+    <string name="eka">Екатерина</string>
+    <string name="irakli">Анатолий</string>
+    <string name="lizi">Марина</string>
+    <string name="salome">Галина</string>
+    <string name="elene">Ольга</string>
+    <string name="lili">Ирина</string>
+    <string name="natia">Татьяна</string>
+    <string name="tea">Светлана</string>
+    <string name="ilia">Никита</string>
+    <string name="andria">Вадим</string>
+    <string name="luka">Руслан</string>
+    <string name="lasha">Сергей</string>
+    <string name="beka">Игорь</string>
+    <string name="tornike">Артём</string>
 </resources>

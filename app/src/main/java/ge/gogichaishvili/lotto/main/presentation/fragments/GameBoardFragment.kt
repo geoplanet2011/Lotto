@@ -41,6 +41,15 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val player = mViewModel.getPlayerInfo()
+        val opponent = mViewModel.getOpponentInfo()
+        binding.tvPlayerOneName.text = player.nickName.toString()
+        binding.tvPlayerTwoName.text = opponent.name
+        binding.tvPlayerOneScore.text = player.balance.toString()
+        binding.ivPlayer.setImageResource(player.avatar)
+        binding.ivOpponent.setImageResource(opponent.avatar)
+
+
         mViewModel.generateCard(requireContext(), binding.llCards)
         mViewModel.lineCompletionEvent.observe(viewLifecycleOwner) {
             Toast.makeText(requireContext(), "ხაზი შევსებულია!", Toast.LENGTH_SHORT).show()
