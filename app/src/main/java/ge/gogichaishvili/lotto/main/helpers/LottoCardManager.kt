@@ -9,6 +9,7 @@ import android.graphics.drawable.shapes.RectShape
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -69,6 +70,11 @@ object LottoCardManager {
             }
             if (isCardValid()) {
                 linearLayout.addView(table)
+                table.translationX = -linearLayout.width.toFloat()
+                    table.animate()
+                    .translationX(0f)
+                    .setDuration(1500)
+                    .start()
                 counter++
                 println("card  created successfully!")
             } else {

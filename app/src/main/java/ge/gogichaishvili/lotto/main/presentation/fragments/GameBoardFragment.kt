@@ -25,7 +25,6 @@ import java.util.TimerTask
 class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::class) {
 
     private val timer: Timer = Timer()
-    private var player: MediaPlayer? = null
 
     private var _binding: FragmentGameBoardBinding? = null
     private val binding get() = _binding!!
@@ -49,6 +48,8 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
         binding.ivPlayer.setImageResource(player.avatar)
         binding.ivOpponent.setImageResource(opponent.avatar)
 
+        mViewModel.generateCard(requireContext(), binding.llCards)
+
         binding.btnChange.setOnClickListener {
             mViewModel.redrawCard(requireContext(), binding.llCards)
         }
@@ -56,9 +57,6 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
         binding.btnStart.setOnClickListener {
             getLottoStones()
         }
-
-        mViewModel.generateCard(requireContext(), binding.llCards)
-
 
     }
 
@@ -142,6 +140,7 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
     }
 
     override fun bindObservers() {
+
         mViewModel.lineCompletionEvent.observe(viewLifecycleOwner) {
             Toast.makeText(requireContext(), "ხაზი შევსებულია!", Toast.LENGTH_SHORT).show()
         }
