@@ -1,5 +1,6 @@
 package ge.gogichaishvili.lotto.main.helpers
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Paint
@@ -9,7 +10,6 @@ import android.graphics.drawable.shapes.RectShape
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -57,6 +57,7 @@ object LottoCardManager {
 
     private var counter: Int = 0
 
+    @SuppressLint("SuspiciousIndentation")
     fun generateCard(
         context: Context,
         linearLayout: LinearLayout,
@@ -154,8 +155,10 @@ object LottoCardManager {
                 if (tv.text.isNotEmpty() || tv.text.isNotBlank()) {
                     Utils.playAudio(context, R.raw.lotto)
                     if (lottoStones != null) {
-                        if (tv.text.toString()
-                                .toInt() in lottoStones.value!!.numbers
+                        if (lottoStones.value?.numbers?.contains(
+                                tv.text.toString()
+                                    .toInt()
+                            ) == true
                         ) {
 
                             iv.setBackgroundResource(R.drawable.chip)

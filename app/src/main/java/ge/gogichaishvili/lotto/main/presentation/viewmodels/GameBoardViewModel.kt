@@ -1,6 +1,7 @@
 package ge.gogichaishvili.lotto.main.presentation.viewmodels
 
 import android.content.Context
+import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -69,6 +70,26 @@ class GameBoardViewModel(
 
     fun getOpponentInfo(): OpponentAvatarModel {
         return opponentManager.getOpponentInfo()
+    }
+
+    fun disableAllViewsInViewGroup(viewGroup: ViewGroup) {
+        for (i in 0 until viewGroup.childCount) {
+            val child = viewGroup.getChildAt(i)
+            child.isEnabled = false
+            if (child is ViewGroup) {
+                disableAllViewsInViewGroup(child)
+            }
+        }
+    }
+
+    fun enableAllViewsInViewGroup(viewGroup: ViewGroup) {
+        for (i in 0 until viewGroup.childCount) {
+            val child = viewGroup.getChildAt(i)
+            child.isEnabled = true
+            if (child is ViewGroup) {
+                enableAllViewsInViewGroup(child)
+            }
+        }
     }
 
 }

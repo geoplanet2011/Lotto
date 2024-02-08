@@ -24,7 +24,9 @@ import java.util.TimerTask
 
 class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::class) {
 
-    private val timer: Timer = Timer()
+    private var timer: Timer = Timer()
+
+    private var isGamePaused = false
 
     private var _binding: FragmentGameBoardBinding? = null
     private val binding get() = _binding!!
@@ -56,6 +58,17 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
 
         binding.btnStart.setOnClickListener {
             getLottoStones()
+            binding.btnChange.visibility = View.GONE
+            binding.btnStart.visibility = View.GONE
+            binding.btnPause.visibility = View.VISIBLE
+        }
+
+        binding.btnPause.setOnClickListener {
+            if (isGamePaused) {
+                resumeGame()
+            } else {
+                pauseGame()
+            }
         }
 
     }
@@ -92,7 +105,7 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
             setTextColor(Color.rgb(112, 40, 31))
             visibility = View.INVISIBLE
         }
-        if (binding.llStones.childCount > 3) {
+        if (binding.llStones.childCount == 3) {
             removeOldestLottoStone()
         }
         binding.llStones.addView(lottoStone, 0)
@@ -137,6 +150,23 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
         val soundFileName = "a$number"
         val resID = resources.getIdentifier(soundFileName, "raw", activity?.packageName)
         Utils.playSound(activity, resID)
+    }
+
+
+    private fun pauseGame() {
+        timer.cancel()
+        timer.purge()
+        isGamePaused = true
+        binding.btnPause.setBackgroundResource(R.drawable.baseline_play)
+        mViewModel.disableAllViewsInViewGroup(binding.llCards)
+    }
+
+    private fun resumeGame() {
+        timer = Timer()
+        getLottoStones()
+        isGamePaused = false
+        binding.btnPause.setBackgroundResource(R.drawable.baseline_pause)
+        mViewModel.enableAllViewsInViewGroup(binding.llCards)
     }
 
     override fun bindObservers() {
