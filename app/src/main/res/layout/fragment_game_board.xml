@@ -61,12 +61,21 @@
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:background="@drawable/baseline_pause"
-        app:layout_constraintTop_toTopOf="@+id/iv_player"
-        app:layout_constraintStart_toEndOf="@+id/iv_player"
-        app:layout_constraintEnd_toStartOf="@+id/iv_opponent"
+        android:padding="10dp"
         android:visibility="invisible"
-        tools:visibility = "visible"
-        android:padding="10dp" />
+        app:layout_constraintEnd_toStartOf="@+id/iv_opponent"
+        app:layout_constraintStart_toEndOf="@+id/iv_player"
+        app:layout_constraintTop_toTopOf="@+id/iv_player"
+        tools:visibility="visible" />
+
+    <LinearLayout
+        android:id="@+id/ll_drawChips"
+        android:layout_width="200dp"
+        android:layout_height="70dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toStartOf="@+id/iv_opponent"
+        app:layout_constraintStart_toEndOf="@+id/iv_player"
+        app:layout_constraintTop_toTopOf="@+id/iv_player" />
 
     <com.mikhaellopez.circularimageview.CircularImageView
         android:id="@+id/iv_opponent"
@@ -103,15 +112,88 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_playerOneScore" />
 
     <LinearLayout
-        android:layout_marginTop="15dp"
         android:id="@+id/ll_cards"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
         android:gravity="center"
         android:orientation="vertical"
         app:layout_constraintEnd_toStartOf="@id/rightGuide"
         app:layout_constraintStart_toEndOf="@id/leftGuide"
         app:layout_constraintTop_toBottomOf="@id/ll_stones" />
+
+    <LinearLayout
+        android:id="@+id/ll_chips"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toStartOf="@+id/btn_start"
+        app:layout_constraintStart_toEndOf="@id/leftGuide"
+        app:layout_constraintTop_toBottomOf="@+id/ll_cards">
+
+        <ImageButton
+            android:id="@+id/chip1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:background="@null"
+            android:contentDescription="@string/chip"
+            android:scaleType="center"
+            app:srcCompat="@drawable/chip1" />
+
+        <ImageButton
+            android:id="@+id/chip5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:background="@null"
+            android:contentDescription="@string/chip"
+            android:scaleType="center"
+            app:srcCompat="@drawable/chip5" />
+
+        <ImageButton
+            android:id="@+id/chip10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:background="@null"
+            android:contentDescription="@string/chip"
+            android:scaleType="center"
+            app:srcCompat="@drawable/chip10" />
+
+        <ImageButton
+            android:id="@+id/chip25"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:background="@null"
+            android:contentDescription="@string/chip"
+            android:scaleType="center"
+            app:srcCompat="@drawable/chip25" />
+
+        <ImageButton
+            android:id="@+id/chip50"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:background="@null"
+            android:contentDescription="@string/chip"
+            android:scaleType="center"
+            app:srcCompat="@drawable/chip50" />
+
+        <ImageButton
+            android:id="@+id/chip100"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:background="@null"
+            android:contentDescription="@string/chip"
+            android:scaleType="center"
+            app:srcCompat="@drawable/chip100" />
+
+    </LinearLayout>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_change"
@@ -126,7 +208,7 @@
         android:textSize="16sp"
         app:layout_constraintEnd_toStartOf="@+id/btn_start"
         app:layout_constraintStart_toEndOf="@id/leftGuide"
-        app:layout_constraintTop_toBottomOf="@+id/ll_cards" />
+        app:layout_constraintTop_toBottomOf="@+id/ll_chips" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_start"
@@ -141,6 +223,6 @@
         android:textSize="16sp"
         app:layout_constraintEnd_toStartOf="@id/rightGuide"
         app:layout_constraintStart_toEndOf="@+id/btn_change"
-        app:layout_constraintTop_toBottomOf="@+id/ll_cards" />
+        app:layout_constraintTop_toBottomOf="@+id/ll_chips" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

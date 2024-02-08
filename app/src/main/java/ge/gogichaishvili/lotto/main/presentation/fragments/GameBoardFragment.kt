@@ -2,7 +2,6 @@ package ge.gogichaishvili.lotto.main.presentation.fragments
 
 import android.annotation.SuppressLint
 import android.graphics.Color
-import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,23 +9,32 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import ge.gogichaishvili.lotto.R
 import ge.gogichaishvili.lotto.app.tools.Utils
 import ge.gogichaishvili.lotto.databinding.FragmentGameBoardBinding
+import ge.gogichaishvili.lotto.main.enums.ChipValueEnum
+import ge.gogichaishvili.lotto.main.helpers.AnimationManager
+import ge.gogichaishvili.lotto.main.helpers.BetChipDrawerManager
 import ge.gogichaishvili.lotto.main.models.LottoDrawResult
 import ge.gogichaishvili.lotto.main.presentation.fragments.base.BaseFragment
 import ge.gogichaishvili.lotto.main.presentation.viewmodels.GameBoardViewModel
 import java.util.Timer
 import java.util.TimerTask
 
-class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::class) {
+class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::class), View.OnClickListener {
 
     private var timer: Timer = Timer()
 
     private var isGamePaused = false
+
+    private var bet = 0
+    private var balance = 0
+
+    private val betChipDrawerManager = BetChipDrawerManager()
 
     private var _binding: FragmentGameBoardBinding? = null
     private val binding get() = _binding!!
@@ -46,11 +54,16 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
         val opponent = mViewModel.getOpponentInfo()
         binding.tvPlayerOneName.text = player.nickName.toString()
         binding.tvPlayerTwoName.text = opponent.name
-        binding.tvPlayerOneScore.text = player.balance.toString()
+        balance = player.balance
+        binding.tvPlayerOneScore.text = balance.toString()
         binding.ivPlayer.setImageResource(player.avatar)
         binding.ivOpponent.setImageResource(opponent.avatar)
 
         mViewModel.generateCard(requireContext(), binding.llCards)
+
+        arrayOf(binding.chip1, binding.chip5, binding.chip10, binding.chip25, binding.chip50, binding.chip100).forEach {
+            it.setOnClickListener(this)
+        }
 
         binding.btnChange.setOnClickListener {
             mViewModel.redrawCard(requireContext(), binding.llCards)
@@ -61,6 +74,7 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
             binding.btnChange.visibility = View.GONE
             binding.btnStart.visibility = View.GONE
             binding.btnPause.visibility = View.VISIBLE
+            binding.llChips.visibility = View.GONE
         }
 
         binding.btnPause.setOnClickListener {
@@ -191,6 +205,54 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
             mViewModel.lottoCardManager.previousNumbers = it.numbers
 
         })
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    override fun onClick(p0: View?) {
+            when (p0) {
+                binding.chip1 -> {
+                    onChipSelect(ChipValueEnum.Zero)
+                }
+                binding.chip5 -> {
+                    onChipSelect(ChipValueEnum.Five)
+                }
+                binding.chip10 -> {
+                    onChipSelect(ChipValueEnum.Ten)
+                }
+                binding.chip25 -> {
+                    onChipSelect(ChipValueEnum.TwentyFive)
+                }
+                binding.chip50 -> {
+                    onChipSelect(ChipValueEnum.Fifty)
+                }
+                binding.chip100 -> {
+                    onChipSelect(ChipValueEnum.Hundred)
+                }
+            }
+        Utils.playSound(activity, R.raw.chip)
+        AnimationManager.chipAnimation(p0 as ImageButton)
+        betChipDrawerManager.drawChips(binding.llDrawChips, requireContext(),bet)
+
+    }
+
+    private fun onChipSelect (chip: ChipValueEnum) {
+        if (chip === ChipValueEnum.Zero) {
+            balance += bet
+            bet = 0
+            binding.tvPlayerOneScore.text = balance.toString()
+            //textViewBet.setText(Bet.toString())
+        } else if (balance >= chip.value) {
+            bet += chip.value
+            balance -= chip.value
+            binding.tvPlayerOneScore.text = balance.toString()
+            //textViewBet.setText(Bet.toString())
+        } else {
+            Toast.makeText(context, "No money", Toast.LENGTH_SHORT).show()
+        }
     }
 
 }
