@@ -14,7 +14,7 @@ object ViewModelModules {
         }
 
         viewModel {
-            GameBoardViewModel(lottoManager = get(), lottoCardManager = get(), pref = get(), opponentManager = get())
+            GameBoardViewModel(lottoManager = get(), lottoCardManager = get(), pref = get(), opponentManager = get(), opponentCardManager = get())
         }
 
         viewModel {

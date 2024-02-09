@@ -10,6 +10,7 @@ import ge.gogichaishvili.lotto.app.tools.SharedPreferenceManager
 import ge.gogichaishvili.lotto.app.tools.SingleLiveEvent
 import ge.gogichaishvili.lotto.main.helpers.LottoCardManager
 import ge.gogichaishvili.lotto.main.helpers.LottoStonesManager
+import ge.gogichaishvili.lotto.main.helpers.OpponentCardManager
 import ge.gogichaishvili.lotto.main.helpers.OpponentManager
 import ge.gogichaishvili.lotto.main.models.LottoDrawResult
 import ge.gogichaishvili.lotto.main.models.OpponentAvatarModel
@@ -22,7 +23,8 @@ class GameBoardViewModel(
     private val lottoManager: LottoStonesManager,
     val lottoCardManager: LottoCardManager,
     private val pref: SharedPreferenceManager,
-    private val opponentManager: OpponentManager
+    private val opponentManager: OpponentManager,
+    private val opponentCardManager: OpponentCardManager
 ) : BaseViewModel() {
 
     private val _requestStateLiveData = SingleLiveEvent<LottoDrawResult>()
@@ -44,6 +46,12 @@ class GameBoardViewModel(
     fun redrawCard(context: Context, linearLayout: LinearLayout) {
         viewModelScope.launch(Dispatchers.Main.immediate) {
             lottoCardManager.redrawCards(context, linearLayout, _requestStateLiveData)
+        }
+    }
+
+    fun generateOpponentCard() {
+        viewModelScope.launch(Dispatchers.Main.immediate) {
+            opponentCardManager.generateBotCards()
         }
     }
 
@@ -91,5 +99,6 @@ class GameBoardViewModel(
             }
         }
     }
+
 
 }

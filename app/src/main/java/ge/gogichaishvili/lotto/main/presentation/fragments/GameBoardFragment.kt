@@ -61,6 +61,7 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
         binding.ivOpponent.setImageResource(opponent.avatar)
 
         mViewModel.generateCard(requireContext(), binding.llCards)
+        mViewModel.generateOpponentCard()
 
         arrayOf(
             binding.chip0,
