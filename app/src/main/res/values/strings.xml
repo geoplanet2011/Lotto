@@ -31,4 +31,6 @@
     <string name="change">Change</string>
     <string name="start">Start</string>
     <string name="chip">Chip</string>
+    <string name="o">0</string>
+    <string name="max_bet">Maximum bet is 500 !</string>
 </resources>

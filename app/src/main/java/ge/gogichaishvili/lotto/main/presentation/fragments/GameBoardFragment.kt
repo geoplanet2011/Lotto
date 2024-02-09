@@ -12,7 +12,6 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.Toast
-import androidx.lifecycle.Observer
 import ge.gogichaishvili.lotto.R
 import ge.gogichaishvili.lotto.app.tools.Utils
 import ge.gogichaishvili.lotto.databinding.FragmentGameBoardBinding
@@ -32,6 +31,7 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
     private var isGamePaused = false
 
     private var bet = 0
+    private val maxBet = 500
     private var balance = 0
 
     private val betChipDrawerManager = BetChipDrawerManager()
@@ -61,7 +61,7 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
 
         mViewModel.generateCard(requireContext(), binding.llCards)
 
-        arrayOf(binding.chip1, binding.chip5, binding.chip10, binding.chip25, binding.chip50, binding.chip100).forEach {
+        arrayOf(binding.chip0, binding.chip5, binding.chip10, binding.chip25, binding.chip50, binding.chip100).forEach {
             it.setOnClickListener(this)
         }
 
@@ -192,8 +192,7 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
             Toast.makeText(requireContext(), "ბილეთი შევსებულია!", Toast.LENGTH_SHORT).show()
         }
 
-
-        mViewModel.requestStateLiveData.observe(requireActivity(), Observer { it ->
+        mViewModel.requestStateLiveData.observe(viewLifecycleOwner) { it ->
             handleLottoDrawResult(it)
 
             mViewModel.lottoCardManager.setHints(it.numbers, binding.llCards)
@@ -204,7 +203,7 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
             }
             mViewModel.lottoCardManager.previousNumbers = it.numbers
 
-        })
+        }
     }
 
     override fun onDestroyView() {
@@ -214,28 +213,54 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
 
     override fun onClick(p0: View?) {
             when (p0) {
-                binding.chip1 -> {
+                binding.chip0 -> {
                     onChipSelect(ChipValueEnum.Zero)
+                    betChipDrawerManager.drawChips(binding.llDrawChips, requireContext(),bet)
                 }
                 binding.chip5 -> {
+                    if (bet + ChipValueEnum.Five.value > maxBet) {
+                        Toast.makeText(requireContext(), R.string.max_bet, Toast.LENGTH_SHORT).show()
+                        return
+                    }
                     onChipSelect(ChipValueEnum.Five)
+                    betChipDrawerManager.drawChips(binding.llDrawChips, requireContext(),bet)
                 }
                 binding.chip10 -> {
+                    if (bet + ChipValueEnum.Ten.value > maxBet) {
+                        Toast.makeText(requireContext(), R.string.max_bet, Toast.LENGTH_SHORT).show()
+                        return
+                    }
                     onChipSelect(ChipValueEnum.Ten)
+                    betChipDrawerManager.drawChips(binding.llDrawChips, requireContext(),bet)
                 }
                 binding.chip25 -> {
+                    if (bet + ChipValueEnum.TwentyFive.value > maxBet) {
+                        Toast.makeText(requireContext(), R.string.max_bet, Toast.LENGTH_SHORT).show()
+                        return
+                    }
                     onChipSelect(ChipValueEnum.TwentyFive)
+                    betChipDrawerManager.drawChips(binding.llDrawChips, requireContext(),bet)
                 }
                 binding.chip50 -> {
+                    if (bet + ChipValueEnum.Fifty.value > maxBet) {
+                        Toast.makeText(requireContext(), R.string.max_bet, Toast.LENGTH_SHORT).show()
+                        return
+                    }
                     onChipSelect(ChipValueEnum.Fifty)
+                    betChipDrawerManager.drawChips(binding.llDrawChips, requireContext(),bet)
                 }
                 binding.chip100 -> {
+                    if (bet + ChipValueEnum.Hundred.value > maxBet) {
+                        Toast.makeText(requireContext(), R.string.max_bet, Toast.LENGTH_SHORT).show()
+                        return
+                    }
                     onChipSelect(ChipValueEnum.Hundred)
+                    betChipDrawerManager.drawChips(binding.llDrawChips, requireContext(),bet)
                 }
             }
         Utils.playSound(activity, R.raw.chip)
         AnimationManager.chipAnimation(p0 as ImageButton)
-        betChipDrawerManager.drawChips(binding.llDrawChips, requireContext(),bet)
+
 
     }
 
@@ -244,12 +269,12 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
             balance += bet
             bet = 0
             binding.tvPlayerOneScore.text = balance.toString()
-            //textViewBet.setText(Bet.toString())
+            binding.betText.text = bet.toString()
         } else if (balance >= chip.value) {
             bet += chip.value
             balance -= chip.value
             binding.tvPlayerOneScore.text = balance.toString()
-            //textViewBet.setText(Bet.toString())
+            binding.betText.text = bet.toString()
         } else {
             Toast.makeText(context, "No money", Toast.LENGTH_SHORT).show()
         }

@@ -31,4 +31,6 @@
     <string name="change">Изменить</string>
     <string name="start">Начинать</string>
     <string name="chip">Chip</string>
+    <string name="o">0</string>
+    <string name="max_bet">Максимальная ставка 500 !</string>
 </resources>

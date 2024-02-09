@@ -31,4 +31,6 @@
     <string name="change">შეცვლა</string>
     <string name="start">დაწყება</string>
     <string name="chip">Chip</string>
+    <string name="o">0</string>
+    <string name="max_bet">მაქსიმალური ფსონი არის 500 !</string>
 </resources>

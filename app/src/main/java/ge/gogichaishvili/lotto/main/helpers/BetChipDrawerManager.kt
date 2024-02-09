@@ -11,15 +11,14 @@ import ge.gogichaishvili.lotto.R
 class BetChipDrawerManager() {
 
     private var coins = arrayOf<IntArray>(
-        intArrayOf(100, 50, 25, 10, 5, 1),
-        intArrayOf(0, 0, 0, 0, 0, 0),
+        intArrayOf(100, 50, 25, 10, 5),
+        intArrayOf(0, 0, 0, 0, 0),
         intArrayOf(
             R.drawable.chip100,
             R.drawable.chip50,
             R.drawable.chip25,
             R.drawable.chip10,
-            R.drawable.chip5,
-            R.drawable.chip1
+            R.drawable.chip5
         )
     )
 
