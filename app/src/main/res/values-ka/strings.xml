@@ -33,4 +33,5 @@
     <string name="chip">Chip</string>
     <string name="o">0</string>
     <string name="max_bet">მაქსიმალური ფსონი არის 500 !</string>
+    <string name="min_bet">მინიმალური ფსონი არის 5 !</string>
 </resources>

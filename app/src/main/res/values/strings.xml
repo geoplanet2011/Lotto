@@ -33,4 +33,5 @@
     <string name="chip">Chip</string>
     <string name="o">0</string>
     <string name="max_bet">Maximum bet is 500 !</string>
+    <string name="min_bet">Minimum bet is 5 !</string>
 </resources>
