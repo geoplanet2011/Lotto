@@ -60,8 +60,8 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
         binding.ivPlayer.setImageResource(player.avatar)
         binding.ivOpponent.setImageResource(opponent.avatar)
 
-        mViewModel.generateCard(requireContext(), binding.llCards)
         mViewModel.generateOpponentCard()
+        mViewModel.generateCard(requireContext(), binding.llCards)
 
         arrayOf(
             binding.chip0,
@@ -219,7 +219,18 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
             }
             mViewModel.lottoCardManager.previousNumbers = it.numbers
 
+            mViewModel.checkOpponentGameCompletion(it.numbers.last())
+
         }
+
+        mViewModel.opponentLineCompletionEvent.observe(viewLifecycleOwner) {
+            Toast.makeText(requireContext(), "ოპონენტის ხაზი შევსებულია!", Toast.LENGTH_SHORT).show()
+        }
+        mViewModel.opponentCardCompletionEvent.observe(viewLifecycleOwner) {
+            Toast.makeText(requireContext(), "ოპონენტის ბილეთი შევსებულია!", Toast.LENGTH_SHORT).show()
+        }
+
+
     }
 
     override fun onDestroyView() {

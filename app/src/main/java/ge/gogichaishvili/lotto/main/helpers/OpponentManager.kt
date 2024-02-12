@@ -59,4 +59,5 @@ class OpponentManager(context: Context) {
         }
         return OpponentAvatarModel(name, avatarImage)
     }
+
 }

@@ -21,6 +21,10 @@ object OpponentCardManager {
 
     private val opponentCards: MutableList<List<Int>> = ArrayList()
 
+    private val drawnNumbers: MutableList<Int> = mutableListOf()
+
+    private var isLineCompleted: Boolean = false
+
     private var onOpponentLineCompleteListener: (() -> Unit)? = null
     private var onOpponentCardCompleteListener: (() -> Unit)? = null
 
@@ -43,10 +47,10 @@ object OpponentCardManager {
                 opponentCards.add(newCard)
                 printOpponentCards()
                 println("Opponent card  created successfully!")
-            }  else {
+            } else {
                 println("Opponent card not created")
             }
-           resetCard()
+            resetCard()
         }
 
     }
@@ -122,34 +126,64 @@ object OpponentCardManager {
     }
 
     private fun resetCard() {
-       oneList.clear()
-       tenList.clear()
-       twentyList.clear()
-       thirtyList.clear()
-       fortyList.clear()
-       fiftyList.clear()
-       sixtyList.clear()
-       seventyList.clear()
-       eightyList.clear()
-       oneList = (1..9).toMutableList()
-       tenList = (10..19).toMutableList()
-       twentyList = (20..29).toMutableList()
-       thirtyList = (30..39).toMutableList()
-       fortyList = (40..49).toMutableList()
-       fiftyList = (50..59).toMutableList()
-       sixtyList = (60..69).toMutableList()
-       seventyList = (70..79).toMutableList()
-       eightyList = (80..90).toMutableList()
-       indexList.clear()
-       indexList = (0..8).toMutableList()
-       deleteIndexList.clear()
-       randomNumberList.clear()
-       fullTicketNumberList.clear()
+        oneList.clear()
+        tenList.clear()
+        twentyList.clear()
+        thirtyList.clear()
+        fortyList.clear()
+        fiftyList.clear()
+        sixtyList.clear()
+        seventyList.clear()
+        eightyList.clear()
+        oneList = (1..9).toMutableList()
+        tenList = (10..19).toMutableList()
+        twentyList = (20..29).toMutableList()
+        thirtyList = (30..39).toMutableList()
+        fortyList = (40..49).toMutableList()
+        fiftyList = (50..59).toMutableList()
+        sixtyList = (60..69).toMutableList()
+        seventyList = (70..79).toMutableList()
+        eightyList = (80..90).toMutableList()
+        indexList.clear()
+        indexList = (0..8).toMutableList()
+        deleteIndexList.clear()
+        randomNumberList.clear()
+        fullTicketNumberList.clear()
+        isLineCompleted = false
+        opponentCards.clear()
+        drawnNumbers.clear()
     }
 
     private fun printOpponentCards() {
         opponentCards.forEach { println(it) }
     }
 
+    private fun checkOpponentCardsCompletion() {
+        opponentCards.forEachIndexed { _, card ->
+            val linesCompleted = card.chunked(9).count { row ->
+                row.count { it != 0 && drawnNumbers.contains(it) } == row.count { it != 0 }
+            }
+
+            val cardCompleted = card.filter { it != 0 }.all { drawnNumbers.contains(it) }
+
+            if (linesCompleted > 0) {
+                if (!isLineCompleted) {
+                    onOpponentLineCompleteListener?.invoke()
+                    isLineCompleted = true
+                }
+            }
+
+            if (cardCompleted) {
+                onOpponentCardCompleteListener?.invoke()
+            }
+
+        }
+    }
+
+    fun checkOpponentGameCompletion(number: Int) {
+        drawnNumbers.add(number)
+        checkOpponentCardsCompletion()
+        println(drawnNumbers.joinToString(", "))
+    }
 
 }

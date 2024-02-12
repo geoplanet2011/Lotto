@@ -35,14 +35,14 @@ object LottoCardManager {
     private var seventyList = (70..79).toMutableList()
     private var eightyList = (80..90).toMutableList()
 
-    private var randomNumberList: MutableList<Int> = ArrayList() //random number list for one line
+    private var randomNumberList: MutableList<Int> = ArrayList()
 
     private var indexList = (0..8).toMutableList()
-    private var deleteIndexList: MutableList<Int> = ArrayList() //index list for delete numbers
+    private var deleteIndexList: MutableList<Int> = ArrayList()
 
     private val fullTicketNumberList: MutableList<Int> = ArrayList()
 
-    var previousNumbers: List<Int> = emptyList() //for loss numbers
+    var previousNumbers: List<Int> = emptyList()
 
     private var onLineCompleteListener: (() -> Unit)? = null
     private var onCardCompleteListener: (() -> Unit)? = null
@@ -72,7 +72,7 @@ object LottoCardManager {
             if (isCardValid()) {
                 linearLayout.addView(table)
                 table.translationX = -linearLayout.width.toFloat()
-                    table.animate()
+                table.animate()
                     .translationX(0f)
                     .setDuration(1500)
                     .start()
@@ -95,13 +95,6 @@ object LottoCardManager {
         table.layoutParams = params
         table.isShrinkAllColumns = true
         table.isStretchAllColumns = true
-
-        /*val tableBorder = ShapeDrawable(RectShape())
-        tableBorder.paint.style = Paint.Style.STROKE
-        tableBorder.paint.strokeWidth = 5f
-        tableBorder.paint.color = Color.BLACK
-        table.background = tableBorder*/
-
         val backgroundWithBorder = GradientDrawable().apply {
             shape = GradientDrawable.RECTANGLE
             setColor(Color.WHITE)
@@ -369,15 +362,16 @@ object LottoCardManager {
         }
     }
 
-
-    fun redrawCards(context: Context, linearLayout: LinearLayout, lottoStones: SingleLiveEvent<LottoDrawResult>?) {
+    fun redrawCards(
+        context: Context,
+        linearLayout: LinearLayout,
+        lottoStones: SingleLiveEvent<LottoDrawResult>?
+    ) {
         linearLayout.removeAllViews()
         counter = 0
         resetCard()
         generateCard(context, linearLayout, lottoStones)
     }
-
-
 
 }
 

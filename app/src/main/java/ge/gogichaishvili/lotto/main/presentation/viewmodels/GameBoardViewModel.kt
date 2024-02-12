@@ -58,8 +58,22 @@ class GameBoardViewModel(
     val lineCompletionEvent = MutableLiveData<Unit>()
     val cardCompletionEvent = MutableLiveData<Unit>()
 
+    val opponentLineCompletionEvent = MutableLiveData<Unit>()
+    val opponentCardCompletionEvent = MutableLiveData<Unit>()
+
     init {
+        setupOpponentCardManager()
         setupLottoCardManager()
+    }
+
+    private fun setupOpponentCardManager() {
+        opponentCardManager.setOnOpponentLineCompleteListener {
+            opponentLineCompletionEvent.postValue(Unit)
+        }
+
+        opponentCardManager.setOnOpponentCardCompleteListener {
+            opponentCardCompletionEvent.postValue(Unit)
+        }
     }
 
     private fun setupLottoCardManager() {
@@ -100,5 +114,8 @@ class GameBoardViewModel(
         }
     }
 
+    fun checkOpponentGameCompletion (number: Int) {
+        opponentCardManager.checkOpponentGameCompletion(number)
+    }
 
 }

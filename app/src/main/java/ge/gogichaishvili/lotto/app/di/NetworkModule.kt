@@ -18,8 +18,8 @@ object NetworkModule {
     private fun provideOkHttpClient(requestInterceptor: RequestInterceptor): OkHttpClient {
         val clientBuilder = OkHttpClient.Builder()
             .connectTimeout(2, TimeUnit.MINUTES)
-            .writeTimeout(2, TimeUnit.MINUTES) // write timeout
-            .readTimeout(2, TimeUnit.MINUTES) // read timeout
+            .writeTimeout(2, TimeUnit.MINUTES)
+            .readTimeout(2, TimeUnit.MINUTES)
             .addInterceptor(
                 HttpLoggingInterceptor().apply {
                     level = HttpLoggingInterceptor.Level.BODY
