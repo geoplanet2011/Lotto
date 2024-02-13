@@ -1,6 +1,5 @@
 package ge.gogichaishvili.lotto.settings.presentation.viewmodels
 
-import androidx.appcompat.app.AppCompatDelegate
 import ge.gogichaishvili.lotto.R
 import ge.gogichaishvili.lotto.app.tools.SharedPreferenceManager
 import ge.gogichaishvili.lotto.main.models.PlayerData
@@ -17,31 +16,31 @@ class SettingsViewModel(
         return pref.getPlayerInfo()
     }
 
-    fun nextAvatar () {
+    fun nextAvatar() {
         counter++
         if (counter > 10) {
             counter = 1
         }
     }
 
-    fun previousAvatar () {
+    fun previousAvatar() {
         counter--
         if (counter < 1) {
             counter = 10
         }
     }
 
-   fun getAvatar(): Int {
-       return getAvatarImage(counter)
-   }
+    fun getAvatar(): Int {
+        return getAvatarImage(counter)
+    }
 
-   fun savePlayerInfo(playerName: String) {
-       pref.saveInfo(
-           playerName,
-           counter,
-           getAvatarImage(counter)
-       )
-   }
+    fun savePlayerInfo(playerName: String) {
+        pref.saveInfo(
+            playerName,
+            counter,
+            getAvatarImage(counter)
+        )
+    }
 
     private fun getAvatarImage(counter: Int): Int {
         val avatarImage = when (counter) {

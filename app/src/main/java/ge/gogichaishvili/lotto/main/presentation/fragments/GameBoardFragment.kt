@@ -226,7 +226,9 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
 
             if (it.numbers.isNotEmpty()) {
 
-                mViewModel.lottoCardManager.setHints(it.numbers, binding.llCards)
+                if (mViewModel.isHintEnabled()) {
+                    mViewModel.lottoCardManager.setHints(it.numbers, binding.llCards)
+                }
 
                 val removedNumbers =
                     mViewModel.lottoCardManager.previousNumbers - it.numbers.toSet()

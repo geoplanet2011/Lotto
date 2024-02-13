@@ -91,7 +91,7 @@ class SharedPreferenceManager(context: Context) {
     }
 
     fun isEnabledHint(): Boolean {
-        return preference.getBoolean(IS_ENABLED_HINT_KEY, false)
+        return preference.getBoolean(IS_ENABLED_HINT_KEY, true)
     }
 
     fun setIsEnabledHint(isEnabledHint: Boolean) {
@@ -101,7 +101,7 @@ class SharedPreferenceManager(context: Context) {
     }
 
     fun isEnabledSound(): Boolean {
-        return preference.getBoolean(IS_ENABLED_SOUND_KEY, false)
+        return preference.getBoolean(IS_ENABLED_SOUND_KEY, true)
     }
 
     fun setIsEnabledSound(isEnabledSound: Boolean) {

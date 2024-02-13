@@ -116,11 +116,11 @@ class GameBoardViewModel(
         }
     }
 
-    fun checkOpponentGameCompletion (number: Int) {
+    fun checkOpponentGameCompletion(number: Int) {
         opponentCardManager.checkOpponentGameCompletion(number)
     }
 
-    fun checkGameResult (gameOverStatus: GameOverStatusEnum, context: Context) {
+    fun checkGameResult(gameOverStatus: GameOverStatusEnum, context: Context) {
         val gameManager = GameManager()
         gameManager.checkGameResult(gameOverStatus, context)
     }
@@ -133,6 +133,10 @@ class GameBoardViewModel(
         lottoManager.resetBag()
         lottoCardManager.resetAll()
         opponentCardManager.resetAll()
+    }
+
+    fun isHintEnabled(): Boolean {
+        return pref.isEnabledHint()
     }
 
 }
