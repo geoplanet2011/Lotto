@@ -8,6 +8,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import ge.gogichaishvili.lotto.app.tools.SharedPreferenceManager
 import ge.gogichaishvili.lotto.app.tools.SingleLiveEvent
+import ge.gogichaishvili.lotto.main.enums.GameOverStatusEnum
+import ge.gogichaishvili.lotto.main.helpers.GameManager
 import ge.gogichaishvili.lotto.main.helpers.LottoCardManager
 import ge.gogichaishvili.lotto.main.helpers.LottoStonesManager
 import ge.gogichaishvili.lotto.main.helpers.OpponentCardManager
@@ -116,6 +118,11 @@ class GameBoardViewModel(
 
     fun checkOpponentGameCompletion (number: Int) {
         opponentCardManager.checkOpponentGameCompletion(number)
+    }
+
+    fun checkGameResult (gameOverStatus: GameOverStatusEnum, context: Context) {
+        val gameManager = GameManager()
+        gameManager.checkGameResult(gameOverStatus, context)
     }
 
 }

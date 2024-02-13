@@ -143,7 +143,7 @@ object LottoCardManager {
             defaultLayoutParams.setMargins(5, 5, 5, 5)
             defaultLayoutParams.gravity = Gravity.CENTER
             iv.layoutParams = defaultLayoutParams
-
+            tv.isSoundEffectsEnabled = false
             tv.setOnClickListener {
                 if (tv.text.isNotEmpty() || tv.text.isNotBlank()) {
                     Utils.playAudio(context, R.raw.lotto)

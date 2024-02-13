@@ -24,6 +24,7 @@ object OpponentCardManager {
     private val drawnNumbers: MutableList<Int> = mutableListOf()
 
     private var isLineCompleted: Boolean = false
+    private var isCardCompleted: Boolean = false
 
     private var onOpponentLineCompleteListener: (() -> Unit)? = null
     private var onOpponentCardCompleteListener: (() -> Unit)? = null
@@ -149,9 +150,9 @@ object OpponentCardManager {
         deleteIndexList.clear()
         randomNumberList.clear()
         fullTicketNumberList.clear()
-        isLineCompleted = false
-        opponentCards.clear()
-        drawnNumbers.clear()
+        //isLineCompleted = false
+        //opponentCards.clear()
+        //drawnNumbers.clear()
     }
 
     private fun printOpponentCards() {
@@ -174,7 +175,11 @@ object OpponentCardManager {
             }
 
             if (cardCompleted) {
-                onOpponentCardCompleteListener?.invoke()
+                if (!isCardCompleted) {
+                    onOpponentCardCompleteListener?.invoke()
+                    isCardCompleted = true
+                    println("ბოტმა მოიგო ავოეეე!!!")
+                }
             }
 
         }

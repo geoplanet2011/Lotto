@@ -34,4 +34,6 @@
     <string name="o">0</string>
     <string name="max_bet">Максимальная ставка 500 !</string>
     <string name="min_bet">Минимальная ставка 5 !</string>
+    <string name="win">Ты победил !</string>
+    <string name="draw">Ничья</string>
 </resources>

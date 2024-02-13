@@ -16,6 +16,7 @@ import ge.gogichaishvili.lotto.R
 import ge.gogichaishvili.lotto.app.tools.Utils
 import ge.gogichaishvili.lotto.databinding.FragmentGameBoardBinding
 import ge.gogichaishvili.lotto.main.enums.ChipValueEnum
+import ge.gogichaishvili.lotto.main.enums.GameOverStatusEnum
 import ge.gogichaishvili.lotto.main.helpers.AnimationManager
 import ge.gogichaishvili.lotto.main.helpers.BetChipDrawerManager
 import ge.gogichaishvili.lotto.main.models.LottoDrawResult
@@ -72,6 +73,7 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
             binding.chip100
         ).forEach {
             it.setOnClickListener(this)
+            it.isSoundEffectsEnabled = false
         }
 
         binding.btnChange.setOnClickListener {
@@ -117,6 +119,9 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
     private fun handleLottoDrawResult(result: LottoDrawResult) {
         if (result.isEmpty) {
             println("bag is empty")
+            timer.cancel()
+            timer.purge()
+            mViewModel.checkGameResult(GameOverStatusEnum.Draw, requireContext())
         } else {
             val newNumber = result.numbers.last()
             addLottoStoneButton(newNumber)
@@ -206,30 +211,41 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
         }
         mViewModel.cardCompletionEvent.observe(viewLifecycleOwner) {
             Toast.makeText(requireContext(), "ბილეთი შევსებულია!", Toast.LENGTH_SHORT).show()
+            timer.cancel()
+            timer.purge()
+            mViewModel.checkGameResult(GameOverStatusEnum.PLAYER_WIN, requireContext())
         }
 
         mViewModel.requestStateLiveData.observe(viewLifecycleOwner) { it ->
             handleLottoDrawResult(it)
 
-            mViewModel.lottoCardManager.setHints(it.numbers, binding.llCards)
+            if (it.numbers.isNotEmpty()) {
 
-            val removedNumbers = mViewModel.lottoCardManager.previousNumbers - it.numbers.toSet()
-            if (removedNumbers.isNotEmpty()) {
+                mViewModel.lottoCardManager.setHints(it.numbers, binding.llCards)
+
+                val removedNumbers =
+                    mViewModel.lottoCardManager.previousNumbers - it.numbers.toSet()
+
                 mViewModel.lottoCardManager.setLoss(removedNumbers, binding.llCards)
-            }
-            mViewModel.lottoCardManager.previousNumbers = it.numbers
 
-            mViewModel.checkOpponentGameCompletion(it.numbers.last())
+                mViewModel.lottoCardManager.previousNumbers = it.numbers
+
+                mViewModel.checkOpponentGameCompletion(it.numbers.last())
+            }
 
         }
 
         mViewModel.opponentLineCompletionEvent.observe(viewLifecycleOwner) {
-            Toast.makeText(requireContext(), "ოპონენტის ხაზი შევსებულია!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "ოპონენტის ხაზი შევსებულია!", Toast.LENGTH_SHORT)
+                .show()
         }
         mViewModel.opponentCardCompletionEvent.observe(viewLifecycleOwner) {
-            Toast.makeText(requireContext(), "ოპონენტის ბილეთი შევსებულია!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "ოპონენტის ბილეთი შევსებულია!", Toast.LENGTH_SHORT)
+                .show()
+            timer.cancel()
+            timer.purge()
+            mViewModel.checkGameResult(GameOverStatusEnum.OPPONENT_WIN, requireContext())
         }
-
 
     }
 
