@@ -39,4 +39,11 @@
     <string name="line_is_filled">ხაზი შევსებულია</string>
     <string name="opponent_line_is_filled">ს ხაზი შევსებულია</string>
     <string name="no_money">თქვენ არ გაქვთ საკმარისი თანხა</string>
+    <string name="hint_enable">მინიშნებების ჩართვა</string>
+    <string name="enable_sound">ხმის ჩართვა</string>
+    <string name="low">დაბალი</string>
+    <string name="medium">საშუალო</string>
+    <string name="high">მაღალი</string>
+    <string name="game_speed">თამაშის სიჩქარე</string>
+    <string name="game_language">თამაშის ენა</string>
 </resources>

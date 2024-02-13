@@ -9,6 +9,7 @@ import com.google.android.material.snackbar.Snackbar
 import ge.gogichaishvili.lotto.R
 import ge.gogichaishvili.lotto.app.tools.hideKeyboard
 import ge.gogichaishvili.lotto.databinding.FragmentSettingsBinding
+import ge.gogichaishvili.lotto.main.enums.GameSpeedEnum
 import ge.gogichaishvili.lotto.main.presentation.fragments.base.BaseFragment
 import ge.gogichaishvili.lotto.settings.presentation.viewmodels.SettingsViewModel
 
@@ -31,6 +32,86 @@ class SettingsFragment : BaseFragment<SettingsViewModel>(SettingsViewModel::clas
         val playerInfo = mViewModel.getPlayerInfo()
         binding.etPlayerName.setText(playerInfo.nickName.toString())
         binding.ivAvatar.setImageResource(playerInfo.avatar)
+
+        val isHintEnabled = mViewModel.isHintEnabled()
+        binding.hintSwitch.isChecked = isHintEnabled
+        binding.hintSwitch.setOnCheckedChangeListener { _, isChecked ->
+            mViewModel.onHintChanged(isChecked)
+        }
+
+        val isSoundEnabled = mViewModel.isSoundEnabled()
+        binding.soundSwitch.isChecked = isSoundEnabled
+        binding.soundSwitch.setOnCheckedChangeListener { _, isChecked ->
+            mViewModel.onSoundChanged(isChecked)
+        }
+
+        when (mViewModel.getSelectedLanguage()) {
+            "ka" -> {
+                binding.rbGeorgian.isChecked = true
+                binding.rbEnglish.isChecked = false
+                binding.rbRussian.isChecked = false
+            }
+            "en" -> {
+                binding.rbGeorgian.isChecked = false
+                binding.rbEnglish.isChecked = true
+                binding.rbRussian.isChecked = false
+            }
+            "ru" -> {
+                binding.rbRussian.isChecked = true
+                binding.rbGeorgian.isChecked = false
+                binding.rbEnglish.isChecked = false
+            }
+        }
+
+        binding.radioGroup.setOnCheckedChangeListener { _, checkedId ->
+
+            if (checkedId == R.id.rb_georgian) {
+                mViewModel.onLanguageChanged("ka")
+            }
+
+            if (checkedId == R.id.rb_english) {
+                mViewModel.onLanguageChanged("en")
+            }
+
+            if (checkedId == R.id.rb_russian) {
+                mViewModel.onLanguageChanged("ru")
+            }
+
+        }
+
+        when (mViewModel.getGameSpeed()) {
+            GameSpeedEnum.HIGH.value -> {
+                binding.rbHigh.isChecked = true
+                binding.rbMedium.isChecked = false
+                binding.rbLow.isChecked = false
+            }
+            GameSpeedEnum.MEDIUM.value -> {
+                binding.rbHigh.isChecked = false
+                binding.rbMedium.isChecked = true
+                binding.rbLow.isChecked = false
+            }
+            GameSpeedEnum.LOW.value -> {
+                binding.rbHigh.isChecked = false
+                binding.rbMedium.isChecked = false
+                binding.rbLow.isChecked = true
+            }
+        }
+
+        binding.radioGroup2.setOnCheckedChangeListener { _, checkedId ->
+
+            if (checkedId == R.id.rb_high) {
+                mViewModel.onGameSpeedChanged(GameSpeedEnum.HIGH.value)
+            }
+
+            if (checkedId == R.id.rb_medium) {
+                mViewModel.onGameSpeedChanged(GameSpeedEnum.MEDIUM.value)
+            }
+
+            if (checkedId == R.id.rb_low) {
+                mViewModel.onGameSpeedChanged(GameSpeedEnum.LOW.value)
+            }
+
+        }
 
         binding.btnNext.setOnClickListener {
             mViewModel.nextAvatar()

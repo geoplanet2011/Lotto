@@ -1,5 +1,6 @@
 package ge.gogichaishvili.lotto.settings.presentation.viewmodels
 
+import androidx.appcompat.app.AppCompatDelegate
 import ge.gogichaishvili.lotto.R
 import ge.gogichaishvili.lotto.app.tools.SharedPreferenceManager
 import ge.gogichaishvili.lotto.main.models.PlayerData
@@ -56,6 +57,38 @@ class SettingsViewModel(
             else -> R.drawable.avatar_10
         }
         return avatarImage
+    }
+
+    fun isHintEnabled(): Boolean {
+        return pref.isEnabledHint()
+    }
+
+    fun isSoundEnabled(): Boolean {
+        return pref.isEnabledSound()
+    }
+
+    fun onHintChanged(isHintEnabled: Boolean) {
+        pref.setIsEnabledHint(isHintEnabled)
+    }
+
+    fun onSoundChanged(isSoundEnabled: Boolean) {
+        pref.setIsEnabledSound(isSoundEnabled)
+    }
+
+    fun getSelectedLanguage(): String {
+        return pref.getSelectedLanguageCode()
+    }
+
+    fun onLanguageChanged(languageKey: String) {
+        pref.saveSelectedLanguageCode(languageKey)
+    }
+
+    fun getGameSpeed(): Int {
+        return pref.getGameSpeed()
+    }
+
+    fun onGameSpeedChanged(speed: Int) {
+        pref.setGameSpeed(speed)
     }
 
 }

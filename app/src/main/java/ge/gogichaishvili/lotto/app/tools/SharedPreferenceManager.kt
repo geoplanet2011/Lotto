@@ -80,6 +80,46 @@ class SharedPreferenceManager(context: Context) {
         editor.apply()
     }
 
+    fun saveSelectedLanguageCode(languageKey: String) {
+        editor.apply {
+            putString(SELECTED_LANGUAGE_KEY, languageKey)
+        }.apply()
+    }
+
+    fun getSelectedLanguageCode(): String {
+        return preference.getString(SELECTED_LANGUAGE_KEY, "en") ?: "en"
+    }
+
+    fun isEnabledHint(): Boolean {
+        return preference.getBoolean(IS_ENABLED_HINT_KEY, false)
+    }
+
+    fun setIsEnabledHint(isEnabledHint: Boolean) {
+        editor.apply {
+            putBoolean(IS_ENABLED_HINT_KEY, isEnabledHint)
+        }.apply()
+    }
+
+    fun isEnabledSound(): Boolean {
+        return preference.getBoolean(IS_ENABLED_SOUND_KEY, false)
+    }
+
+    fun setIsEnabledSound(isEnabledSound: Boolean) {
+        editor.apply {
+            putBoolean(IS_ENABLED_SOUND_KEY, isEnabledSound)
+        }.apply()
+    }
+
+    fun getGameSpeed(): Int {
+        return preference.getInt(GAME_SPEED_KEY, 2000)
+    }
+
+    fun setGameSpeed(gameSpeed: Int) {
+        editor.apply {
+            putInt(GAME_SPEED_KEY, gameSpeed)
+        }.apply()
+    }
+
     companion object {
         private const val PREFERENCE_NAME = "MySharedPreference"
         private const val NICK_NAME_KEY = "Player"
@@ -90,5 +130,10 @@ class SharedPreferenceManager(context: Context) {
 
         private const val WIN_KEY = "Win"
         private const val LOSE_KEY = "Lose"
+
+        private const val SELECTED_LANGUAGE_KEY = "en"
+        private const val IS_ENABLED_HINT_KEY = "true"
+        private const val IS_ENABLED_SOUND_KEY = "true"
+        private const val GAME_SPEED_KEY = "medium"
     }
 }

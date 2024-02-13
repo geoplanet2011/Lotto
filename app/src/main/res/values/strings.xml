@@ -39,4 +39,11 @@
     <string name="line_is_filled">The line is filled</string>
     <string name="opponent_line_is_filled">\'s line is filled</string>
     <string name="no_money">You don\'t have enough money</string>
+    <string name="hint_enable">Enable hints</string>
+    <string name="enable_sound">Enable Sound</string>
+    <string name="low">Low</string>
+    <string name="medium">Medium</string>
+    <string name="high">High</string>
+    <string name="game_speed">Game speed</string>
+    <string name="game_language">Game language</string>
 </resources>
