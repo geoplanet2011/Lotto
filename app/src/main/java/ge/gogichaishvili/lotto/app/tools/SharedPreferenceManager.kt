@@ -71,6 +71,10 @@ class SharedPreferenceManager(context: Context) {
         )
     }
 
+    fun savePlayerBalance(balance: Int) {
+        editor.putInt(BALANCE_KEY, balance).apply()
+    }
+
     fun clearAll() {
         editor.clear()
         editor.apply()

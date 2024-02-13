@@ -36,4 +36,7 @@
     <string name="min_bet">Minimum bet is 5 !</string>
     <string name="win">You win !</string>
     <string name="draw">Draw</string>
+    <string name="line_is_filled">The line is filled</string>
+    <string name="opponent_line_is_filled">\'s line is filled</string>
+    <string name="no_money">You don\'t have enough money</string>
 </resources>

@@ -125,4 +125,14 @@ class GameBoardViewModel(
         gameManager.checkGameResult(gameOverStatus, context)
     }
 
+    fun saveNewBalance(balance: Int) {
+        pref.savePlayerBalance(balance)
+    }
+
+    fun resetManagers() {
+        lottoManager.resetBag()
+        lottoCardManager.resetAll()
+        opponentCardManager.resetAll()
+    }
+
 }

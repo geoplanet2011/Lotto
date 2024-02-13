@@ -150,9 +150,6 @@ object OpponentCardManager {
         deleteIndexList.clear()
         randomNumberList.clear()
         fullTicketNumberList.clear()
-        //isLineCompleted = false
-        //opponentCards.clear()
-        //drawnNumbers.clear()
     }
 
     private fun printOpponentCards() {
@@ -189,6 +186,37 @@ object OpponentCardManager {
         drawnNumbers.add(number)
         checkOpponentCardsCompletion()
         println(drawnNumbers.joinToString(", "))
+    }
+
+    fun resetAll() {
+        oneList.clear()
+        tenList.clear()
+        twentyList.clear()
+        thirtyList.clear()
+        fortyList.clear()
+        fiftyList.clear()
+        sixtyList.clear()
+        seventyList.clear()
+        eightyList.clear()
+        oneList = (1..9).toMutableList()
+        tenList = (10..19).toMutableList()
+        twentyList = (20..29).toMutableList()
+        thirtyList = (30..39).toMutableList()
+        fortyList = (40..49).toMutableList()
+        fiftyList = (50..59).toMutableList()
+        sixtyList = (60..69).toMutableList()
+        seventyList = (70..79).toMutableList()
+        eightyList = (80..90).toMutableList()
+        indexList.clear()
+        indexList = (0..8).toMutableList()
+        deleteIndexList.clear()
+        randomNumberList.clear()
+        fullTicketNumberList.clear()
+        isLineCompleted = false
+        isCardCompleted = false
+        opponentCards.clear()
+        drawnNumbers.clear()
+        counter = 0
     }
 
 }

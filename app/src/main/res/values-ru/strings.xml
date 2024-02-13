@@ -36,4 +36,7 @@
     <string name="min_bet">Минимальная ставка 5 !</string>
     <string name="win">Ты победил !</string>
     <string name="draw">Ничья</string>
+    <string name="line_is_filled">Строка заполнена</string>
+    <string name="opponent_line_is_filled">Строка заполнена</string>
+    <string name="no_money">У вас недостаточно денег</string>
 </resources>

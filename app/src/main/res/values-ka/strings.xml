@@ -36,4 +36,7 @@
     <string name="min_bet">მინიმალური ფსონი არის 5 !</string>
     <string name="win">თქვენ მოიგეთ !</string>
     <string name="draw">ფრე</string>
+    <string name="line_is_filled">ხაზი შევსებულია</string>
+    <string name="opponent_line_is_filled">ს ხაზი შევსებულია</string>
+    <string name="no_money">თქვენ არ გაქვთ საკმარისი თანხა</string>
 </resources>

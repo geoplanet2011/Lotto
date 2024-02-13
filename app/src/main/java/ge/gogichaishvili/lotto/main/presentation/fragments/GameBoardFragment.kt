@@ -12,7 +12,9 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import ge.gogichaishvili.lotto.R
+import ge.gogichaishvili.lotto.app.tools.Tools
 import ge.gogichaishvili.lotto.app.tools.Utils
 import ge.gogichaishvili.lotto.databinding.FragmentGameBoardBinding
 import ge.gogichaishvili.lotto.main.enums.ChipValueEnum
@@ -20,6 +22,7 @@ import ge.gogichaishvili.lotto.main.enums.GameOverStatusEnum
 import ge.gogichaishvili.lotto.main.helpers.AnimationManager
 import ge.gogichaishvili.lotto.main.helpers.BetChipDrawerManager
 import ge.gogichaishvili.lotto.main.models.LottoDrawResult
+import ge.gogichaishvili.lotto.main.models.OpponentAvatarModel
 import ge.gogichaishvili.lotto.main.presentation.fragments.base.BaseFragment
 import ge.gogichaishvili.lotto.main.presentation.viewmodels.GameBoardViewModel
 import java.util.Timer
@@ -38,6 +41,7 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
 
     private val betChipDrawerManager = BetChipDrawerManager()
 
+    private lateinit var opponent: OpponentAvatarModel
     private var _binding: FragmentGameBoardBinding? = null
     private val binding get() = _binding!!
 
@@ -53,7 +57,7 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
         super.onViewCreated(view, savedInstanceState)
 
         val player = mViewModel.getPlayerInfo()
-        val opponent = mViewModel.getOpponentInfo()
+        opponent = mViewModel.getOpponentInfo()
         binding.tvPlayerOneName.text = player.nickName.toString()
         binding.tvPlayerTwoName.text = opponent.name
         balance = player.balance
@@ -88,9 +92,10 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
                 binding.llChips.visibility = View.GONE
                 binding.betText.visibility = View.GONE
                 binding.llDrawChips.visibility = View.GONE
+                timer = Timer()
                 getLottoStones()
             } else {
-                Toast.makeText(requireContext(), R.string.min_bet, Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.min_bet), Toast.LENGTH_SHORT).show()
             }
 
         }
@@ -119,9 +124,9 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
     private fun handleLottoDrawResult(result: LottoDrawResult) {
         if (result.isEmpty) {
             println("bag is empty")
-            timer.cancel()
-            timer.purge()
+            calculateNewBalance(GameOverStatusEnum.Draw)
             mViewModel.checkGameResult(GameOverStatusEnum.Draw, requireContext())
+            resetGame()
         } else {
             val newNumber = result.numbers.last()
             addLottoStoneButton(newNumber)
@@ -207,13 +212,13 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
     override fun bindObservers() {
 
         mViewModel.lineCompletionEvent.observe(viewLifecycleOwner) {
-            Toast.makeText(requireContext(), "ხაზი შევსებულია!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.line_is_filled), Toast.LENGTH_SHORT).show()
         }
         mViewModel.cardCompletionEvent.observe(viewLifecycleOwner) {
-            Toast.makeText(requireContext(), "ბილეთი შევსებულია!", Toast.LENGTH_SHORT).show()
-            timer.cancel()
-            timer.purge()
+            //Toast.makeText(requireContext(), "ბილეთი შევსებულია!", Toast.LENGTH_SHORT).show()
+            calculateNewBalance(GameOverStatusEnum.PLAYER_WIN)
             mViewModel.checkGameResult(GameOverStatusEnum.PLAYER_WIN, requireContext())
+            resetGame()
         }
 
         mViewModel.requestStateLiveData.observe(viewLifecycleOwner) { it ->
@@ -236,15 +241,14 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
         }
 
         mViewModel.opponentLineCompletionEvent.observe(viewLifecycleOwner) {
-            Toast.makeText(requireContext(), "ოპონენტის ხაზი შევსებულია!", Toast.LENGTH_SHORT)
+            Toast.makeText(requireContext(), "${opponent.name}${getString(R.string.opponent_line_is_filled)}", Toast.LENGTH_SHORT)
                 .show()
         }
         mViewModel.opponentCardCompletionEvent.observe(viewLifecycleOwner) {
-            Toast.makeText(requireContext(), "ოპონენტის ბილეთი შევსებულია!", Toast.LENGTH_SHORT)
-                .show()
-            timer.cancel()
-            timer.purge()
+            //Toast.makeText(requireContext(), "ოპონენტის ბილეთი შევსებულია!", Toast.LENGTH_SHORT).show()
+            calculateNewBalance(GameOverStatusEnum.OPPONENT_WIN)
             mViewModel.checkGameResult(GameOverStatusEnum.OPPONENT_WIN, requireContext())
+            resetGame()
         }
 
     }
@@ -263,7 +267,7 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
 
             binding.chip5 -> {
                 if (bet + ChipValueEnum.Five.value > maxBet) {
-                    Toast.makeText(requireContext(), R.string.max_bet, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.max_bet), Toast.LENGTH_SHORT).show()
                     return
                 }
                 onChipSelect(ChipValueEnum.Five)
@@ -272,7 +276,7 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
 
             binding.chip10 -> {
                 if (bet + ChipValueEnum.Ten.value > maxBet) {
-                    Toast.makeText(requireContext(), R.string.max_bet, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.max_bet), Toast.LENGTH_SHORT).show()
                     return
                 }
                 onChipSelect(ChipValueEnum.Ten)
@@ -281,7 +285,7 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
 
             binding.chip25 -> {
                 if (bet + ChipValueEnum.TwentyFive.value > maxBet) {
-                    Toast.makeText(requireContext(), R.string.max_bet, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.max_bet), Toast.LENGTH_SHORT).show()
                     return
                 }
                 onChipSelect(ChipValueEnum.TwentyFive)
@@ -290,7 +294,7 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
 
             binding.chip50 -> {
                 if (bet + ChipValueEnum.Fifty.value > maxBet) {
-                    Toast.makeText(requireContext(), R.string.max_bet, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.max_bet), Toast.LENGTH_SHORT).show()
                     return
                 }
                 onChipSelect(ChipValueEnum.Fifty)
@@ -299,7 +303,7 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
 
             binding.chip100 -> {
                 if (bet + ChipValueEnum.Hundred.value > maxBet) {
-                    Toast.makeText(requireContext(), R.string.max_bet, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.max_bet), Toast.LENGTH_SHORT).show()
                     return
                 }
                 onChipSelect(ChipValueEnum.Hundred)
@@ -324,8 +328,47 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
             binding.tvPlayerOneScore.text = balance.toString()
             binding.betText.text = bet.toString()
         } else {
-            Toast.makeText(context, "No money", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, getString(R.string.no_money), Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun calculateNewBalance(gameOverStatus: GameOverStatusEnum) {
+        when (gameOverStatus) {
+
+            GameOverStatusEnum.PLAYER_WIN -> {
+                balance += bet * 2
+                bet = 0
+            }
+
+            GameOverStatusEnum.OPPONENT_WIN -> {
+                bet = 0
+            }
+
+            GameOverStatusEnum.Draw -> {
+                balance += bet
+                bet = 0
+            }
+
+        }
+        mViewModel.saveNewBalance(balance)
+        binding.tvPlayerOneScore.text = balance.toString()
+        binding.betText.text = bet.toString()
+    }
+
+    private fun resetGame() {
+        timer.cancel()
+        timer.purge()
+        mViewModel.resetManagers()
+        mViewModel.generateOpponentCard()
+        mViewModel.redrawCard(requireContext(), binding.llCards)
+        binding.llStones.removeAllViews()
+        binding.llDrawChips.removeAllViews()
+        binding.btnChange.visibility = View.VISIBLE
+        binding.btnStart.visibility = View.VISIBLE
+        binding.btnPause.visibility = View.GONE
+        binding.llChips.visibility = View.VISIBLE
+        binding.betText.visibility = View.VISIBLE
+        binding.llDrawChips.visibility = View.VISIBLE
     }
 
 }
