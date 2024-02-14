@@ -85,7 +85,7 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
         val player = mViewModel.getPlayerInfo()
         opponent = mViewModel.getOpponentInfo()
         binding.tvPlayerOneName.text = player.nickName.toString()
-        binding.tvPlayerTwoName.text = opponent.name
+        binding.tvPlayerTwoName.text = getString(opponent.name)
         balance = player.balance
         binding.tvPlayerOneScore.text = balance.toString()
         binding.ivPlayer.setImageResource(player.avatar)
