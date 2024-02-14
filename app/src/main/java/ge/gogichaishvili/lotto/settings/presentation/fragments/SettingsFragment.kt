@@ -1,6 +1,11 @@
 package ge.gogichaishvili.lotto.settings.presentation.fragments
 
+import android.app.Activity
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -8,9 +13,11 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.google.android.material.snackbar.Snackbar
 import ge.gogichaishvili.lotto.R
+import ge.gogichaishvili.lotto.app.tools.getBackStackTag
 import ge.gogichaishvili.lotto.app.tools.hideKeyboard
 import ge.gogichaishvili.lotto.databinding.FragmentSettingsBinding
 import ge.gogichaishvili.lotto.main.enums.GameSpeedEnum
+import ge.gogichaishvili.lotto.main.presentation.activities.MainActivity
 import ge.gogichaishvili.lotto.main.presentation.fragments.base.BaseFragment
 import ge.gogichaishvili.lotto.settings.presentation.viewmodels.SettingsViewModel
 
@@ -54,11 +61,13 @@ class SettingsFragment : BaseFragment<SettingsViewModel>(SettingsViewModel::clas
                 binding.rbEnglish.isChecked = false
                 binding.rbRussian.isChecked = false
             }
+
             "en" -> {
                 binding.rbGeorgian.isChecked = false
                 binding.rbEnglish.isChecked = true
                 binding.rbRussian.isChecked = false
             }
+
             "ru" -> {
                 binding.rbRussian.isChecked = true
                 binding.rbGeorgian.isChecked = false
@@ -79,7 +88,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel>(SettingsViewModel::clas
             if (checkedId == R.id.rb_russian) {
                 mViewModel.onLanguageChanged("ru")
             }
-
+            refreshSettings()
         }
 
         when (mViewModel.getGameSpeed()) {
@@ -88,11 +97,13 @@ class SettingsFragment : BaseFragment<SettingsViewModel>(SettingsViewModel::clas
                 binding.rbMedium.isChecked = false
                 binding.rbLow.isChecked = false
             }
+
             GameSpeedEnum.MEDIUM.value -> {
                 binding.rbHigh.isChecked = false
                 binding.rbMedium.isChecked = true
                 binding.rbLow.isChecked = false
             }
+
             GameSpeedEnum.LOW.value -> {
                 binding.rbHigh.isChecked = false
                 binding.rbMedium.isChecked = false
@@ -145,4 +156,26 @@ class SettingsFragment : BaseFragment<SettingsViewModel>(SettingsViewModel::clas
         super.onDestroyView()
         _binding = null
     }
+
+    private fun refreshSettings() {
+        Handler(Looper.getMainLooper()).postDelayed({
+            val intent = Intent(requireContext(), MainActivity::class.java).apply {
+                putExtra("openSettingsFragment", true)
+            }
+            requireActivity().finish()
+            if (Build.VERSION.SDK_INT >= 34) {
+                requireActivity().overrideActivityTransition(
+                    Activity.OVERRIDE_TRANSITION_OPEN, android.R.anim.fade_in,
+                    android.R.anim.fade_out
+                )
+            } else {
+                requireActivity().overridePendingTransition(
+                    android.R.anim.fade_in,
+                    android.R.anim.fade_out
+                )
+            }
+            startActivity(intent)
+        }, 200)
+    }
+
 }
