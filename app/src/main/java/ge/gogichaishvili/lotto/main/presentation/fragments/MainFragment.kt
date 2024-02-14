@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import ge.gogichaishvili.lotto.R
 import ge.gogichaishvili.lotto.databinding.FragmentMainBinding
 import ge.gogichaishvili.lotto.main.presentation.fragments.base.BaseFragment
@@ -27,6 +28,13 @@ class MainFragment : BaseFragment<MainActivityViewModel>(MainActivityViewModel::
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                requireActivity().moveTaskToBack(true)
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
 
         binding.newGameBtn.setOnClickListener {
             parentFragmentManager.beginTransaction()

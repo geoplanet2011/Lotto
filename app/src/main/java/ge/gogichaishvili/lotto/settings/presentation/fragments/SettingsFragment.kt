@@ -66,7 +66,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel>(SettingsViewModel::clas
             }
         }
 
-        binding.radioGroup.setOnCheckedChangeListener { _, checkedId ->
+        binding.radioGroup2.setOnCheckedChangeListener { _, checkedId ->
 
             if (checkedId == R.id.rb_georgian) {
                 mViewModel.onLanguageChanged("ka")
@@ -100,7 +100,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel>(SettingsViewModel::clas
             }
         }
 
-        binding.radioGroup2.setOnCheckedChangeListener { _, checkedId ->
+        binding.radioGroup.setOnCheckedChangeListener { _, checkedId ->
 
             if (checkedId == R.id.rb_high) {
                 mViewModel.onGameSpeedChanged(GameSpeedEnum.HIGH.value)

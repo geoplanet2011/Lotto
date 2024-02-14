@@ -46,4 +46,9 @@ class MainActivity : AppCompatActivity() {
         _binding = null
     }
 
+    override fun onResume() {
+        super.onResume()
+        enableFullScreen()
+    }
+
 }

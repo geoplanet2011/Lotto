@@ -57,6 +57,8 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        resetGame()
+
         val player = mViewModel.getPlayerInfo()
         opponent = mViewModel.getOpponentInfo()
         binding.tvPlayerOneName.text = player.nickName.toString()
