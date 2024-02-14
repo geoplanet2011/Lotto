@@ -24,4 +24,8 @@ object LottoStonesManager {
         drawnNumbers.clear()
     }
 
+    fun shuffle() {
+        if (bag.isNotEmpty())
+            bag.shuffle()
+    }
 }

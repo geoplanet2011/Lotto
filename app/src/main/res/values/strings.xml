@@ -46,4 +46,5 @@
     <string name="high">High</string>
     <string name="game_speed">Game speed</string>
     <string name="game_language">Game language</string>
+    <string name="shuffle">Shuffling</string>
 </resources>

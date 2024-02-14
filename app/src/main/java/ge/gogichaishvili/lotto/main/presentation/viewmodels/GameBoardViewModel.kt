@@ -151,4 +151,8 @@ class GameBoardViewModel(
         return pref.getGameSpeed()
     }
 
+    fun bagShuffle () {
+        lottoManager.shuffle()
+    }
+
 }

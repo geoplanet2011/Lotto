@@ -46,4 +46,5 @@
     <string name="high">მაღალი</string>
     <string name="game_speed">თამაშის სიჩქარე</string>
     <string name="game_language">თამაშის ენა</string>
+    <string name="shuffle">Shuffling</string>
 </resources>

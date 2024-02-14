@@ -1,7 +1,12 @@
 package ge.gogichaishvili.lotto.main.presentation.fragments
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.Color
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +18,7 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import ge.gogichaishvili.lotto.R
 import ge.gogichaishvili.lotto.app.tools.Tools
 import ge.gogichaishvili.lotto.app.tools.Utils
@@ -26,8 +32,10 @@ import ge.gogichaishvili.lotto.main.models.LottoDrawResult
 import ge.gogichaishvili.lotto.main.models.OpponentAvatarModel
 import ge.gogichaishvili.lotto.main.presentation.fragments.base.BaseFragment
 import ge.gogichaishvili.lotto.main.presentation.viewmodels.GameBoardViewModel
+import java.util.Objects
 import java.util.Timer
 import java.util.TimerTask
+import kotlin.math.sqrt
 
 class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::class),
     View.OnClickListener {
@@ -46,6 +54,11 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
     private var _binding: FragmentGameBoardBinding? = null
     private val binding get() = _binding!!
 
+    private var sensorManager: SensorManager? = null
+    private var acceleration = 0f
+    private var currentAcceleration = 0f
+    private var lastAcceleration = 0f
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -56,6 +69,16 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        sensorManager = requireContext().getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        Objects.requireNonNull(sensorManager)!!
+            .registerListener(
+                sensorListener, sensorManager!!
+                    .getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL
+            )
+        acceleration = 10f
+        currentAcceleration = SensorManager.GRAVITY_EARTH
+        lastAcceleration = SensorManager.GRAVITY_EARTH
 
         resetGame()
 
@@ -388,6 +411,41 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
         binding.llChips.visibility = View.VISIBLE
         binding.betText.visibility = View.VISIBLE
         binding.llDrawChips.visibility = View.VISIBLE
+    }
+
+    private val sensorListener: SensorEventListener = object : SensorEventListener {
+        override fun onSensorChanged(event: SensorEvent) {
+            val x = event.values[0]
+            val y = event.values[1]
+            val z = event.values[2]
+            lastAcceleration = currentAcceleration
+            currentAcceleration = sqrt((x * x + y * y + z * z).toDouble()).toFloat()
+            val delta: Float = currentAcceleration - lastAcceleration
+            acceleration = acceleration * 0.9f + delta
+            if (acceleration > 10) {
+                if (binding.btnStart.isVisible) {
+                    Utils.playSound(activity, R.raw.shuffle)
+                    mViewModel.bagShuffle()
+                    Toast.makeText(requireContext(), getString(R.string.shuffle), Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+        override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
+    }
+
+    override fun onResume() {
+        sensorManager?.registerListener(
+            sensorListener, sensorManager!!.getDefaultSensor(
+                Sensor.TYPE_ACCELEROMETER
+            ), SensorManager.SENSOR_DELAY_NORMAL
+        )
+        super.onResume()
+    }
+
+    override fun onPause() {
+        sensorManager!!.unregisterListener(sensorListener)
+        super.onPause()
     }
 
 }
