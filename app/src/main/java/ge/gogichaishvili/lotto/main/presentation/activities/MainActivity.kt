@@ -7,6 +7,7 @@ import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import ge.gogichaishvili.lotto.R
+import ge.gogichaishvili.lotto.app.tools.enableFullScreen
 import ge.gogichaishvili.lotto.databinding.ActivityMainBinding
 import ge.gogichaishvili.lotto.main.presentation.fragments.MainFragment
 import ge.gogichaishvili.lotto.main.presentation.viewmodels.MainActivityViewModel
@@ -23,7 +24,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         installSplashScreen()
-
+        enableFullScreen()
         requestedOrientation = (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
