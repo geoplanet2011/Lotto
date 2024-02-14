@@ -19,6 +19,7 @@ import ge.gogichaishvili.lotto.app.tools.Utils
 import ge.gogichaishvili.lotto.databinding.FragmentGameBoardBinding
 import ge.gogichaishvili.lotto.main.enums.ChipValueEnum
 import ge.gogichaishvili.lotto.main.enums.GameOverStatusEnum
+import ge.gogichaishvili.lotto.main.enums.GameSpeedEnum
 import ge.gogichaishvili.lotto.main.helpers.AnimationManager
 import ge.gogichaishvili.lotto.main.helpers.BetChipDrawerManager
 import ge.gogichaishvili.lotto.main.models.LottoDrawResult
@@ -111,6 +112,7 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
     }
 
     private fun getLottoStones() {
+       val period = mViewModel.getGameSpeed()
         timer.schedule(object : TimerTask() {
             override fun run() {
                 activity?.runOnUiThread(Runnable {
@@ -118,7 +120,7 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
                 })
             }
 
-        }, 0, 2000)
+        }, 0, period)
     }
 
     private fun handleLottoDrawResult(result: LottoDrawResult) {
@@ -150,7 +152,9 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
         }
         binding.llStones.addView(lottoStone, 0)
         animateLottoStoneAppearance(lottoStone)
-        playSoundForNumber(number)
+        if (mViewModel.isSoundEnabled()) {
+            playSoundForNumber(number)
+        }
     }
 
     private fun removeOldestLottoStone() {
@@ -187,7 +191,18 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
 
     @SuppressLint("DiscouragedApi")
     private fun playSoundForNumber(number: Int) {
-        val soundFileName = "a$number"
+        var soundFileName = ""
+        when (mViewModel.getSelectedLanguage()) {
+            "en" -> {
+                soundFileName = "a$number"
+            }
+            "ru" -> {
+                soundFileName = "r$number"
+            }
+            "ka" -> {
+               soundFileName = "g$number"
+            }
+        }
         val resID = resources.getIdentifier(soundFileName, "raw", activity?.packageName)
         Utils.playSound(activity, resID)
     }

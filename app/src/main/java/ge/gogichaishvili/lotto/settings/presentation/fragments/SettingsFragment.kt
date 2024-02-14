@@ -1,6 +1,7 @@
 package ge.gogichaishvili.lotto.settings.presentation.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,12 +37,14 @@ class SettingsFragment : BaseFragment<SettingsViewModel>(SettingsViewModel::clas
         val isHintEnabled = mViewModel.isHintEnabled()
         binding.hintSwitch.isChecked = isHintEnabled
         binding.hintSwitch.setOnCheckedChangeListener { _, isChecked ->
+            Log.d("SettingsFragment", "Hint switch changed to: $isChecked")
             mViewModel.onHintChanged(isChecked)
         }
 
         val isSoundEnabled = mViewModel.isSoundEnabled()
         binding.soundSwitch.isChecked = isSoundEnabled
         binding.soundSwitch.setOnCheckedChangeListener { _, isChecked ->
+            Log.d("SettingsFragment", "Sound switch changed to: $isChecked")
             mViewModel.onSoundChanged(isChecked)
         }
 

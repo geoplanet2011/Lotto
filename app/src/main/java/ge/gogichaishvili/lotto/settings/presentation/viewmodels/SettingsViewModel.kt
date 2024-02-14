@@ -82,11 +82,11 @@ class SettingsViewModel(
         pref.saveSelectedLanguageCode(languageKey)
     }
 
-    fun getGameSpeed(): Int {
+    fun getGameSpeed(): Long {
         return pref.getGameSpeed()
     }
 
-    fun onGameSpeedChanged(speed: Int) {
+    fun onGameSpeedChanged(speed: Long) {
         pref.setGameSpeed(speed)
     }
 

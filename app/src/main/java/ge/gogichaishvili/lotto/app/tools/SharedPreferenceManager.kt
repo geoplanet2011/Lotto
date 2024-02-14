@@ -110,13 +110,13 @@ class SharedPreferenceManager(context: Context) {
         }.apply()
     }
 
-    fun getGameSpeed(): Int {
-        return preference.getInt(GAME_SPEED_KEY, 2000)
+    fun getGameSpeed(): Long {
+        return preference.getLong(GAME_SPEED_KEY, 2000)
     }
 
-    fun setGameSpeed(gameSpeed: Int) {
+    fun setGameSpeed(gameSpeed: Long) {
         editor.apply {
-            putInt(GAME_SPEED_KEY, gameSpeed)
+            putLong(GAME_SPEED_KEY, gameSpeed)
         }.apply()
     }
 
@@ -132,7 +132,7 @@ class SharedPreferenceManager(context: Context) {
         private const val LOSE_KEY = "Lose"
 
         private const val SELECTED_LANGUAGE_KEY = "en"
-        private const val IS_ENABLED_HINT_KEY = "true"
+        private const val IS_ENABLED_HINT_KEY = "false"
         private const val IS_ENABLED_SOUND_KEY = "true"
         private const val GAME_SPEED_KEY = "medium"
     }

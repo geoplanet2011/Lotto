@@ -139,4 +139,16 @@ class GameBoardViewModel(
         return pref.isEnabledHint()
     }
 
+    fun isSoundEnabled(): Boolean {
+        return pref.isEnabledSound()
+    }
+
+    fun getSelectedLanguage(): String {
+        return pref.getSelectedLanguageCode()
+    }
+
+    fun getGameSpeed(): Long {
+        return pref.getGameSpeed()
+    }
+
 }
