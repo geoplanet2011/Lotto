@@ -39,6 +39,11 @@ class AdMobActivity : AppCompatActivity() {
         _binding = ActivityAdMobBinding.inflate(LayoutInflater.from(this))
         setContentView(_binding?.root)
 
+        val requestConfiguration = RequestConfiguration.Builder()
+            .setTestDeviceIds(listOf("cc86e2a9-f3f7-41a4-a881-10ca1ad1abe1")) // Your test device ID
+            .build()
+        MobileAds.setRequestConfiguration(requestConfiguration)
+
         MobileAds.initialize(this) {
             loadRewardedAd()
         }
@@ -57,7 +62,7 @@ class AdMobActivity : AppCompatActivity() {
 
         RewardedAd.load(
             this,
-            "ca-app-pub-3940256099942544/5224354917",
+            "ca-app-pub-4290928451578259/9410286233",
             adRequest,
             object : RewardedAdLoadCallback() {
                 override fun onAdFailedToLoad(adError: LoadAdError) {
