@@ -27,8 +27,6 @@ object NetworkModule {
             )
             .addInterceptor(requestInterceptor)
 
-        clientBuilder.build()
-
         return clientBuilder.build()
     }
 

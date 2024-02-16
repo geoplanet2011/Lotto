@@ -1,25 +1,20 @@
 package ge.gogichaishvili.lotto.main.presentation.activities
 
-import android.content.ContentValues
 import android.content.pm.ActivityInfo
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.WindowManager
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.OnUserEarnedRewardListener
 import com.google.android.gms.ads.RequestConfiguration
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
-import com.google.android.gms.ads.OnUserEarnedRewardListener
-import ge.gogichaishvili.lotto.R
 import ge.gogichaishvili.lotto.databinding.ActivityAdMobBinding
-import ge.gogichaishvili.lotto.databinding.ActivityMainBinding
-import java.util.Arrays
 
 class AdMobActivity : AppCompatActivity() {
 
@@ -48,11 +43,9 @@ class AdMobActivity : AppCompatActivity() {
             loadRewardedAd()
         }
 
-
         binding.btnShow.setOnClickListener {
             showRewardedAd()
         }
-
 
     }
 
