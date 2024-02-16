@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "897205707436",
+    "project_id": "lotto-facbf",
+    "storage_bucket": "lotto-facbf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:897205707436:android:2253e36551efb93b02b509",
+        "android_client_info": {
+          "package_name": "ge.gogichaishvili.lotto"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDGHdDG7ZQVl_2zPXgbXDI2VdE0XM1NjtE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

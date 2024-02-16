@@ -17,15 +17,12 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.Toast
-import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import ge.gogichaishvili.lotto.R
-import ge.gogichaishvili.lotto.app.tools.Tools
 import ge.gogichaishvili.lotto.app.tools.Utils
 import ge.gogichaishvili.lotto.databinding.FragmentGameBoardBinding
 import ge.gogichaishvili.lotto.main.enums.ChipValueEnum
 import ge.gogichaishvili.lotto.main.enums.GameOverStatusEnum
-import ge.gogichaishvili.lotto.main.enums.GameSpeedEnum
 import ge.gogichaishvili.lotto.main.helpers.AnimationManager
 import ge.gogichaishvili.lotto.main.helpers.BetChipDrawerManager
 import ge.gogichaishvili.lotto.main.models.LottoDrawResult

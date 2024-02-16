@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -53,8 +54,8 @@ dependencies {
     implementation("androidx.recyclerview:recyclerview:1.3.2")
 
     // Coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
     // Fragment
     implementation("androidx.fragment:fragment-ktx:1.6.2")
@@ -110,5 +111,15 @@ dependencies {
 
     //Splashscreen
     implementation("androidx.core:core-splashscreen:1.1.0-alpha02")
+
+    //Firebase
+    implementation(platform("com.google.firebase:firebase-bom:32.7.2"))
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-auth:22.3.1")
+    implementation("com.google.firebase:firebase-database:20.3.0")
+    implementation("com.google.firebase:firebase-storage:20.3.0")
+
+    //AdMob
+    implementation("com.google.android.gms:play-services-ads:22.6.0")
 
 }

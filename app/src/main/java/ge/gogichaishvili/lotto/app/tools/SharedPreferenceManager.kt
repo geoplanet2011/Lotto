@@ -75,6 +75,10 @@ class SharedPreferenceManager(context: Context) {
         editor.putInt(BALANCE_KEY, balance).apply()
     }
 
+    fun getPlayerBalance(): Int {
+        return preference.getInt(BALANCE_KEY, 1000)
+    }
+
     fun clearAll() {
         editor.clear()
         editor.apply()
@@ -119,6 +123,7 @@ class SharedPreferenceManager(context: Context) {
             putLong(GAME_SPEED_KEY, gameSpeed)
         }.apply()
     }
+
 
     companion object {
         private const val PREFERENCE_NAME = "MySharedPreference"

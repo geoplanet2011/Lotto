@@ -1,5 +1,6 @@
 package ge.gogichaishvili.lotto.main.presentation.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +8,7 @@ import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import ge.gogichaishvili.lotto.R
 import ge.gogichaishvili.lotto.databinding.FragmentMainBinding
+import ge.gogichaishvili.lotto.main.presentation.activities.AdMobActivity
 import ge.gogichaishvili.lotto.main.presentation.fragments.base.BaseFragment
 import ge.gogichaishvili.lotto.main.presentation.viewmodels.MainActivityViewModel
 import ge.gogichaishvili.lotto.settings.presentation.fragments.SettingsFragment
@@ -54,6 +56,19 @@ class MainFragment : BaseFragment<MainActivityViewModel>(MainActivityViewModel::
                 ).addToBackStack(
                     SettingsFragment::class.java.name
                 ).commit()
+        }
+
+        binding.admobBtn.setOnClickListener {
+           /* parentFragmentManager.beginTransaction()
+                .replace(
+                    R.id.fragmentContainerView,
+                    AdmobFragment()
+                ).addToBackStack(
+                    AdmobFragment::class.java.name
+                ).commit()*/
+
+            val intent = Intent(requireContext(), AdMobActivity::class.java)
+            startActivity(intent)
         }
 
         binding.exitBtn.setOnClickListener {

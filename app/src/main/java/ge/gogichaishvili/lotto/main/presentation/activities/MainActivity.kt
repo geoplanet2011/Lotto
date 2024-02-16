@@ -3,30 +3,30 @@ package ge.gogichaishvili.lotto.main.presentation.activities
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.pm.ActivityInfo
-import android.content.res.Configuration
-import android.content.res.Resources
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.os.bundleOf
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.google.firebase.Firebase
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.analytics
 import ge.gogichaishvili.lotto.R
 import ge.gogichaishvili.lotto.app.tools.SharedPreferenceManager
 import ge.gogichaishvili.lotto.app.tools.enableFullScreen
 import ge.gogichaishvili.lotto.app.tools.getBackStackTag
-import ge.gogichaishvili.lotto.app.tools.removeFragmentByStackName
 import ge.gogichaishvili.lotto.app.tools.wrap
 import ge.gogichaishvili.lotto.databinding.ActivityMainBinding
 import ge.gogichaishvili.lotto.main.presentation.fragments.MainFragment
 import ge.gogichaishvili.lotto.main.presentation.viewmodels.MainActivityViewModel
 import ge.gogichaishvili.lotto.settings.presentation.fragments.SettingsFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
 
     private val viewModel: MainActivityViewModel by viewModel()
+
+    private lateinit var analytics: FirebaseAnalytics
 
     private var _binding: ActivityMainBinding? = null
     private val binding get() = _binding!!
@@ -43,6 +43,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(_binding?.root)
 
         setCorrectScreen()
+
+        analytics = Firebase.analytics
 
     }
 

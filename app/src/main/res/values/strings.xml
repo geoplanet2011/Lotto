@@ -47,4 +47,6 @@
     <string name="game_speed">Game speed</string>
     <string name="game_language">Game language</string>
     <string name="shuffle">Shuffling</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
