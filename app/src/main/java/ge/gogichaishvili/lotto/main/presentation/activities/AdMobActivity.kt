@@ -10,7 +10,6 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
-import com.google.android.gms.ads.OnUserEarnedRewardListener
 import com.google.android.gms.ads.RequestConfiguration
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
@@ -64,41 +63,36 @@ class AdMobActivity : AppCompatActivity() {
 
                 override fun onAdLoaded(rewardedAd: RewardedAd) {
                     mRewardedAd = rewardedAd
+                    mRewardedAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
+                        override fun onAdDismissedFullScreenContent() {
+                            loadRewardedAd()
+                        }
+
+                        override fun onAdFailedToShowFullScreenContent(p0: AdError) {
+                            loadRewardedAd()
+                        }
+
+                        override fun onAdShowedFullScreenContent() {
+                            // Ad showed fullscreen content
+                        }
+                    }
                 }
             })
     }
 
-
     private fun showRewardedAd() {
         if (mRewardedAd != null) {
-
-            mRewardedAd!!.fullScreenContentCallback = object : FullScreenContentCallback() {
-                override fun onAdShowedFullScreenContent() {
-                    mRewardedAd = null
-                }
-
-                override fun onAdFailedToShowFullScreenContent(p0: AdError) {
-                    mRewardedAd = null
-                }
-
-                override fun onAdDismissedFullScreenContent() {
-                    mRewardedAd = null
-                    loadRewardedAd()
-                }
-            }
-
-            mRewardedAd!!.show(this, OnUserEarnedRewardListener() {
-
+            mRewardedAd!!.show(this) {
                 val rewardAmount = it.amount
                 var rewardType = it.type
 
                 totalCoins += rewardAmount
                 binding.tvInfo.text = totalCoins.toString()
-
-            })
+            }
         } else {
             println("The rewarded ad wasn't ready yet.")
             loadRewardedAd()
         }
     }
+
 }
