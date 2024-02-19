@@ -47,8 +47,12 @@
     <string name="game_speed">Скорость игры</string>
     <string name="game_language">Язык игры</string>
     <string name="shuffle">Shuffling</string>
-    <string name="get_coin">Получить монеты</string>
+    <string name="get_coin">+1000 монет бесплатно</string>
     <string name="add_credit">Вам начислено 1000 монет</string>
     <string name="new_balance_is">Ваш новый баланс составляет</string>
     <string name="coins">монеты</string>
+    <string name="exit">Выход</string>
+    <string name="settings">Настройки</string>
+    <string name="single_player">Один игрок</string>
+    <string name="multi_player">Мультиплеер</string>
 </resources>

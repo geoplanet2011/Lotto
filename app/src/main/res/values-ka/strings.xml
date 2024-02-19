@@ -47,8 +47,12 @@
     <string name="game_speed">თამაშის სიჩქარე</string>
     <string name="game_language">თამაშის ენა</string>
     <string name="shuffle">Shuffling</string>
-    <string name="get_coin">+ 1000 მონეტა</string>
+    <string name="get_coin">+1000 მონეტა უფასოდ</string>
     <string name="add_credit">თქვენ დაგერიცხათ 1000 მონეტა</string>
     <string name="new_balance_is">თქვენი ახალი ბალანსი შეადგენს</string>
     <string name="coins">მონეტას</string>
+    <string name="exit">გასვლა</string>
+    <string name="settings">პარამეტრები</string>
+    <string name="single_player">ახალი თამაში</string>
+    <string name="multi_player">ქსელში თამაში</string>
 </resources>

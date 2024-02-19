@@ -49,8 +49,12 @@
     <string name="shuffle">Shuffling</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="get_coin">+ 1000 coin</string>
+    <string name="get_coin">Get free 1000 coins</string>
     <string name="add_credit">You have been credited with 1000 coins</string>
     <string name="new_balance_is">Your new balance is</string>
     <string name="coins">coins</string>
+    <string name="exit">Exit</string>
+    <string name="settings">Settings</string>
+    <string name="single_player">Single player</string>
+    <string name="multi_player">Multi player</string>
 </resources>

@@ -1,6 +1,5 @@
 package ge.gogichaishvili.lotto.app.di
 
-import ge.gogichaishvili.lotto.main.presentation.viewmodels.AdmobViewModel
 import ge.gogichaishvili.lotto.main.presentation.viewmodels.GameBoardViewModel
 import ge.gogichaishvili.lotto.main.presentation.viewmodels.MainActivityViewModel
 import ge.gogichaishvili.lotto.settings.presentation.viewmodels.SettingsViewModel
@@ -11,7 +10,7 @@ object ViewModelModules {
     val modules = module {
 
         viewModel {
-            MainActivityViewModel()
+            MainActivityViewModel(pref = get())
         }
 
         viewModel {
@@ -26,10 +25,6 @@ object ViewModelModules {
 
         viewModel {
             SettingsViewModel(pref = get())
-        }
-
-        viewModel {
-            AdmobViewModel(pref = get())
         }
 
     }

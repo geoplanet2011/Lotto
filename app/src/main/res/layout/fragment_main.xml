@@ -11,27 +11,27 @@
 
     <Button
         android:id="@+id/new_game_btn"
-        android:text="new game"
+        android:text="@string/single_player"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
     <Button
         android:id="@+id/settings_btn"
-        android:text="settings"
+        android:text="@string/settings"
         android:layout_margin="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
     <Button
         android:id="@+id/admob_btn"
-        android:text="get coins"
+        android:text="@string/get_coin"
         android:layout_margin="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
     <Button
         android:id="@+id/exit_btn"
-        android:text="exit"
+        android:text="@string/exit"
         android:layout_margin="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>

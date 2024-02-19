@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.RequestConfiguration
 import com.google.firebase.Firebase
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.analytics
@@ -45,6 +47,13 @@ class MainActivity : AppCompatActivity() {
         setCorrectScreen()
 
         analytics = Firebase.analytics
+
+        val requestConfiguration = RequestConfiguration.Builder()
+            .setTestDeviceIds(listOf("cc86e2a9-f3f7-41a4-a881-10ca1ad1abe1")) // Your test device ID
+            .build()
+        MobileAds.setRequestConfiguration(requestConfiguration)
+
+        MobileAds.initialize(this)
 
     }
 
