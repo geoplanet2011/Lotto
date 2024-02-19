@@ -11,7 +11,9 @@
         android:id="@+id/btn_show"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Rewarded Interstitial Ads AdMob"
+        android:layout_marginTop="25dp"
+        android:textSize="18sp"
+        android:text="@string/get_coin"
         ads:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -20,10 +22,10 @@
         android:id="@+id/tv_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="0"
+        tools:text="0"
         android:textSize="20sp"
         android:textColor="@color/black"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="35dp"
         ads:layout_constraintTop_toBottomOf="@+id/btn_show"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

@@ -13,4 +13,7 @@ class AdmobViewModel(
         pref.savePlayerBalance(newBalance)
     }
 
+    fun getNewBalance(): String {
+        return pref.getPlayerBalance().toString()
+    }
 }
