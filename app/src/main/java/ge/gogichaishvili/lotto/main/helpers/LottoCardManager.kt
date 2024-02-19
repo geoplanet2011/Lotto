@@ -352,11 +352,13 @@ object LottoCardManager {
                             if (frameLayout is FrameLayout) {
                                 frameLayout.forEach { view ->
                                     if (view is TextView) {
-                                        val textNumber = view.text.toString().toIntOrNull()
-                                        if (textNumber != null && textNumber in removedNumbers) {
-                                            view.setTextColor(Color.RED)
-                                            view.setBackgroundResource(R.drawable.f2)
-                                            view.isClickable = false
+                                        if (view.isClickable) {
+                                            val textNumber = view.text.toString().toIntOrNull()
+                                            if (textNumber != null && textNumber in removedNumbers) {
+                                                view.setTextColor(Color.RED)
+                                                //view.setBackgroundResource(R.drawable.f2)
+                                                view.isClickable = false
+                                            }
                                         }
                                     }
                                 }
