@@ -55,4 +55,5 @@
     <string name="settings">პარამეტრები</string>
     <string name="single_player">ახალი თამაში</string>
     <string name="multi_player">ქსელში თამაში</string>
+    <string name="high_score">რეკორდი</string>
 </resources>

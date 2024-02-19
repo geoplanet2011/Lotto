@@ -46,7 +46,11 @@ class MainFragment : BaseFragment<MainActivityViewModel>(MainActivityViewModel::
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
 
-        loadRewardedAd()
+        try {
+            loadRewardedAd()
+        } catch (e: Exception) {
+            println(e.message.toString())
+        }
 
         binding.newGameBtn.setOnClickListener {
             parentFragmentManager.beginTransaction()

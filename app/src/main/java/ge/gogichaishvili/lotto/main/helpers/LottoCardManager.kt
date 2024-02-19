@@ -156,7 +156,7 @@ object LottoCardManager {
                             ) == true
                         ) {
 
-                            iv.setBackgroundResource(R.drawable.chip)
+                            iv.setBackgroundResource(R.drawable.f1)
 
                             tv.isClickable = false
                             clickableCount++
@@ -355,6 +355,7 @@ object LottoCardManager {
                                         val textNumber = view.text.toString().toIntOrNull()
                                         if (textNumber != null && textNumber in removedNumbers) {
                                             view.setTextColor(Color.RED)
+                                            view.setBackgroundResource(R.drawable.f2)
                                             view.isClickable = false
                                         }
                                     }

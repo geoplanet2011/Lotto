@@ -4,36 +4,60 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
     android:keepScreenOn="true"
     android:orientation="vertical"
-    android:gravity="center"
     tools:context=".main.presentation.fragments.MainFragment">
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/new_game_btn"
-        android:text="@string/single_player"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-    <Button
-        android:id="@+id/settings_btn"
-        android:text="@string/settings"
+        android:layout_height="wrap_content"
         android:layout_margin="10dp"
+        android:background="@drawable/new_game_button"
+        android:padding="5dp"
+        android:text="@string/single_player"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/settings_btn"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@drawable/settings_button"
+        android:padding="5dp"
+        android:text="@string/settings"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/records_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@drawable/highscore_button"
+        android:padding="5dp"
+        android:text="@string/high_score"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
 
     <Button
         android:id="@+id/admob_btn"
-        android:text="@string/get_coin"
-        android:layout_margin="10dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="@string/get_coin" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/exit_btn"
-        android:text="@string/exit"
-        android:layout_margin="10dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@drawable/exit_button"
+        android:padding="5dp"
+        android:text="@string/exit"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
 
 </LinearLayout>

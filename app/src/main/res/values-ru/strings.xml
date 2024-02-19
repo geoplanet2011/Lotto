@@ -53,6 +53,7 @@
     <string name="coins">монеты</string>
     <string name="exit">Выход</string>
     <string name="settings">Настройки</string>
-    <string name="single_player">Один игрок</string>
+    <string name="single_player">Новая игра</string>
     <string name="multi_player">Мультиплеер</string>
+    <string name="high_score">Рекорд</string>
 </resources>

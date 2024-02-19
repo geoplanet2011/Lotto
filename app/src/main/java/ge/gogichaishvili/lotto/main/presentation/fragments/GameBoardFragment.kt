@@ -160,12 +160,13 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
     @SuppressLint("DiscouragedApi")
     private fun addLottoStoneButton(number: Int) {
         val lottoStone = Button(requireContext()).apply {
-            layoutParams = LinearLayout.LayoutParams(150, 150).apply {
-                setMargins(10, 0, 10, 0)
+            layoutParams = LinearLayout.LayoutParams(180, 180).apply {
+                setMargins(0, 0, 0, 0)
             }
-            setBackgroundResource(R.drawable.barrel_small)
+            setBackgroundResource(R.drawable.st)
+            setPadding(0, 0, 0, 25)
             text = number.toString()
-            textSize = 22f
+            textSize = 18f
             setTextColor(Color.rgb(112, 40, 31))
             visibility = View.INVISIBLE
         }
