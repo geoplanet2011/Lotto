@@ -4,6 +4,7 @@ import ge.gogichaishvili.lotto.main.helpers.LottoCardManager
 import ge.gogichaishvili.lotto.main.helpers.LottoStonesManager
 import ge.gogichaishvili.lotto.main.helpers.OpponentCardManager
 import ge.gogichaishvili.lotto.main.helpers.OpponentManager
+import ge.gogichaishvili.lotto.main.helpers.RatingManager
 import org.koin.dsl.module
 
 object ManagerModule {

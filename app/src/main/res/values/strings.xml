@@ -37,7 +37,7 @@
     <string name="win">You win !</string>
     <string name="draw">Draw</string>
     <string name="line_is_filled">The line is filled</string>
-    <string name="opponent_line_is_filled">\'s line is filled</string>
+    <string name="opponent_line_is_filled">line is filled</string>
     <string name="no_money">You don\'t have enough money</string>
     <string name="hint_enable">Enable hints</string>
     <string name="enable_sound">Enable Sound</string>
@@ -58,4 +58,5 @@
     <string name="single_player">New game</string>
     <string name="multi_player">Multi player</string>
     <string name="high_score">High score</string>
+    <string name="ok" >OK</string>
 </resources>

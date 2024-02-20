@@ -16,6 +16,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import java.io.Serializable
 import java.util.ArrayList
+import java.util.regex.Pattern
 
 fun Activity.enableFullScreen() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -88,5 +89,27 @@ inline fun <reified T : Parcelable> Intent.parcelableArrayList(key: String): Arr
 }
 
 
+fun String.koreqtulMotxrobitBrunvashiGadayvana(): String {
+    var result = ""
+    val match = Pattern.compile("[ა-ჰ]+$", Pattern.CASE_INSENSITIVE).matcher(this)
+    result = if (match.find()) {
+        if (this.endsWith("ი")) this.dropLast(1) + "მა" else this + "მ"
+    } else {
+        if (this.endsWith("a") || this.endsWith("e") || this.endsWith("o") || this.endsWith("i") || this.endsWith(
+                "u"
+            )
+        ) "$this - მ" else "$this - მა"
+    }
+    return result
+}
 
-
+fun String.koreqtulMicemitBrunvashiGadayvana(): String {
+    var result = ""
+    val match = Pattern.compile("[ა-ჰ]+$", Pattern.CASE_INSENSITIVE).matcher(this)
+    result = if (match.find()) {
+        if (this.endsWith("ი")) this.dropLast(1) + "ს" else this + "ს"
+    } else {
+        "$this - ს"
+    }
+    return result
+}

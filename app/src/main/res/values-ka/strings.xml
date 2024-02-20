@@ -37,7 +37,7 @@
     <string name="win">თქვენ მოიგეთ !</string>
     <string name="draw">ფრე</string>
     <string name="line_is_filled">ხაზი შევსებულია</string>
-    <string name="opponent_line_is_filled">ს ხაზი შევსებულია</string>
+    <string name="opponent_line_is_filled">ხაზი შევსებულია</string>
     <string name="no_money">თქვენ არ გაქვთ საკმარისი თანხა</string>
     <string name="hint_enable">მინიშნებების ჩართვა</string>
     <string name="enable_sound">ხმის ჩართვა</string>
@@ -56,4 +56,5 @@
     <string name="single_player">ახალი თამაში</string>
     <string name="multi_player">ქსელში თამაში</string>
     <string name="high_score">რეკორდი</string>
+    <string name="ok" >OK</string>
 </resources>

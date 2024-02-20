@@ -20,6 +20,7 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import ge.gogichaishvili.lotto.R
 import ge.gogichaishvili.lotto.app.tools.Utils
+import ge.gogichaishvili.lotto.app.tools.koreqtulMicemitBrunvashiGadayvana
 import ge.gogichaishvili.lotto.databinding.FragmentGameBoardBinding
 import ge.gogichaishvili.lotto.main.enums.ChipValueEnum
 import ge.gogichaishvili.lotto.main.enums.GameOverStatusEnum
@@ -281,7 +282,7 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
         }
 
         mViewModel.opponentLineCompletionEvent.observe(viewLifecycleOwner) {
-            Toast.makeText(requireContext(), "${opponent.name}${getString(R.string.opponent_line_is_filled)}", Toast.LENGTH_SHORT)
+            Toast.makeText(requireContext(), "${getString(opponent.name).koreqtulMicemitBrunvashiGadayvana()} ${getString(R.string.opponent_line_is_filled)}", Toast.LENGTH_SHORT)
                 .show()
         }
         mViewModel.opponentCardCompletionEvent.observe(viewLifecycleOwner) {

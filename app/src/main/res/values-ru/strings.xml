@@ -56,4 +56,5 @@
     <string name="single_player">Новая игра</string>
     <string name="multi_player">Мультиплеер</string>
     <string name="high_score">Рекорд</string>
+    <string name="ok" >OK</string>
 </resources>

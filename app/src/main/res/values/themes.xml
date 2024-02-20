@@ -63,7 +63,7 @@
         <item name="windowSplashScreenBackground">@color/white</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/applogo</item>
         <item name="postSplashScreenTheme">@style/Base.Theme.Lotto</item>
-        <item name="windowSplashScreenAnimationDuration">200</item>
+        <item name="windowSplashScreenAnimationDuration">1000</item>
     </style>
 
     <!-- spinner style date picker -->

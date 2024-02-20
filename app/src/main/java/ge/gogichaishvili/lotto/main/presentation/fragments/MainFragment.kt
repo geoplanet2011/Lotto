@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.fragment.app.FragmentActivity
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
@@ -74,6 +75,14 @@ class MainFragment : BaseFragment<MainActivityViewModel>(MainActivityViewModel::
 
         binding.admobBtn.setOnClickListener {
             showRewardedAd()
+        }
+
+        binding.recordsBtn.setOnClickListener {
+            val dialog = HighScoreDialogFragment()
+            dialog.show(
+                (context as FragmentActivity).supportFragmentManager,
+                "HighScoreDialogFragment"
+            )
         }
 
         binding.exitBtn.setOnClickListener {
