@@ -18,5 +18,7 @@ object ManagerModule {
 
         single { OpponentCardManager }
 
+        factory { RatingManager() }
+
     }
 }

@@ -48,7 +48,6 @@
     <string name="game_language">Game language</string>
     <string name="shuffle">Shuffling</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="get_coin">Get free 1000 coins</string>
     <string name="add_credit">You have been credited with 1000 coins</string>
     <string name="new_balance_is">Your new balance is</string>
@@ -59,4 +58,9 @@
     <string name="multi_player">Multi player</string>
     <string name="high_score">High score</string>
     <string name="ok" >OK</string>
+    <string name="your_rating">"Your rating is "</string>
+    <string name="wins">Win:</string>
+    <string name="loses">Lose:</string>
+    <string name="your_balance">Your balance is</string>
+    <string name="valuta">$</string>
 </resources>

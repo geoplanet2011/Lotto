@@ -57,4 +57,9 @@
     <string name="multi_player">ქსელში თამაში</string>
     <string name="high_score">რეკორდი</string>
     <string name="ok" >OK</string>
+    <string name="your_rating">"თქვენი რეიტინგი არის "</string>
+    <string name="wins">გამარჯვება:</string>
+    <string name="loses">წაგება:</string>
+    <string name="your_balance">"თქვენი ბალანსია "</string>
+    <string name="valuta">₾</string>
 </resources>

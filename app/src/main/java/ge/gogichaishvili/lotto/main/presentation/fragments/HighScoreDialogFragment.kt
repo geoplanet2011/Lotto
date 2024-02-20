@@ -1,5 +1,6 @@
 package ge.gogichaishvili.lotto.main.presentation.fragments
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -11,17 +12,22 @@ import android.view.Window
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.core.view.children
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.DialogFragment
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import ge.gogichaishvili.lotto.R
 import ge.gogichaishvili.lotto.app.tools.vibratePhone
 import ge.gogichaishvili.lotto.databinding.FragmentHighscoreDialogBinding
 import ge.gogichaishvili.lotto.main.helpers.RatingManager
+import ge.gogichaishvili.lotto.main.presentation.viewmodels.HighScoreViewModel
 
 class HighScoreDialogFragment : DialogFragment() {
 
     private var _binding: FragmentHighscoreDialogBinding? = null
     private val binding get() = _binding!!
+
+    private val viewModel: HighScoreViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +45,7 @@ class HighScoreDialogFragment : DialogFragment() {
         return _binding?.root
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -47,26 +54,31 @@ class HighScoreDialogFragment : DialogFragment() {
             width = w
         }
 
-        val ratingManager = RatingManager()
-        ratingManager.init(55)
-        updateStarsUI(ratingManager.getStars())
-
         vibratePhone()
+
+
+        viewModel.initRatingManager(viewModel.getRating())
+        updateStarsUI(viewModel.getStars())
+
+        val balance = viewModel.getBalance()
+        val wins = viewModel.getWins()
+        val loses = viewModel.getLoses()
+        val rating = viewModel.getRating()
+
+        binding.tvRating.text = "${getString(R.string.your_rating)} $rating"
+        binding.tvBalance.text = "${getString(R.string.your_balance)} $balance ${getString(R.string.valuta)}"
+        binding.tvWin.text = "${getString(R.string.wins)} $wins"
+        binding.tvLose.text = "${getString(R.string.loses)} $loses"
 
         binding.btnCancel.setOnClickListener {
             dismiss()
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
     private fun updateStarsUI(stars: List<RatingManager.Star>) {
         binding.llStars.removeAllViews()
-        for (star in stars) {
-            val starImageView = ImageView(context).apply {
+        stars.forEach { star ->
+            val starImageView = ImageView(requireContext()).apply {
                 layoutParams = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
@@ -76,17 +88,20 @@ class HighScoreDialogFragment : DialogFragment() {
                     ).toInt()
                     params.setMargins(marginInPixels, marginInPixels, marginInPixels, marginInPixels)
                 }
-                scaleType = ImageView.ScaleType.FIT_CENTER
-                setImageResource(
-                    when (star.state) {
-                        RatingManager.Star.StarState.FullStar -> R.drawable.starfull
-                        RatingManager.Star.StarState.HalfStar -> R.drawable.starhalf
-                        else -> R.drawable.star
-                    }
-                )
+                setImageResource(when (star.state) {
+                    RatingManager.Star.StarState.FullStar -> R.drawable.starfull
+                    RatingManager.Star.StarState.HalfStar -> R.drawable.starhalf
+                    else -> R.drawable.star
+                })
             }
             binding.llStars.addView(starImageView)
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
 }
+

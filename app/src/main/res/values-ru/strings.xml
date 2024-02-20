@@ -57,4 +57,9 @@
     <string name="multi_player">Мультиплеер</string>
     <string name="high_score">Рекорд</string>
     <string name="ok" >OK</string>
+    <string name="your_rating">"Ваш рейтинг "</string>
+    <string name="wins">Победа:</string>
+    <string name="loses">Проигрыш:</string>
+    <string name="your_balance">Ваш баланс</string>
+    <string name="valuta">$</string>
 </resources>
