@@ -1,5 +1,8 @@
 package ge.gogichaishvili.lotto.main.presentation.fragments
 
+import android.animation.ObjectAnimator
+import android.animation.PropertyValuesHolder
+import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -12,15 +15,14 @@ import android.view.Window
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
-import androidx.core.view.children
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.DialogFragment
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import ge.gogichaishvili.lotto.R
 import ge.gogichaishvili.lotto.app.tools.vibratePhone
 import ge.gogichaishvili.lotto.databinding.FragmentHighscoreDialogBinding
 import ge.gogichaishvili.lotto.main.helpers.RatingManager
 import ge.gogichaishvili.lotto.main.presentation.viewmodels.HighScoreViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HighScoreDialogFragment : DialogFragment() {
 
@@ -56,16 +58,19 @@ class HighScoreDialogFragment : DialogFragment() {
 
         vibratePhone()
 
+        animateTrophy()
+
         val balance = viewModel.getBalance()
         val wins = viewModel.getWins()
         val loses = viewModel.getLoses()
         val rating = viewModel.calculatePlayerRating(wins, loses, balance)
 
-        viewModel.initRatingManager(rating)
+        viewModel.initRatingManager(55)
         updateStarsUI(viewModel.getStars())
 
         binding.tvRating.text = "${getString(R.string.your_rating)} $rating"
-        binding.tvBalance.text = "${getString(R.string.your_balance)} $balance ${getString(R.string.valuta)}"
+        binding.tvBalance.text =
+            "${getString(R.string.your_balance)} $balance ${getString(R.string.valuta)}"
         binding.tvWin.text = "${getString(R.string.wins)} $wins"
         binding.tvLose.text = "${getString(R.string.loses)} $loses"
 
@@ -76,6 +81,9 @@ class HighScoreDialogFragment : DialogFragment() {
 
     private fun updateStarsUI(stars: List<RatingManager.Star>) {
         binding.llStars.removeAllViews()
+        var delay = 0L
+        val animationDuration = 300L
+
         stars.forEach { star ->
             val starImageView = ImageView(requireContext()).apply {
                 layoutParams = LinearLayout.LayoutParams(
@@ -85,22 +93,57 @@ class HighScoreDialogFragment : DialogFragment() {
                     val marginInPixels = TypedValue.applyDimension(
                         TypedValue.COMPLEX_UNIT_DIP, 5f, resources.displayMetrics
                     ).toInt()
-                    params.setMargins(marginInPixels, marginInPixels, marginInPixels, marginInPixels)
+                    params.setMargins(
+                        marginInPixels,
+                        marginInPixels,
+                        marginInPixels,
+                        marginInPixels
+                    )
                 }
-                setImageResource(when (star.state) {
-                    RatingManager.Star.StarState.FullStar -> R.drawable.starfull
-                    RatingManager.Star.StarState.HalfStar -> R.drawable.starhalf
-                    else -> R.drawable.star
-                })
+                setImageResource(
+                    when (star.state) {
+                        RatingManager.Star.StarState.FullStar -> R.drawable.starfull
+                        RatingManager.Star.StarState.HalfStar -> R.drawable.starhalf
+                        else -> R.drawable.star
+                    }
+                )
+                alpha = 0f
+                scaleX = 0f
+                scaleY = 0f
             }
             binding.llStars.addView(starImageView)
+
+            starImageView.animate()
+                .scaleX(1f)
+                .scaleY(1f)
+                .alpha(1f)
+                .setDuration(animationDuration)
+                .setStartDelay(delay)
+                .start()
+
+            delay += 100
         }
+    }
+
+    private fun animateTrophy() {
+        val scaleUp = ObjectAnimator.ofPropertyValuesHolder(
+            binding.ivLogo,
+            PropertyValuesHolder.ofFloat("scaleX", 1.0f, 1.2f),
+            PropertyValuesHolder.ofFloat("scaleY", 1.0f, 1.2f)
+        ).apply {
+            duration = 500
+            repeatCount = 1
+            repeatMode = ValueAnimator.REVERSE
+        }
+
+        scaleUp.start()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
 
 }
 
