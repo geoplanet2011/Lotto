@@ -57,11 +57,14 @@
     <string name="single_player">New game</string>
     <string name="multi_player">Multi player</string>
     <string name="high_score">High score</string>
-    <string name="ok" >OK</string>
+    <string name="ok">OK</string>
     <string name="your_rating">"Your rating is "</string>
     <string name="wins">Win:</string>
     <string name="loses">Lose:</string>
     <string name="your_balance">Your balance is</string>
     <string name="valuta">$</string>
     <string name="back">Back</string>
+    <string name="privacy_policy">Privacy policy</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

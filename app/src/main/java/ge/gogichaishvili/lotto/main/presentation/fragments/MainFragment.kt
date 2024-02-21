@@ -48,11 +48,7 @@ class MainFragment : BaseFragment<MainActivityViewModel>(MainActivityViewModel::
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
 
-        try {
-            loadRewardedAd()
-        } catch (e: Exception) {
-            println(e.message.toString())
-        }
+        loadRewardedAd()
 
         binding.newGameBtn.setOnClickListener {
             parentFragmentManager.beginTransaction()
@@ -90,41 +86,53 @@ class MainFragment : BaseFragment<MainActivityViewModel>(MainActivityViewModel::
             activity?.finishAndRemoveTask()
         }
 
+        binding.tvPrivacyPolicy.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainerView, PrivacyPolicyFragment())
+                .addToBackStack(PrivacyPolicyFragment::class.java.name)
+                .commit()
+        }
+
     }
 
     private fun loadRewardedAd() {
 
-        val adRequest = AdRequest.Builder().build()
+        try {
+            val adRequest = AdRequest.Builder().build()
 
-        RewardedAd.load(
-            requireContext(),
-            "ca-app-pub-4290928451578259/9410286233",
-            adRequest,
-            object : RewardedAdLoadCallback() {
-                override fun onAdFailedToLoad(adError: LoadAdError) {
-                    mRewardedAd = null
-                    loadRewardedAd()
-                }
-
-                override fun onAdLoaded(rewardedAd: RewardedAd) {
-                    mRewardedAd = rewardedAd
-                    mRewardedAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
-                        override fun onAdDismissedFullScreenContent() {
-                            mRewardedAd = null
-                            loadRewardedAd()
-                        }
-
-                        override fun onAdFailedToShowFullScreenContent(p0: AdError) {
-                            mRewardedAd = null
-                            loadRewardedAd()
-                        }
-
-                        override fun onAdShowedFullScreenContent() {
-
-                        }
+            RewardedAd.load(
+                requireContext(),
+                "ca-app-pub-4290928451578259/9410286233",
+                adRequest,
+                object : RewardedAdLoadCallback() {
+                    override fun onAdFailedToLoad(adError: LoadAdError) {
+                        mRewardedAd = null
+                        loadRewardedAd()
                     }
-                }
-            })
+
+                    override fun onAdLoaded(rewardedAd: RewardedAd) {
+                        mRewardedAd = rewardedAd
+                        mRewardedAd?.fullScreenContentCallback =
+                            object : FullScreenContentCallback() {
+                                override fun onAdDismissedFullScreenContent() {
+                                    mRewardedAd = null
+                                    loadRewardedAd()
+                                }
+
+                                override fun onAdFailedToShowFullScreenContent(p0: AdError) {
+                                    mRewardedAd = null
+                                    loadRewardedAd()
+                                }
+
+                                override fun onAdShowedFullScreenContent() {
+
+                                }
+                            }
+                    }
+                })
+        } catch (e: Exception) {
+            println(e.message.toString())
+        }
     }
 
     @SuppressLint("SetTextI18n")
