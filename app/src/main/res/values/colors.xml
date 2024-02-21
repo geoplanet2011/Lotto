@@ -6,4 +6,6 @@
     <color name="hint">#40100F0F</color>
     <color name="red">#b1070d</color>
     <color name="text_color_gold">#F6A427</color>
+    <color name="linkbutton">#0188CC</color>
+    <color name="linkbutton_pressed">#2AB1F5</color>
 </resources>

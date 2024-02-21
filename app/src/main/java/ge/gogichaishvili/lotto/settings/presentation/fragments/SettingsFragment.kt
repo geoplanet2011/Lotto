@@ -127,6 +127,12 @@ class SettingsFragment : BaseFragment<SettingsViewModel>(SettingsViewModel::clas
 
         }
 
+        binding.tvBack.setOnClickListener {
+            if (requireActivity().supportFragmentManager.backStackEntryCount > 0) {
+                requireActivity().supportFragmentManager.popBackStackImmediate()
+            }
+        }
+
         binding.btnNext.setOnClickListener {
             mViewModel.nextAvatar()
             binding.ivAvatar.setImageResource(mViewModel.getAvatar())

@@ -6,6 +6,7 @@ import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -18,6 +19,7 @@ import android.widget.LinearLayout
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.DialogFragment
 import ge.gogichaishvili.lotto.R
+import ge.gogichaishvili.lotto.app.tools.Utils
 import ge.gogichaishvili.lotto.app.tools.vibratePhone
 import ge.gogichaishvili.lotto.databinding.FragmentHighscoreDialogBinding
 import ge.gogichaishvili.lotto.main.helpers.RatingManager
@@ -30,6 +32,8 @@ class HighScoreDialogFragment : DialogFragment() {
     private val binding get() = _binding!!
 
     private val viewModel: HighScoreViewModel by viewModel()
+
+    private lateinit var mediaPlayer: MediaPlayer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,7 +69,7 @@ class HighScoreDialogFragment : DialogFragment() {
         val loses = viewModel.getLoses()
         val rating = viewModel.calculatePlayerRating(wins, loses, balance)
 
-        viewModel.initRatingManager(55)
+        viewModel.initRatingManager(rating)
         updateStarsUI(viewModel.getStars())
 
         binding.tvRating.text = "${getString(R.string.your_rating)} $rating"
@@ -73,6 +77,9 @@ class HighScoreDialogFragment : DialogFragment() {
             "${getString(R.string.your_balance)} $balance ${getString(R.string.valuta)}"
         binding.tvWin.text = "${getString(R.string.wins)} $wins"
         binding.tvLose.text = "${getString(R.string.loses)} $loses"
+
+        mediaPlayer = MediaPlayer.create(requireContext(), R.raw.applause)
+        mediaPlayer.start()
 
         binding.btnCancel.setOnClickListener {
             dismiss()
@@ -141,6 +148,8 @@ class HighScoreDialogFragment : DialogFragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        mediaPlayer?.stop()
+        mediaPlayer?.release()
         _binding = null
     }
 

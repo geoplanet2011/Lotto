@@ -63,4 +63,5 @@
     <string name="loses">Lose:</string>
     <string name="your_balance">Your balance is</string>
     <string name="valuta">$</string>
+    <string name="back">Back</string>
 </resources>
