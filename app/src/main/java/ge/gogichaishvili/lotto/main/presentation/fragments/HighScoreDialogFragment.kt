@@ -56,14 +56,13 @@ class HighScoreDialogFragment : DialogFragment() {
 
         vibratePhone()
 
-
-        viewModel.initRatingManager(viewModel.getRating())
-        updateStarsUI(viewModel.getStars())
-
         val balance = viewModel.getBalance()
         val wins = viewModel.getWins()
         val loses = viewModel.getLoses()
-        val rating = viewModel.getRating()
+        val rating = viewModel.calculatePlayerRating(wins, loses, balance)
+
+        viewModel.initRatingManager(rating)
+        updateStarsUI(viewModel.getStars())
 
         binding.tvRating.text = "${getString(R.string.your_rating)} $rating"
         binding.tvBalance.text = "${getString(R.string.your_balance)} $balance ${getString(R.string.valuta)}"
