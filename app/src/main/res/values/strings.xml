@@ -48,7 +48,7 @@
     <string name="game_language">Game language</string>
     <string name="shuffle">Shuffling</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="get_coin">Get free 1000 coins</string>
+    <string name="get_coin">Get +1000 coins</string>
     <string name="add_credit">You have been credited with 1000 coins</string>
     <string name="new_balance_is">Your new balance is</string>
     <string name="coins">coins</string>
@@ -66,5 +66,4 @@
     <string name="back">Back</string>
     <string name="privacy_policy">Privacy policy</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

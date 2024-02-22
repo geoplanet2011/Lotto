@@ -47,7 +47,7 @@
     <string name="game_speed">Скорость игры</string>
     <string name="game_language">Язык игры</string>
     <string name="shuffle">Shuffling</string>
-    <string name="get_coin">+1000 монет бесплатно</string>
+    <string name="get_coin">+1000 монет</string>
     <string name="add_credit">Вам начислено 1000 монет</string>
     <string name="new_balance_is">Ваш новый баланс составляет</string>
     <string name="coins">монеты</string>
@@ -63,5 +63,5 @@
     <string name="your_balance">Ваш баланс</string>
     <string name="valuta">$</string>
     <string name="back">Назад</string>
-    <string name="privacy_policy">Политика конфиденциальности</string>
+    <string name="privacy_policy">Политика\nконфиденциальности</string>
 </resources>
