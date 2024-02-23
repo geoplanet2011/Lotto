@@ -21,6 +21,17 @@
         android:textSize="16sp" />
 
     <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/new_multiple_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@drawable/new_game_button"
+        android:padding="5dp"
+        android:text="@string/single_player"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/settings_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

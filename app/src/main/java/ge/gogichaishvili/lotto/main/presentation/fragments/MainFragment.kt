@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.FragmentActivity
@@ -17,6 +16,7 @@ import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import ge.gogichaishvili.lotto.R
 import ge.gogichaishvili.lotto.databinding.FragmentMainBinding
+import ge.gogichaishvili.lotto.login.presentation.fragments.LoginFragment
 import ge.gogichaishvili.lotto.main.presentation.fragments.base.BaseFragment
 import ge.gogichaishvili.lotto.main.presentation.viewmodels.MainActivityViewModel
 import ge.gogichaishvili.lotto.settings.presentation.fragments.SettingsFragment
@@ -93,6 +93,12 @@ class MainFragment : BaseFragment<MainActivityViewModel>(MainActivityViewModel::
                 .commit()
         }
 
+        binding.newMultipleBtn.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainerView, LoginFragment())
+                .addToBackStack(LoginFragment::class.java.name)
+                .commit()
+        }
     }
 
     private fun loadRewardedAd() {

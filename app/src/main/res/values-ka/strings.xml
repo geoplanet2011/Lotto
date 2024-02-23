@@ -64,4 +64,5 @@
     <string name="valuta">₾</string>
     <string name="back">უკან</string>
     <string name="privacy_policy">კონფიდენციალურობის\nპოლიტიკა</string>
+    <string name="input_required">ყველა ველის შევსება აუცილებელია</string>
 </resources>
