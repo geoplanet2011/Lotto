@@ -66,4 +66,6 @@
     <string name="privacy_policy">Политика\nконфиденциальности</string>
     <string name="input_required">Все поля обязательны для заполнения</string>
     <string name="registration_success">Вы успешно зарегистрированы</string>
+    <string name="enter_email">Пожалуйста, введите свой адрес эл. почты</string>
+    <string name="reset_password">Письмо успешно отправлено для сброса пароля!</string>
 </resources>

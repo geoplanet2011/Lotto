@@ -66,4 +66,6 @@
     <string name="privacy_policy">კონფიდენციალურობის\nპოლიტიკა</string>
     <string name="input_required">ყველა ველის შევსება აუცილებელია</string>
     <string name="registration_success">თქვენ წარმატებით დარეგისტრირდით</string>
+    <string name="enter_email">გთხოვთ შეიყვანოთ თქვენი ელ. ფოსტა</string>
+    <string name="reset_password">ელ. ფოსტა წარმატებით გაიგზავნა თქვენი პაროლის აღსადგენად</string>
 </resources>
