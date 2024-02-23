@@ -65,4 +65,5 @@
     <string name="back">უკან</string>
     <string name="privacy_policy">კონფიდენციალურობის\nპოლიტიკა</string>
     <string name="input_required">ყველა ველის შევსება აუცილებელია</string>
+    <string name="registration_success">თქვენ წარმატებით დარეგისტრირდით</string>
 </resources>

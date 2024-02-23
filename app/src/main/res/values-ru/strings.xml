@@ -65,4 +65,5 @@
     <string name="back">Назад</string>
     <string name="privacy_policy">Политика\nконфиденциальности</string>
     <string name="input_required">Все поля обязательны для заполнения</string>
+    <string name="registration_success">Вы успешно зарегистрированы</string>
 </resources>
