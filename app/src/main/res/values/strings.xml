@@ -76,6 +76,7 @@
     <string name="registration">Registration</string>
     <string name="recovery_password">Password recovery</string>
     <string name="login">Login</string>
+    <string name="name">Please enter your nickname</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

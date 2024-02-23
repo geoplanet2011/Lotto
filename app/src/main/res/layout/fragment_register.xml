@@ -5,18 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:gravity="center"
+    android:background="@color/white"
     tools:context=".register.presentation.fragments.RegisterFragment">
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/pictureIV"
-        android:layout_margin="10dp"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_gravity="center"/>
 
     <Button
         android:id="@+id/cameraBtn"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/white"
         android:backgroundTint="@color/cardview_dark_background"
@@ -27,37 +28,61 @@
         android:id="@+id/emailInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:layout_margin="15dp"/>
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/rounded_edittext"
+        android:drawableEnd="@drawable/email"
+        android:hint="@string/enter_email"
+        android:importantForAutofill="no"
+        android:inputType="text"
+        android:padding="10dip"
+        tools:ignore="TextFields" />
 
     <EditText
         android:id="@+id/passwordInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/rounded_edittext"
+        android:drawableEnd="@drawable/password"
+        android:hint="@string/enter_password"
+        android:importantForAutofill="no"
         android:inputType="textPassword"
-        android:layout_margin="15dp"/>
+        android:padding="10dip"
+        tools:ignore="TextFields" />
 
     <EditText
         android:id="@+id/firstnameInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:layout_margin="15dp"/>
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:visibility="invisible"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/rounded_edittext"
+        android:drawableEnd="@drawable/person"
+        android:hint="@string/name"
+        android:importantForAutofill="no"
+        android:inputType="text"
+        android:padding="10dip"
+        tools:ignore="TextFields" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/registerBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/white"
+        android:layout_margin="20dp"
         android:backgroundTint="@color/cardview_dark_background"
-        android:layout_margin="15dp"
-        android:text="Register"/>
+        android:padding="12dp"
+        android:text="@string/login"
+        android:textColor="@color/white"
+        app:cornerRadius="5dp" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:visibility="invisible" />
 
 </LinearLayout>
