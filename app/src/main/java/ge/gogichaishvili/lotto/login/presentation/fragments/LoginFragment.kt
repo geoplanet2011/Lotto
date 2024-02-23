@@ -1,7 +1,10 @@
 package ge.gogichaishvili.lotto.login.presentation.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.text.InputType
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -21,6 +24,8 @@ class LoginFragment : Fragment() {
 
     private lateinit var auth: FirebaseAuth
 
+    private var isPasswordVisible = false
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -29,6 +34,7 @@ class LoginFragment : Fragment() {
         return _binding?.root
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -67,6 +73,27 @@ class LoginFragment : Fragment() {
                 ).addToBackStack(
                     RecoveryFragment::class.java.name
                 ).commit()
+        }
+
+        binding.passwordInput.setOnTouchListener { v, event ->
+
+            val DRAWABLE_RIGHT = 2
+
+            if (event.action == MotionEvent.ACTION_UP) {
+                if (event.rawX >= (binding.passwordInput.right - binding.passwordInput.compoundDrawables[DRAWABLE_RIGHT].bounds.width())) {
+                    isPasswordVisible = !isPasswordVisible
+                    if (isPasswordVisible) {
+                        binding.passwordInput.inputType =
+                            InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                    } else {
+                        binding.passwordInput.inputType =
+                            InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                    }
+                    binding.passwordInput.setSelection(binding.passwordInput.text.length)
+                    return@setOnTouchListener true
+                }
+            }
+            false
         }
 
     }
