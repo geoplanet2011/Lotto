@@ -9,4 +9,5 @@
     <color name="linkbutton">#0188CC</color>
     <color name="linkbutton_pressed">#2AB1F5</color>
     <color name="green_dark_color">#055F5F</color>
+    <color name="black_overlay">#66000000</color>
 </resources>

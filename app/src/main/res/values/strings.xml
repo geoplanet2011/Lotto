@@ -77,6 +77,23 @@
     <string name="recovery_password">Password recovery</string>
     <string name="login">Login</string>
     <string name="name">Please enter your nickname</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="search">Search</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+    <string name="notification">Notification</string>
+    <string name="enter_the_password">Enter password</string>
+    <string name="yes">Yes</string>
+    <string name="cancel">Cancel</string>
+    <string name="wrong_password">Wrong password</string>
+    <string name="room_name">Room name</string>
+    <string name="enable_password">Set password</string>
+    <string name="password">Password</string>
+    <string name="create">Create</string>
+    <string name="room_exist">A room with that name already exists</string>
+    <string name="room_created">Room successfully created</string>
+    <string name="error">Error</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

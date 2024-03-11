@@ -73,4 +73,19 @@
     <string name="recovery_password">პაროლის აღდგენა</string>
     <string name="login">შესვლა</string>
     <string name="name">სახელი</string>
+    <string name="search">ძებნა</string>
+    <string name="delete">წაშლა</string>
+    <string name="edit">რედაქტირება</string>
+    <string name="notification">შეტყობინება</string>
+    <string name="enter_the_password">შეიყვანეთ პაროლი</string>
+    <string name="yes">დიახ</string>
+    <string name="cancel">გაუქმება</string>
+    <string name="wrong_password">პაროლი არასწორია</string>
+    <string name="room_name">ოთახის სახელი</string>
+    <string name="enable_password">პაროლის დაყენება</string>
+    <string name="password">პაროლი</string>
+    <string name="create">შექმნა</string>
+    <string name="room_exist">ოთახი ასეთი სახელით უკვე არსებობს</string>
+    <string name="room_created">ოთახი წარმატებით შეიქმნა</string>
+    <string name="error">შეცდომა</string>
 </resources>

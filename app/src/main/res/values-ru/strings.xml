@@ -73,4 +73,19 @@
     <string name="recovery_password">Восстановление пароля</string>
     <string name="login">Авторизоваться</string>
     <string name="name">Имя</string>
+    <string name="search">Поиск</string>
+    <string name="delete">Удалить</string>
+    <string name="edit">Редактировать</string>
+    <string name="notification">Сообщение</string>
+    <string name="enter_the_password">Введите пароль</string>
+    <string name="yes">Да</string>
+    <string name="cancel">Отмена</string>
+    <string name="wrong_password">Неправильный пароль</string>
+    <string name="room_name">Название комнаты</string>
+    <string name="enable_password">Установка пароля</string>
+    <string name="password">Пароль</string>
+    <string name="create">Создать</string>
+    <string name="room_exist">Комната с таким названием уже существует</string>
+    <string name="room_created">Комната успешно создана</string>
+    <string name="error">Ошибка</string>
 </resources>

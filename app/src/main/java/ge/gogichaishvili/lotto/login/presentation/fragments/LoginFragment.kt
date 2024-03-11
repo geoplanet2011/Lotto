@@ -12,8 +12,10 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
 import ge.gogichaishvili.lotto.R
+import ge.gogichaishvili.lotto.app.tools.hideKeyboard
 import ge.gogichaishvili.lotto.databinding.FragmentLoginBinding
 import ge.gogichaishvili.lotto.main.presentation.fragments.DashboardFragment
+import ge.gogichaishvili.lotto.main.presentation.fragments.RoomListFragment
 import ge.gogichaishvili.lotto.recovery.presentation.fragments.RecoveryFragment
 import ge.gogichaishvili.lotto.register.presentation.fragments.RegisterFragment
 
@@ -129,6 +131,7 @@ class LoginFragment : Fragment() {
 
     private fun singInUser(email: String, password: String) {
         showLoader()
+        hideKeyboard()
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(requireActivity()) {
                 hideLoader()
@@ -136,13 +139,13 @@ class LoginFragment : Fragment() {
                     parentFragmentManager.beginTransaction()
                         .replace(
                             R.id.fragmentContainerView,
-                            DashboardFragment()
+                            RoomListFragment()
                         ).addToBackStack(
-                            DashboardFragment::class.java.name
+                            RoomListFragment::class.java.name
                         ).commit()
                 } else {
-                    Toast.makeText(requireContext(), "Error " + it.exception, Toast.LENGTH_SHORT)
-                        .show()
+                    val error = it.exception?.message ?: getString(R.string.error)
+                    Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show()
                 }
             }
     }

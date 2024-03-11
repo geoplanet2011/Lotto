@@ -13,6 +13,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import ge.gogichaishvili.lotto.databinding.FragmentDashboardBinding
+import ge.gogichaishvili.lotto.main.enums.RoomSateEnums
 import ge.gogichaishvili.lotto.main.models.Room
 
 class DashboardFragment : Fragment() {
@@ -53,7 +54,7 @@ class DashboardFragment : Fragment() {
         }
 
         binding.sendBtn.setOnClickListener {
-            sendData()
+           // sendData()
         }
 
         //getData ()
@@ -61,7 +62,7 @@ class DashboardFragment : Fragment() {
 
 
     private fun sendData () {
-        databaseReferenceForRooms!!.child("room1").setValue(Room("otaxi1", "paroliania1"))
+        databaseReferenceForRooms!!.child("room1").setValue(Room("otaxi1", true, "123", RoomSateEnums.OPEN))
     }
 
 

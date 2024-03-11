@@ -9,6 +9,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
 import ge.gogichaishvili.lotto.R
+import ge.gogichaishvili.lotto.app.tools.hideKeyboard
 import ge.gogichaishvili.lotto.databinding.FragmentRecoveryBinding
 
 class RecoveryFragment : Fragment() {
@@ -39,6 +40,7 @@ class RecoveryFragment : Fragment() {
             Toast.makeText(requireContext(), R.string.enter_email, Toast.LENGTH_SHORT).show()
         } else {
             showLoader()
+            hideKeyboard()
             FirebaseAuth.getInstance().sendPasswordResetEmail(email)
                 .addOnCompleteListener { task ->
                     hideLoader()
@@ -48,10 +50,14 @@ class RecoveryFragment : Fragment() {
                             R.string.reset_password,
                             Toast.LENGTH_SHORT
                         ).show()
+                        if (requireActivity().supportFragmentManager.backStackEntryCount > 0) {
+                            requireActivity().supportFragmentManager.popBackStackImmediate()
+                        }
                     } else {
+                        val errorMessage = task.exception?.message ?: getString(R.string.error)
                         Toast.makeText(
                             requireContext(),
-                            task.exception!!.message.toString(),
+                            errorMessage,
                             Toast.LENGTH_SHORT
                         ).show()
                     }

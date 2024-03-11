@@ -1,3 +1,10 @@
 package ge.gogichaishvili.lotto.main.models
 
-data class Room (var name: String, var status: String)
+import ge.gogichaishvili.lotto.main.enums.RoomSateEnums
+
+data class Room (
+    var name: String? = "",
+    var isLocked: Boolean? = false,
+    var password: String? = "",
+    var state: RoomSateEnums? = RoomSateEnums.OPEN
+)

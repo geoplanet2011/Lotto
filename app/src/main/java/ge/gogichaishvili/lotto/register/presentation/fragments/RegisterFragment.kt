@@ -1,26 +1,19 @@
 package ge.gogichaishvili.lotto.register.presentation.fragments
 
-import android.Manifest
-import android.app.Activity
-import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
-import android.text.TextUtils
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import ge.gogichaishvili.lotto.R
+import ge.gogichaishvili.lotto.app.tools.hideKeyboard
 import ge.gogichaishvili.lotto.databinding.FragmentRegisterBinding
-import java.net.URI
 
 class RegisterFragment : Fragment() {
 
@@ -81,6 +74,7 @@ class RegisterFragment : Fragment() {
 
     private fun createUser(email: String, password: String) {
         showLoader()
+        hideKeyboard()
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(requireActivity()) {
                 hideLoader()
@@ -89,16 +83,22 @@ class RegisterFragment : Fragment() {
                     val currentUserDb = databaseReference?.child((currentUser?.uid!!))
                     currentUserDb?.child("firstname")
                         ?.setValue(binding.firstnameInput.text.trim().toString())
+                    currentUserDb?.child("status")?.setValue("offline")
                     Toast.makeText(
                         requireContext(),
                         R.string.registration_success,
                         Toast.LENGTH_SHORT
                     ).show()
+                    if (requireActivity().supportFragmentManager.backStackEntryCount > 0) {
+                        requireActivity().supportFragmentManager.popBackStackImmediate()
+                    }
                 } else {
-                    Toast.makeText(requireContext(), "Error", Toast.LENGTH_SHORT).show()
+                    val error = it.exception?.message ?: getString(R.string.error)
+                    Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show()
                 }
             }
     }
+
 
     fun resizeBitmap(source: Bitmap, maxLength: Int): Bitmap {
         try {
