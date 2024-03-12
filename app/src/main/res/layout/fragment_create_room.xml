@@ -7,6 +7,17 @@
     android:padding="10dp"
     tools:context=".main.presentation.fragments.CreateRoomFragment">
 
+    <TextView
+        android:id="@+id/tv_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:text="@string/back"
+        android:textColor="@drawable/linkbutton"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/room_TextInputLayout"
         style="@style/ThemeOverlay.MaterialComponents.TextInputEditText.OutlinedBox"
@@ -15,7 +26,7 @@
         android:layout_marginTop="25dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/tv_back">
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/et_room_name"

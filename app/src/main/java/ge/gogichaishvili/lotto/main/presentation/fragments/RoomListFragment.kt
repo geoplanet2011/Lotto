@@ -70,6 +70,12 @@ class RoomListFragment : BaseFragment<RoomListViewModel>(RoomListViewModel::clas
             override fun afterTextChanged(s: Editable?) {}
         })
 
+        binding.tvBack.setOnClickListener {
+            FirebaseAuth.getInstance().signOut()
+            if (requireActivity().supportFragmentManager.backStackEntryCount > 0) {
+                requireActivity().supportFragmentManager.popBackStackImmediate()
+            }
+        }
         //onlineUserStatus("Online")
 
     }

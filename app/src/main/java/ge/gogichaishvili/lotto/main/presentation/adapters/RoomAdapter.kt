@@ -4,12 +4,14 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
+import android.os.Bundle
 import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import ge.gogichaishvili.lotto.R
 import ge.gogichaishvili.lotto.databinding.ViewRoomItemBinding
@@ -41,10 +43,7 @@ class RoomAdapter(private val context: Context, private val roomList: List<Room>
                 if (room.isLocked == true) {
                     alertWithInputText(context, room.password!!, room.name!!)
                 } else {
-                    val intent = Intent(context, DashboardFragment::class.java).apply {
-                        putExtra("roomId", room.name)
-                    }
-                    context.startActivity(intent)
+                    navigateToDashboardFragment(room.name)
                 }
             }
         }
@@ -70,9 +69,8 @@ class RoomAdapter(private val context: Context, private val roomList: List<Room>
         builder.setPositiveButton(context.getString(R.string.yes)) { _, _ ->
             val text = input.text.toString().trim()
             if (text == roomPassword.trim()) {
-                val intent = Intent(context, DashboardFragment::class.java)
-                intent.putExtra("roomId", roomName)
-                context.startActivity(intent)
+                navigateToDashboardFragment(roomName)
+
             } else {
                 MediaPlayer.create(context, R.raw.wrong)?.start()
                 Toast.makeText(
@@ -84,5 +82,18 @@ class RoomAdapter(private val context: Context, private val roomList: List<Room>
         }
         builder.setNegativeButton(context.getString(R.string.cancel)) { dialog, _ -> dialog.cancel() }
         builder.show()
+    }
+
+
+    private fun navigateToDashboardFragment(roomName: String?) {
+        roomName?.let {
+            (context as? FragmentActivity)?.supportFragmentManager?.beginTransaction()?.apply {
+                replace(R.id.fragmentContainerView, DashboardFragment().apply {
+                    arguments = Bundle().apply { putString("roomId", it) }
+                })
+                addToBackStack(null)
+                commit()
+            }
+        }
     }
 }
