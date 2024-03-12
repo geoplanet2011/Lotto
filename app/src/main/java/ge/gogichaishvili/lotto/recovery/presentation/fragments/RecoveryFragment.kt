@@ -32,6 +32,12 @@ class RecoveryFragment : Fragment() {
             resetPassword()
         }
 
+        binding.tvBack.setOnClickListener {
+            if (requireActivity().supportFragmentManager.backStackEntryCount > 0) {
+                requireActivity().supportFragmentManager.popBackStackImmediate()
+            }
+        }
+
     }
 
     private fun resetPassword() {

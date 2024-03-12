@@ -1,84 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:gravity="center"
-    android:orientation="vertical"
     tools:context=".login.presentation.fragments.LoginFragment">
 
-    <EditText
-        android:id="@+id/emailInput"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:background="@drawable/rounded_edittext"
-        android:drawableEnd="@drawable/email"
-        android:hint="@string/enter_email"
-        android:importantForAutofill="no"
-        android:inputType="text"
-        android:padding="10dip"
-        tools:ignore="TextFields" />
-
     <TextView
-        android:id="@+id/registerBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="20dp"
-        android:clickable="true"
-        android:gravity="end"
-        android:text="@string/registration"
-        android:textColor="@drawable/linkbutton"
-        android:textSize="15sp" />
-
-    <EditText
-        android:id="@+id/passwordInput"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:background="@drawable/rounded_edittext"
-        android:drawableEnd="@drawable/password"
-        android:hint="@string/enter_password"
-        android:importantForAutofill="no"
-        android:inputType="textPassword"
-        android:padding="10dip"
-        tools:ignore="TextFields" />
-
-    <TextView
-        android:id="@+id/recoverBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="20dp"
-        android:clickable="true"
-        android:gravity="end"
-        android:text="@string/recovery_password"
-        android:textColor="@drawable/linkbutton"
-        android:textSize="15sp" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/loginBtn"
-        android:layout_width="match_parent"
+        android:id="@+id/tv_back"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        android:backgroundTint="@color/cardview_dark_background"
-        android:padding="12dp"
-        android:text="@string/login"
-        android:textColor="@color/white"
-        app:cornerRadius="5dp" />
+        android:text="@string/back"
+        android:textColor="@drawable/linkbutton"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:visibility="invisible" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-</LinearLayout>
+        <EditText
+            android:id="@+id/emailInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/rounded_edittext"
+            android:drawableEnd="@drawable/email"
+            android:hint="@string/enter_email"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:padding="10dip"
+            tools:ignore="TextFields" />
+
+        <TextView
+            android:id="@+id/registerBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:clickable="true"
+            android:gravity="end"
+            android:text="@string/registration"
+            android:textColor="@drawable/linkbutton"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/passwordInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/rounded_edittext"
+            android:drawableEnd="@drawable/password"
+            android:hint="@string/enter_password"
+            android:importantForAutofill="no"
+            android:inputType="textPassword"
+            android:padding="10dip"
+            tools:ignore="TextFields" />
+
+        <TextView
+            android:id="@+id/recoverBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:clickable="true"
+            android:gravity="end"
+            android:text="@string/recovery_password"
+            android:textColor="@drawable/linkbutton"
+            android:textSize="15sp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/loginBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:backgroundTint="@color/cardview_dark_background"
+            android:padding="12dp"
+            android:text="@string/login"
+            android:textColor="@color/white"
+            app:cornerRadius="5dp" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:visibility="invisible" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

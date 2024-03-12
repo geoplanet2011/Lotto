@@ -50,6 +50,12 @@ class RegisterFragment : Fragment() {
 
         }
 
+        binding.tvBack.setOnClickListener {
+            if (requireActivity().supportFragmentManager.backStackEntryCount > 0) {
+                requireActivity().supportFragmentManager.popBackStackImmediate()
+            }
+        }
+
     }
 
     override fun onDestroyView() {
@@ -61,7 +67,7 @@ class RegisterFragment : Fragment() {
     private fun register() {
 
         if (binding.emailInput.text.trim().toString().isEmpty() || binding.passwordInput.text.trim()
-                .toString().isEmpty()
+                .toString().isEmpty() || binding.firstnameInput.text.trim().toString().isEmpty()
         ) {
             Toast.makeText(requireContext(), R.string.input_required, Toast.LENGTH_SHORT).show()
             return

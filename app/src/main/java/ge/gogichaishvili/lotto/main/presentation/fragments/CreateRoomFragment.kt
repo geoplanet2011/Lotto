@@ -57,52 +57,61 @@ class CreateRoomFragment : BaseFragment<CreateRoomViewModel>(CreateRoomViewModel
     }
 
     private fun createRoom() {
-        showLoader()
-        hideKeyboard()
-        val roomName = binding.etRoomName.text.toString().trim()
-        val roomPassword = binding.etPassword.text.toString().trim()
-        val isLocked = binding.passwordSwitch.isChecked
 
-        val reference = FirebaseDatabase.getInstance().getReference("Rooms")
+        if (binding.etRoomName.text.toString().isNotEmpty()) {
+            showLoader()
+            hideKeyboard()
+            val roomName = binding.etRoomName.text.toString().trim()
+            val roomPassword = binding.etPassword.text.toString().trim()
+            val isLocked = binding.passwordSwitch.isChecked
 
-        reference.orderByChild("name").equalTo(roomName)
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    if (dataSnapshot.exists()) {
-                        hideLoader()
-                        Toast.makeText(
-                            requireContext(),
-                            getString(R.string.room_exist),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    } else {
-                        val room = Room(roomName, isLocked, roomPassword, RoomSateEnums.OPEN)
+            val reference = FirebaseDatabase.getInstance().getReference("Rooms")
 
-                        reference.child(roomName).setValue(room).addOnCompleteListener { task ->
+            reference.orderByChild("name").equalTo(roomName)
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        if (dataSnapshot.exists()) {
                             hideLoader()
-                            if (task.isSuccessful) {
-                                Toast.makeText(
-                                    requireContext(),
-                                    getString(R.string.room_created),
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                                if (requireActivity().supportFragmentManager.backStackEntryCount > 0) {
-                                    requireActivity().supportFragmentManager.popBackStackImmediate()
+                            Toast.makeText(
+                                requireContext(),
+                                getString(R.string.room_exist),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else {
+                            val room = Room(roomName, isLocked, roomPassword, RoomSateEnums.OPEN)
+
+                            reference.child(roomName).setValue(room).addOnCompleteListener { task ->
+                                hideLoader()
+                                if (task.isSuccessful) {
+                                    Toast.makeText(
+                                        requireContext(),
+                                        getString(R.string.room_created),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    if (requireActivity().supportFragmentManager.backStackEntryCount > 0) {
+                                        requireActivity().supportFragmentManager.popBackStackImmediate()
+                                    }
+                                } else {
+                                    val errorMessage =
+                                        task.exception?.message ?: getString(R.string.error)
+                                    Toast.makeText(
+                                        requireContext(),
+                                        errorMessage,
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                                 }
-                            } else {
-                                val errorMessage = task.exception?.message ?: getString(R.string.error)
-                                Toast.makeText(
-                                    requireContext(),
-                                    errorMessage,
-                                    Toast.LENGTH_SHORT
-                                ).show()
                             }
                         }
                     }
-                }
 
-                override fun onCancelled(databaseError: DatabaseError) {}
-            })
+                    override fun onCancelled(databaseError: DatabaseError) {
+                        hideLoader()
+                    }
+                })
+
+        } else {
+            Toast.makeText(requireContext(), R.string.input_required, Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun onDestroyView() {

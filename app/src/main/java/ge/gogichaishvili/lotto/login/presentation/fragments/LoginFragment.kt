@@ -98,6 +98,12 @@ class LoginFragment : Fragment() {
             false
         }
 
+        binding.tvBack.setOnClickListener {
+            if (requireActivity().supportFragmentManager.backStackEntryCount > 0) {
+                requireActivity().supportFragmentManager.popBackStackImmediate()
+            }
+        }
+
     }
 
     override fun onStart() {
@@ -118,7 +124,7 @@ class LoginFragment : Fragment() {
     private fun login() {
 
         if (binding.emailInput.text.trim().toString()
-                .isNotEmpty() || binding.passwordInput.text.trim().toString().isNotEmpty()
+                .isNotEmpty() && binding.passwordInput.text.trim().toString().isNotEmpty()
         ) {
             singInUser(
                 binding.emailInput.text.trim().toString(),
