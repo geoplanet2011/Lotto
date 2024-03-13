@@ -6,16 +6,24 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.FileProvider
+import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
@@ -28,9 +36,21 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.OnProgressListener
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.MultiplePermissionsReport
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionDeniedResponse
+import com.karumi.dexter.listener.PermissionGrantedResponse
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import com.karumi.dexter.listener.single.PermissionListener
 import ge.gogichaishvili.lotto.R
 import ge.gogichaishvili.lotto.app.tools.hideKeyboard
 import ge.gogichaishvili.lotto.databinding.FragmentRegisterBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.io.File
 import java.net.URI
 import java.util.UUID
 
@@ -43,7 +63,9 @@ class RegisterFragment : Fragment() {
     private var databaseReference: DatabaseReference? = null
     private var database: FirebaseDatabase? = null
 
-    private var filePath: Uri? = null
+    private lateinit var uri: Uri
+    private var filePath = ""
+
     private lateinit var storage: FirebaseStorage
     private lateinit var storageRef: StorageReference
 
@@ -69,11 +91,11 @@ class RegisterFragment : Fragment() {
         }
 
         binding.galleryBtn.setOnClickListener {
-
+            folderCheckPermission()
         }
 
         binding.cameraBtn.setOnClickListener {
-
+            cameraCheckPermission()
         }
 
         binding.tvBack.setOnClickListener {
@@ -96,7 +118,6 @@ class RegisterFragment : Fragment() {
 
             override fun onCancelled(databaseError: DatabaseError) {}
         })
-
     }
 
     override fun onDestroyView() {
@@ -104,9 +125,7 @@ class RegisterFragment : Fragment() {
         _binding = null
     }
 
-
     private fun register() {
-
         if (binding.emailInput.text.trim().toString().isEmpty() || binding.passwordInput.text.trim()
                 .toString().isEmpty() || binding.firstnameInput.text.trim().toString().isEmpty()
         ) {
@@ -146,7 +165,6 @@ class RegisterFragment : Fragment() {
             }
     }
 
-
     fun resizeBitmap(source: Bitmap, maxLength: Int): Bitmap {
         try {
             if (source.height >= source.width) {
@@ -182,7 +200,7 @@ class RegisterFragment : Fragment() {
     private fun uploadImage() {
         if (filePath != null) {
             var ref: StorageReference = storageRef.child("image/"+UUID.randomUUID().toString())
-            ref.putFile(filePath!!)
+            ref.putFile(filePath.toUri())
                 .addOnSuccessListener {
                     OnSuccessListener<UploadTask.TaskSnapshot> {
                         Toast.makeText(requireContext(), "uploaded", Toast.LENGTH_SHORT).show()
@@ -200,5 +218,163 @@ class RegisterFragment : Fragment() {
                 }
         }
     }
+
+
+    private fun cameraCheckPermission() {
+        val readPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) android.Manifest.permission.READ_MEDIA_IMAGES else android.Manifest.permission.READ_EXTERNAL_STORAGE
+        Dexter.withContext(requireContext())
+            .withPermissions(
+                android.Manifest.permission.CAMERA,
+                readPermission
+            )
+            .withListener(object : MultiplePermissionsListener {
+                override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
+                    report?.let {
+                        if (report.areAllPermissionsGranted()) {
+                            camera()
+                        }
+                    }
+                }
+                override fun onPermissionRationaleShouldBeShown(
+                    permissions: MutableList<PermissionRequest>?,
+                    token: PermissionToken?
+                ) {
+                    token?.continuePermissionRequest()
+                }
+            })
+            .withErrorListener {
+                Toast.makeText(requireContext(), it.name, Toast.LENGTH_SHORT).show()
+            }
+            .check()
+    }
+
+    private fun camera() {
+        val photoFile = File.createTempFile(
+            "IMG_",
+            ".jpg",
+            requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        )
+
+        uri = FileProvider.getUriForFile(
+            requireContext(),
+            "${requireContext().packageName}.provider",
+            photoFile.also {
+                filePath = it.absolutePath
+            }
+        )
+
+        takePicture.launch(uri)
+    }
+
+    private val takePicture =
+        registerForActivityResult(ActivityResultContracts.TakePicture()) { isSaved ->
+            if (isSaved) {
+
+                Glide.with(requireContext())
+                    .asBitmap()
+                    .load(uri)
+                    .listener(object : RequestListener<Bitmap> {
+                        override fun onResourceReady(
+                            resource: Bitmap?,
+                            model: Any?,
+                            target: com.bumptech.glide.request.target.Target<Bitmap>?,
+                            dataSource: com.bumptech.glide.load.DataSource?,
+                            isFirstResource: Boolean
+                        ): Boolean {
+                            //progressbarGallery.visibility = View.INVISIBLE
+                            return false
+                        }
+
+                        override fun onLoadFailed(
+                            e: GlideException?,
+                            model: Any?,
+                            target: com.bumptech.glide.request.target.Target<Bitmap>?,
+                            isFirstResource: Boolean
+                        ): Boolean {
+                            //progressbarGallery.visibility = View.INVISIBLE
+                            return false
+                        }
+                    })
+                    .into(binding.pictureIV)
+
+                try { //save image
+                    uri.let {
+                        val source =
+                            ImageDecoder.createSource(requireActivity().contentResolver, uri)
+                        val bitmap = ImageDecoder.decodeBitmap(source)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+
+            }
+        }
+
+
+    private fun folderCheckPermission() {
+        val readImagePermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) android.Manifest.permission.READ_MEDIA_IMAGES else android.Manifest.permission.READ_EXTERNAL_STORAGE
+        Dexter.withContext(requireContext())
+            .withPermission(readImagePermission)
+            .withListener(object : PermissionListener {
+                override fun onPermissionGranted(response: PermissionGrantedResponse) {
+                    gallery()
+                }
+
+                override fun onPermissionDenied(response: PermissionDeniedResponse) { /* ... */
+                }
+
+                override fun onPermissionRationaleShouldBeShown(
+                    permission: PermissionRequest,
+                    token: PermissionToken
+                ) { /* ... */
+                }
+            }).check()
+    }
+
+    private fun gallery() {
+        pickPicture.launch("image/*")
+    }
+
+    private var pickPicture =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+
+            Glide.with(requireContext())
+                .asBitmap()
+                .load(uri)
+                .listener(object : RequestListener<Bitmap> {
+                    override fun onResourceReady(
+                        resource: Bitmap?,
+                        model: Any?,
+                        target: com.bumptech.glide.request.target.Target<Bitmap>?,
+                        dataSource: com.bumptech.glide.load.DataSource?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        //progressbarGallery.visibility = View.INVISIBLE
+                        return false
+                    }
+
+                    override fun onLoadFailed(
+                        e: GlideException?,
+                        model: Any?,
+                        target: com.bumptech.glide.request.target.Target<Bitmap>?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        //progressbarGallery.visibility = View.INVISIBLE
+                        return false
+                    }
+                })
+                .into(binding.pictureIV)
+
+            try {  //get bitmap from uri
+                uri?.let {
+                    val source =
+                        ImageDecoder.createSource(requireActivity().contentResolver, uri)
+                    val bitmap = ImageDecoder.decodeBitmap(source)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+        }
 
 }

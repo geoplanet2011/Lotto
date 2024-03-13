@@ -122,4 +122,7 @@ dependencies {
     //AdMob
     implementation("com.google.android.gms:play-services-ads:23.0.0")
 
+    //user permission
+    implementation("com.karumi:dexter:6.2.3")
+
 }
