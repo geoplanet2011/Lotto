@@ -88,4 +88,5 @@
     <string name="room_exist">ოთახი ასეთი სახელით უკვე არსებობს</string>
     <string name="room_created">ოთახი წარმატებით შეიქმნა</string>
     <string name="error">შეცდომა</string>
+    <string name="total_users_count">სულ რეგისტრირებული მომხმარებლებია</string>
 </resources>

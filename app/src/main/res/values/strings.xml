@@ -94,6 +94,7 @@
     <string name="room_exist">A room with that name already exists</string>
     <string name="room_created">Room successfully created</string>
     <string name="error">Error</string>
+    <string name="total_users_count">Total register users is</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

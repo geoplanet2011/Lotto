@@ -88,4 +88,5 @@
     <string name="room_exist">Комната с таким названием уже существует</string>
     <string name="room_created">Комната успешно создана</string>
     <string name="error">Ошибка</string>
+    <string name="total_users_count">Всего зарегистрированных пользователей</string>
 </resources>

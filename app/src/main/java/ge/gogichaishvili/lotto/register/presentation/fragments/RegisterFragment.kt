@@ -1,19 +1,38 @@
 package ge.gogichaishvili.lotto.register.presentation.fragments
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import com.google.android.gms.tasks.OnFailureListener
+import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.OnProgressListener
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.UploadTask
 import ge.gogichaishvili.lotto.R
 import ge.gogichaishvili.lotto.app.tools.hideKeyboard
 import ge.gogichaishvili.lotto.databinding.FragmentRegisterBinding
+import java.net.URI
+import java.util.UUID
 
 class RegisterFragment : Fragment() {
 
@@ -23,6 +42,10 @@ class RegisterFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
     private var databaseReference: DatabaseReference? = null
     private var database: FirebaseDatabase? = null
+
+    private var filePath: Uri? = null
+    private lateinit var storage: FirebaseStorage
+    private lateinit var storageRef: StorageReference
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,11 +61,14 @@ class RegisterFragment : Fragment() {
         database = FirebaseDatabase.getInstance()
         databaseReference = database?.reference!!.child("Users")
 
+        storage = FirebaseStorage.getInstance()
+        storageRef = storage.reference
+
         binding.registerBtn.setOnClickListener {
             register()
         }
 
-        binding.pictureIV.setOnClickListener {
+        binding.galleryBtn.setOnClickListener {
 
         }
 
@@ -55,6 +81,21 @@ class RegisterFragment : Fragment() {
                 requireActivity().supportFragmentManager.popBackStackImmediate()
             }
         }
+
+        getRegisterUsersCount()
+
+    }
+
+    private fun getRegisterUsersCount () {
+        databaseReference?.addValueEventListener(object : ValueEventListener {
+            @SuppressLint("SetTextI18n")
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val totalUsers = dataSnapshot.childrenCount.toString()
+                binding.tvTotal.text = "${getString(R.string.total_users_count)} $totalUsers"
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {}
+        })
 
     }
 
@@ -135,6 +176,28 @@ class RegisterFragment : Fragment() {
     private fun hideLoader() {
         if (binding.progressBar.isVisible) {
             binding.progressBar.visibility = View.INVISIBLE
+        }
+    }
+
+    private fun uploadImage() {
+        if (filePath != null) {
+            var ref: StorageReference = storageRef.child("image/"+UUID.randomUUID().toString())
+            ref.putFile(filePath!!)
+                .addOnSuccessListener {
+                    OnSuccessListener<UploadTask.TaskSnapshot> {
+                        Toast.makeText(requireContext(), "uploaded", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                .addOnFailureListener{
+                    OnFailureListener{
+                        Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+                .addOnProgressListener {
+                    OnProgressListener<UploadTask.TaskSnapshot> {
+                        var progress: Double = (100.0 * it.bytesTransferred/it.totalByteCount)
+                    }
+                }
         }
     }
 

@@ -131,7 +131,7 @@ class RoomListFragment : BaseFragment<RoomListViewModel>(RoomListViewModel::clas
 
     override fun onDestroyView() {
         super.onDestroyView()
-        //_binding = null
+        _binding = null
     }
 
     private fun onlineUserStatus(status: String) {
