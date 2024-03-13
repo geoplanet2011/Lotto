@@ -108,7 +108,7 @@ class RegisterFragment : Fragment() {
 
     }
 
-    private fun getRegisterUsersCount () {
+    private fun getRegisterUsersCount() {
         databaseReference?.addValueEventListener(object : ValueEventListener {
             @SuppressLint("SetTextI18n")
             override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -165,28 +165,6 @@ class RegisterFragment : Fragment() {
             }
     }
 
-    fun resizeBitmap(source: Bitmap, maxLength: Int): Bitmap {
-        try {
-            if (source.height >= source.width) {
-                if (source.height <= maxLength) {
-                    return source
-                }
-                val aspectRatio = source.width.toDouble() / source.height.toDouble()
-                val targetWidth = (maxLength * aspectRatio).toInt()
-                return Bitmap.createScaledBitmap(source, targetWidth, maxLength, false)
-            } else {
-                if (source.width <= maxLength) {
-                    return source
-                }
-                val aspectRatio = source.height.toDouble() / source.width.toDouble()
-                val targetHeight = (maxLength * aspectRatio).toInt()
-                return Bitmap.createScaledBitmap(source, maxLength, targetHeight, false)
-            }
-        } catch (e: Exception) {
-            return source
-        }
-    }
-
     private fun showLoader() {
         binding.progressBar.visibility = View.VISIBLE
     }
@@ -197,31 +175,9 @@ class RegisterFragment : Fragment() {
         }
     }
 
-    private fun uploadImage() {
-        if (filePath != null) {
-            var ref: StorageReference = storageRef.child("image/"+UUID.randomUUID().toString())
-            ref.putFile(filePath.toUri())
-                .addOnSuccessListener {
-                    OnSuccessListener<UploadTask.TaskSnapshot> {
-                        Toast.makeText(requireContext(), "uploaded", Toast.LENGTH_SHORT).show()
-                    }
-                }
-                .addOnFailureListener{
-                    OnFailureListener{
-                        Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
-                    }
-                }
-                .addOnProgressListener {
-                    OnProgressListener<UploadTask.TaskSnapshot> {
-                        var progress: Double = (100.0 * it.bytesTransferred/it.totalByteCount)
-                    }
-                }
-        }
-    }
-
-
     private fun cameraCheckPermission() {
-        val readPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) android.Manifest.permission.READ_MEDIA_IMAGES else android.Manifest.permission.READ_EXTERNAL_STORAGE
+        val readPermission =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) android.Manifest.permission.READ_MEDIA_IMAGES else android.Manifest.permission.READ_EXTERNAL_STORAGE
         Dexter.withContext(requireContext())
             .withPermissions(
                 android.Manifest.permission.CAMERA,
@@ -235,6 +191,7 @@ class RegisterFragment : Fragment() {
                         }
                     }
                 }
+
                 override fun onPermissionRationaleShouldBeShown(
                     permissions: MutableList<PermissionRequest>?,
                     token: PermissionToken?
@@ -269,6 +226,8 @@ class RegisterFragment : Fragment() {
     private val takePicture =
         registerForActivityResult(ActivityResultContracts.TakePicture()) { isSaved ->
             if (isSaved) {
+
+                uploadImage(uri)
 
                 Glide.with(requireContext())
                     .asBitmap()
@@ -310,9 +269,9 @@ class RegisterFragment : Fragment() {
             }
         }
 
-
     private fun folderCheckPermission() {
-        val readImagePermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) android.Manifest.permission.READ_MEDIA_IMAGES else android.Manifest.permission.READ_EXTERNAL_STORAGE
+        val readImagePermission =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) android.Manifest.permission.READ_MEDIA_IMAGES else android.Manifest.permission.READ_EXTERNAL_STORAGE
         Dexter.withContext(requireContext())
             .withPermission(readImagePermission)
             .withListener(object : PermissionListener {
@@ -337,6 +296,8 @@ class RegisterFragment : Fragment() {
 
     private var pickPicture =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+
+            uploadImage(uri)
 
             Glide.with(requireContext())
                 .asBitmap()
@@ -376,5 +337,53 @@ class RegisterFragment : Fragment() {
             }
 
         }
+
+    private fun uploadImage(uri: Uri?) {
+        uri?.let {
+            val ref: StorageReference = storageRef.child("image/" + UUID.randomUUID().toString())
+            ref.putFile(it)
+                .addOnSuccessListener {
+                    Toast.makeText(requireContext(), "Uploaded", Toast.LENGTH_SHORT).show()
+                    ref.downloadUrl.addOnSuccessListener { downloadUri ->
+                        Toast.makeText(
+                            requireContext(),
+                            "Download link: $downloadUri",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    Toast.makeText(requireContext(), exception.message, Toast.LENGTH_SHORT).show()
+                }
+                .addOnProgressListener { taskSnapshot ->
+                    val progress =
+                        (100.0 * taskSnapshot.bytesTransferred / taskSnapshot.totalByteCount)
+                }
+        } ?: run {
+            Toast.makeText(requireContext(), "No file selected", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun resizeBitmap(source: Bitmap, maxLength: Int): Bitmap {
+        try {
+            if (source.height >= source.width) {
+                if (source.height <= maxLength) {
+                    return source
+                }
+                val aspectRatio = source.width.toDouble() / source.height.toDouble()
+                val targetWidth = (maxLength * aspectRatio).toInt()
+                return Bitmap.createScaledBitmap(source, targetWidth, maxLength, false)
+            } else {
+                if (source.width <= maxLength) {
+                    return source
+                }
+                val aspectRatio = source.height.toDouble() / source.width.toDouble()
+                val targetHeight = (maxLength * aspectRatio).toInt()
+                return Bitmap.createScaledBitmap(source, maxLength, targetHeight, false)
+            }
+        } catch (e: Exception) {
+            return source
+        }
+    }
 
 }
