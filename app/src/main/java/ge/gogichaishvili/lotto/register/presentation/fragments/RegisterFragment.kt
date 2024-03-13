@@ -50,6 +50,7 @@ import ge.gogichaishvili.lotto.databinding.FragmentRegisterBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.net.URI
 import java.util.UUID
@@ -66,9 +67,6 @@ class RegisterFragment : Fragment() {
     private lateinit var uri: Uri
     private var filePath = ""
 
-    private lateinit var storage: FirebaseStorage
-    private lateinit var storageRef: StorageReference
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -82,9 +80,6 @@ class RegisterFragment : Fragment() {
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance()
         databaseReference = database?.reference!!.child("Users")
-
-        storage = FirebaseStorage.getInstance()
-        storageRef = storage.reference
 
         binding.registerBtn.setOnClickListener {
             register()
@@ -227,7 +222,7 @@ class RegisterFragment : Fragment() {
         registerForActivityResult(ActivityResultContracts.TakePicture()) { isSaved ->
             if (isSaved) {
 
-                uploadImage(uri)
+                //uploadImage(uri)
 
                 Glide.with(requireContext())
                     .asBitmap()
@@ -261,6 +256,7 @@ class RegisterFragment : Fragment() {
                         val source =
                             ImageDecoder.createSource(requireActivity().contentResolver, uri)
                         val bitmap = ImageDecoder.decodeBitmap(source)
+                        resizeImageAndUpload(bitmap)
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -297,7 +293,7 @@ class RegisterFragment : Fragment() {
     private var pickPicture =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
 
-            uploadImage(uri)
+            //uploadImage(uri)
 
             Glide.with(requireContext())
                 .asBitmap()
@@ -331,6 +327,7 @@ class RegisterFragment : Fragment() {
                     val source =
                         ImageDecoder.createSource(requireActivity().contentResolver, uri)
                     val bitmap = ImageDecoder.decodeBitmap(source)
+                    resizeImageAndUpload(bitmap)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -340,7 +337,9 @@ class RegisterFragment : Fragment() {
 
     private fun uploadImage(uri: Uri?) {
         uri?.let {
-            val ref: StorageReference = storageRef.child("image/" + UUID.randomUUID().toString())
+            val ref = FirebaseStorage.getInstance().reference.child(
+                "image/" + UUID.randomUUID().toString()
+            )
             ref.putFile(it)
                 .addOnSuccessListener {
                     Toast.makeText(requireContext(), "Uploaded", Toast.LENGTH_SHORT).show()
@@ -364,7 +363,41 @@ class RegisterFragment : Fragment() {
         }
     }
 
-    fun resizeBitmap(source: Bitmap, maxLength: Int): Bitmap {
+    private fun resizeImageAndUpload(originalBitmap: Bitmap) {
+        val resizedBitmap = resizeBitmap(originalBitmap, 500)
+        val baos = ByteArrayOutputStream()
+        resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+        val image = baos.toByteArray()
+
+        val storageRef =
+            FirebaseStorage.getInstance().reference.child("image/" + UUID.randomUUID().toString())
+        //progressbar.visibility = View.VISIBLE
+        storageRef.putBytes(image)
+            .addOnCompleteListener { uploadTask ->
+                //progressbar.visibility = View.INVISIBLE
+                if (uploadTask.isSuccessful) {
+                    storageRef.downloadUrl.addOnCompleteListener { urlTask ->
+                        urlTask.result?.let { uri ->
+                            Toast.makeText(requireContext(), uri.toString(), Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                    }
+                } else {
+                    uploadTask.exception?.let {
+                        Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+            .addOnFailureListener { exception ->
+                Toast.makeText(requireContext(), exception.message, Toast.LENGTH_SHORT).show()
+            }
+            .addOnProgressListener { taskSnapshot ->
+                val progress =
+                    (100.0 * taskSnapshot.bytesTransferred / taskSnapshot.totalByteCount)
+            }
+    }
+
+    private fun resizeBitmap(source: Bitmap, maxLength: Int): Bitmap {
         try {
             if (source.height >= source.width) {
                 if (source.height <= maxLength) {
