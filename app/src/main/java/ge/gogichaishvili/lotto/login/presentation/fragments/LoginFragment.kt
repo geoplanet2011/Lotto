@@ -42,7 +42,7 @@ class LoginFragment : Fragment() {
 
         auth = FirebaseAuth.getInstance()
 
-        val currentUser = auth.currentUser
+        /*val currentUser = auth.currentUser
         if (currentUser != null) {
             parentFragmentManager.beginTransaction()
                 .replace(
@@ -51,7 +51,7 @@ class LoginFragment : Fragment() {
                 ).addToBackStack(
                     DashboardFragment::class.java.name
                 ).commit()
-        }
+        }*/
 
         binding.loginBtn.setOnClickListener {
             login()

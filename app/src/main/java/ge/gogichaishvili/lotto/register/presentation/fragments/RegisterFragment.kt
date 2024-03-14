@@ -52,7 +52,7 @@ class RegisterFragment : Fragment() {
     private lateinit var uri: Uri
     private var filePath = ""
 
-    private var userPhotoLink: String? = null
+    private var userPhotoLink: String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -94,8 +94,12 @@ class RegisterFragment : Fragment() {
         databaseReference?.addValueEventListener(object : ValueEventListener {
             @SuppressLint("SetTextI18n")
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val totalUsers = dataSnapshot.childrenCount.toString()
-                binding.tvTotal.text = "${getString(R.string.total_users_count)} $totalUsers"
+                try {
+                    val totalUsers = dataSnapshot.childrenCount.toString()
+                    binding.tvTotal.text = "${getString(R.string.total_users_count)} $totalUsers"
+                } catch (e: Exception) {
+                    println(e.message.toString())
+                }
             }
 
             override fun onCancelled(databaseError: DatabaseError) {}
@@ -104,7 +108,7 @@ class RegisterFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+        // _binding = null
     }
 
     private fun register() {
@@ -131,7 +135,9 @@ class RegisterFragment : Fragment() {
                     val currentUserDb = databaseReference?.child((currentUser?.uid!!))
                     currentUserDb?.child("firstname")
                         ?.setValue(binding.firstnameInput.text.trim().toString())
+                    currentUserDb?.child("photo")?.setValue(userPhotoLink)
                     currentUserDb?.child("status")?.setValue("offline")
+                    currentUserDb?.child("coin")?.setValue("1000")
                     Toast.makeText(
                         requireContext(),
                         R.string.registration_success,
@@ -210,7 +216,9 @@ class RegisterFragment : Fragment() {
             if (isSaved) {
 
                 //uploadImage(uri)
-                binding.progressbarPhoto.visibility = View.VISIBLE
+                if (isAdded) {
+                    binding.progressbarPhoto.visibility = View.VISIBLE
+                }
 
                 Glide.with(requireContext())
                     .asBitmap()
@@ -248,7 +256,9 @@ class RegisterFragment : Fragment() {
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    binding.progressbarPhoto.visibility = View.INVISIBLE
+                    if (isAdded) {
+                        binding.progressbarPhoto.visibility = View.INVISIBLE
+                    }
                 }
 
             }
@@ -283,7 +293,9 @@ class RegisterFragment : Fragment() {
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
 
             //uploadImage(uri)
-            binding.progressbarPhoto.visibility = View.VISIBLE
+            if (isAdded) {
+                binding.progressbarPhoto.visibility = View.VISIBLE
+            }
 
             Glide.with(requireContext())
                 .asBitmap()
@@ -321,7 +333,9 @@ class RegisterFragment : Fragment() {
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                binding.progressbarPhoto.visibility = View.INVISIBLE
+                if (isAdded) {
+                    binding.progressbarPhoto.visibility = View.INVISIBLE
+                }
             }
 
         }
@@ -366,12 +380,14 @@ class RegisterFragment : Fragment() {
         storageRef.putBytes(image)
             .addOnCompleteListener { uploadTask ->
                 //progressbar.visibility = View.INVISIBLE
-                binding.progressbarPhoto.visibility = View.INVISIBLE
                 if (uploadTask.isSuccessful) {
                     storageRef.downloadUrl.addOnCompleteListener { urlTask ->
                         urlTask.result?.let { uri ->
                             //Toast.makeText(requireContext(), uri.toString(), Toast.LENGTH_SHORT) .show()
                             userPhotoLink = uri.toString()
+                            if (isAdded) {
+                                binding.progressbarPhoto.visibility = View.INVISIBLE
+                            }
                         }
                     }
                 } else {
