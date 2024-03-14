@@ -124,6 +124,25 @@ class SharedPreferenceManager(context: Context) {
         }.apply()
     }
 
+    fun setIsUserRemember(isUserRememberEnabled: Boolean) {
+        editor.apply {
+            putBoolean(IS_USER_REMEMBER_ENABLED, isUserRememberEnabled)
+        }.apply()
+    }
+
+    fun isUserRemember(): Boolean {
+        return preference.getBoolean(IS_USER_REMEMBER_ENABLED, false)
+    }
+
+    fun saveUserName(userName: String) {
+        editor.apply {
+            putString(PREFERENCE_USERNAME, userName)
+        }.apply()
+    }
+
+    fun getUserName(): String {
+        return preference.getString(PREFERENCE_USERNAME, null)!!
+    }
 
     companion object {
         private const val PREFERENCE_NAME = "MySharedPreference"
@@ -140,5 +159,8 @@ class SharedPreferenceManager(context: Context) {
         private const val IS_ENABLED_HINT_KEY = "false"
         private const val IS_ENABLED_SOUND_KEY = "true"
         private const val GAME_SPEED_KEY = "medium"
+
+        private const val IS_USER_REMEMBER_ENABLED = "is_user_remember_enabled"
+        private const val PREFERENCE_USERNAME = "Username"
     }
 }

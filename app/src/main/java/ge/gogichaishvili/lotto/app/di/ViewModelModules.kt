@@ -1,5 +1,6 @@
 package ge.gogichaishvili.lotto.app.di
 
+import ge.gogichaishvili.lotto.login.presentation.viewmodels.LoginViewModel
 import ge.gogichaishvili.lotto.main.presentation.viewmodels.CreateRoomViewModel
 import ge.gogichaishvili.lotto.main.presentation.viewmodels.GameBoardViewModel
 import ge.gogichaishvili.lotto.main.presentation.viewmodels.HighScoreViewModel
@@ -40,6 +41,10 @@ object ViewModelModules {
 
         viewModel {
             CreateRoomViewModel()
+        }
+
+        viewModel {
+            LoginViewModel( pref = get() )
         }
 
     }

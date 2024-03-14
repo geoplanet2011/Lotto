@@ -14,12 +14,15 @@ import com.google.firebase.auth.FirebaseAuth
 import ge.gogichaishvili.lotto.R
 import ge.gogichaishvili.lotto.app.tools.hideKeyboard
 import ge.gogichaishvili.lotto.databinding.FragmentLoginBinding
+import ge.gogichaishvili.lotto.login.presentation.viewmodels.LoginViewModel
 import ge.gogichaishvili.lotto.main.presentation.fragments.DashboardFragment
 import ge.gogichaishvili.lotto.main.presentation.fragments.RoomListFragment
+import ge.gogichaishvili.lotto.main.presentation.fragments.base.BaseFragment
+import ge.gogichaishvili.lotto.main.presentation.viewmodels.CreateRoomViewModel
 import ge.gogichaishvili.lotto.recovery.presentation.fragments.RecoveryFragment
 import ge.gogichaishvili.lotto.register.presentation.fragments.RegisterFragment
 
-class LoginFragment : Fragment() {
+class LoginFragment : BaseFragment<LoginViewModel>(LoginViewModel::class) {
 
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
@@ -27,6 +30,8 @@ class LoginFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
 
     private var isPasswordVisible = false
+
+    private var rememberStatus: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,6 +57,23 @@ class LoginFragment : Fragment() {
                     DashboardFragment::class.java.name
                 ).commit()
         }*/
+
+        rememberStatus = mViewModel.getUserRememberStatus()
+        binding.rbRemember.isChecked = rememberStatus == true
+        if (rememberStatus) {
+            try {
+                val username = mViewModel.getUserName()
+                binding.emailInput.setText(username)
+            } catch (e: Exception) {
+                println(e.message.toString())
+            }
+        }
+
+        binding.rbRemember.setOnCheckedChangeListener { _, isChecked ->
+            if (!isChecked) {
+                mViewModel.onUserRememberRadioButtonChange(false, "")
+            }
+        }
 
         binding.loginBtn.setOnClickListener {
             login()
@@ -142,6 +164,7 @@ class LoginFragment : Fragment() {
             .addOnCompleteListener(requireActivity()) {
                 hideLoader()
                 if (it.isSuccessful) {
+                    setUserRemember()
                     parentFragmentManager.beginTransaction()
                         .replace(
                             R.id.fragmentContainerView,
@@ -163,6 +186,17 @@ class LoginFragment : Fragment() {
     private fun hideLoader() {
         if (binding.progressBar.isVisible) {
             binding.progressBar.visibility = View.INVISIBLE
+        }
+    }
+
+    private fun setUserRemember () {
+        if (binding.rbRemember.isChecked && binding.emailInput.text.toString().trim()
+                .isNotEmpty()
+        ) {
+            mViewModel.onUserRememberRadioButtonChange(
+                true,
+                binding.emailInput.text.toString().trim()
+            )
         }
     }
 

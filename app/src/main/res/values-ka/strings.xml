@@ -91,4 +91,5 @@
     <string name="total_users_count">სულ რეგისტრირებული მომხმარებლებია</string>
     <string name="camera">კამერა</string>
     <string name="gallery">გალერეა</string>
+    <string name="remember">Remember</string>
 </resources>
