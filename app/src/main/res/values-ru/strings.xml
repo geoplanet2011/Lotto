@@ -89,4 +89,6 @@
     <string name="room_created">Комната успешно создана</string>
     <string name="error">Ошибка</string>
     <string name="total_users_count">Всего зарегистрированных пользователей</string>
+    <string name="camera">Камера</string>
+    <string name="gallery">Галерея</string>
 </resources>

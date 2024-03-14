@@ -89,4 +89,6 @@
     <string name="room_created">ოთახი წარმატებით შეიქმნა</string>
     <string name="error">შეცდომა</string>
     <string name="total_users_count">სულ რეგისტრირებული მომხმარებლებია</string>
+    <string name="camera">კამერა</string>
+    <string name="gallery">გალერეა</string>
 </resources>

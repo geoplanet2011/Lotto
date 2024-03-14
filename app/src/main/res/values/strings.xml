@@ -95,6 +95,8 @@
     <string name="room_created">Room successfully created</string>
     <string name="error">Error</string>
     <string name="total_users_count">Total register users is</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

@@ -1,31 +1,23 @@
 package ge.gogichaishvili.lotto.register.presentation.fragments
 
-import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
-import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
-import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
-import com.google.android.gms.tasks.OnFailureListener
-import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -33,9 +25,6 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.OnProgressListener
-import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.UploadTask
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
@@ -47,12 +36,8 @@ import com.karumi.dexter.listener.single.PermissionListener
 import ge.gogichaishvili.lotto.R
 import ge.gogichaishvili.lotto.app.tools.hideKeyboard
 import ge.gogichaishvili.lotto.databinding.FragmentRegisterBinding
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 import java.io.File
-import java.net.URI
 import java.util.UUID
 
 class RegisterFragment : Fragment() {
@@ -66,6 +51,8 @@ class RegisterFragment : Fragment() {
 
     private lateinit var uri: Uri
     private var filePath = ""
+
+    private var userPhotoLink: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -223,6 +210,7 @@ class RegisterFragment : Fragment() {
             if (isSaved) {
 
                 //uploadImage(uri)
+                binding.progressbarPhoto.visibility = View.VISIBLE
 
                 Glide.with(requireContext())
                     .asBitmap()
@@ -260,6 +248,7 @@ class RegisterFragment : Fragment() {
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
+                    binding.progressbarPhoto.visibility = View.INVISIBLE
                 }
 
             }
@@ -294,6 +283,7 @@ class RegisterFragment : Fragment() {
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
 
             //uploadImage(uri)
+            binding.progressbarPhoto.visibility = View.VISIBLE
 
             Glide.with(requireContext())
                 .asBitmap()
@@ -331,6 +321,7 @@ class RegisterFragment : Fragment() {
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
+                binding.progressbarPhoto.visibility = View.INVISIBLE
             }
 
         }
@@ -375,11 +366,12 @@ class RegisterFragment : Fragment() {
         storageRef.putBytes(image)
             .addOnCompleteListener { uploadTask ->
                 //progressbar.visibility = View.INVISIBLE
+                binding.progressbarPhoto.visibility = View.INVISIBLE
                 if (uploadTask.isSuccessful) {
                     storageRef.downloadUrl.addOnCompleteListener { urlTask ->
                         urlTask.result?.let { uri ->
-                            Toast.makeText(requireContext(), uri.toString(), Toast.LENGTH_SHORT)
-                                .show()
+                            //Toast.makeText(requireContext(), uri.toString(), Toast.LENGTH_SHORT) .show()
+                            userPhotoLink = uri.toString()
                         }
                     }
                 } else {
