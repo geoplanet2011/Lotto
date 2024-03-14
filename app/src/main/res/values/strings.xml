@@ -98,6 +98,11 @@
     <string name="camera">Camera</string>
     <string name="gallery">Gallery</string>
     <string name="remember">Remember</string>
+    <string name="create_room">Create room</string>
+    <string name="room_not_found">No available rooms found</string>
+    <string name="money">Money</string>
+    <string name="bet_coins">"Set bet "</string>
+    <string name="_0">0</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

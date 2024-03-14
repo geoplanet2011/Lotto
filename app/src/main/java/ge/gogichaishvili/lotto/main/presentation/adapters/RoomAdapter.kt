@@ -32,7 +32,7 @@ class RoomAdapter(private val context: Context, private val roomList: List<Room>
         with(holder.binding) {
             tvName.text = room.name
             passwordLogo.visibility =
-                if (room.isLocked == true) View.VISIBLE else View.GONE
+                if (room.locked == true) View.VISIBLE else View.GONE
 
             root.setOnCreateContextMenuListener { contextMenu, _, _ ->
                 contextMenu.add(position, 0, 0, context.getString(R.string.delete))
@@ -40,7 +40,7 @@ class RoomAdapter(private val context: Context, private val roomList: List<Room>
             }
 
             root.setOnClickListener {
-                if (room.isLocked == true) {
+                if (room.locked == true) {
                     alertWithInputText(context, room.password!!, room.name!!)
                 } else {
                     navigateToDashboardFragment(room.name)

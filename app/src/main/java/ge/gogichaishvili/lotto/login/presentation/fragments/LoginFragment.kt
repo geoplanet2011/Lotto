@@ -128,7 +128,7 @@ class LoginFragment : BaseFragment<LoginViewModel>(LoginViewModel::class) {
 
     }
 
-    override fun onStart() {
+   /* override fun onStart() {
         super.onStart()
 
         val user = auth.currentUser
@@ -141,7 +141,7 @@ class LoginFragment : BaseFragment<LoginViewModel>(LoginViewModel::class) {
                     DashboardFragment::class.java.name
                 ).commit()
         }
-    }
+    }*/
 
     private fun login() {
 
@@ -209,7 +209,6 @@ class LoginFragment : BaseFragment<LoginViewModel>(LoginViewModel::class) {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        FirebaseAuth.getInstance().signOut()
         _binding = null
     }
 

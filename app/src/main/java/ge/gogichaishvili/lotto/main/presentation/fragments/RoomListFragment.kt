@@ -6,6 +6,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
@@ -96,6 +97,13 @@ class RoomListFragment : BaseFragment<RoomListViewModel>(RoomListViewModel::clas
                     adapter = RoomAdapter(requireContext(), roomList)
                     binding.roomListRv.adapter = adapter
                     mViewModel.setLoading(false)
+                    if (roomList.isEmpty()) {
+                        Toast.makeText(
+                            requireContext(),
+                            R.string.room_not_found,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             }
 
@@ -131,7 +139,7 @@ class RoomListFragment : BaseFragment<RoomListViewModel>(RoomListViewModel::clas
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+        //_binding = null
     }
 
     private fun onlineUserStatus(status: String) {
@@ -156,7 +164,9 @@ class RoomListFragment : BaseFragment<RoomListViewModel>(RoomListViewModel::clas
         super.bindObservers()
 
         mViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-           binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+            if (isAdded) {
+                binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+            }
         }
     }
 

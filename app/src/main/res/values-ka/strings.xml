@@ -92,4 +92,9 @@
     <string name="camera">კამერა</string>
     <string name="gallery">გალერეა</string>
     <string name="remember">Remember</string>
+    <string name="create_room">Create room</string>
+    <string name="room_not_found">თავისუფალი ოთახები არ მოიძებნა</string>
+    <string name="money">თანხა</string>
+    <string name="bet_coins">ფსონის დადება</string>
+    <string name="_0">0</string>
 </resources>
