@@ -97,4 +97,6 @@
     <string name="money">თანხა</string>
     <string name="bet_coins">ფსონის დადება</string>
     <string name="_0">0</string>
+    <string name="free">უფასო</string>
+    <string name="bet_is">ფსონი არის</string>
 </resources>

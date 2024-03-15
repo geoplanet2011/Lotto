@@ -70,6 +70,19 @@
             tools:ignore="TextContrastCheck" />
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/tv_balance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/your_balance"
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ll_coin"
+        tools:visibility="visible" />
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/coin_TextInputLayout"
         style="@style/ThemeOverlay.MaterialComponents.TextInputEditText.OutlinedBox"
@@ -77,21 +90,21 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:visibility="gone"
-        tools:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ll_coin">
+        app:layout_constraintTop_toBottomOf="@+id/tv_balance"
+        tools:visibility="visible">
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/et_coin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="1dp"
+            android:digits="0123456789"
             android:hint="@string/money"
+            android:inputType="number"
             android:maxLines="1"
             android:singleLine="true"
-            android:inputType="number"
-            android:digits="0123456789"
             android:textColor="@color/black"
             android:textColorHint="@color/black_overlay"
             android:textSize="14sp" />
@@ -170,10 +183,10 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="15dp"
             android:layout_weight="1"
-            android:textAllCaps="false"
             android:background="@drawable/settings_button"
             android:padding="5dp"
             android:text="@string/create"
+            android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="15sp" />
 
@@ -183,10 +196,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_weight="1"
-            android:textAllCaps="false"
             android:background="@drawable/highscore_button"
             android:padding="5dp"
             android:text="@string/cancel"
+            android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="15sp" />
     </LinearLayout>

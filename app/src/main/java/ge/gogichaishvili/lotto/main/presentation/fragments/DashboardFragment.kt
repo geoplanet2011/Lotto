@@ -14,7 +14,9 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import ge.gogichaishvili.lotto.R
 import ge.gogichaishvili.lotto.databinding.FragmentDashboardBinding
+import ge.gogichaishvili.lotto.main.enums.PlayerStatusEnum
 import ge.gogichaishvili.lotto.main.enums.RoomSateEnums
 import ge.gogichaishvili.lotto.main.models.Room
 import ge.gogichaishvili.lotto.main.models.User
@@ -25,6 +27,7 @@ class DashboardFragment : Fragment() {
     private val binding get() = _binding!!
 
     private var roomId: String? = null
+    private var playerStatus: PlayerStatusEnum? = null
     private var playerId: String? = null
     private var opponentId: String? = null
 
@@ -34,6 +37,9 @@ class DashboardFragment : Fragment() {
     private var databaseReference: DatabaseReference? = null
     private var databaseReferenceForRooms: DatabaseReference? = null
     private var database: FirebaseDatabase? = null
+    private var userReference: DatabaseReference? = null
+    private var uid: String? = null
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,13 +53,23 @@ class DashboardFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         roomId = arguments?.getString("roomId") ?: ""
+        val playerStatusCode = arguments?.getInt("playerStatus") ?: PlayerStatusEnum.UNKNOWN.value
+        playerStatus = PlayerStatusEnum.getEnumByCode(playerStatusCode)
 
-        auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance()
         databaseReference = database?.reference!!.child("Users")
         databaseReferenceForRooms = database?.reference!!.child("Rooms")
+        auth = FirebaseAuth.getInstance()
+        firebaseUser = auth.currentUser
+        uid = firebaseUser?.uid!!
+        userReference = databaseReference?.child(uid!!)
 
-        firebaseUser = FirebaseAuth.getInstance().currentUser
+        if (playerStatus == PlayerStatusEnum.JOINER) {
+            addPlayerToRoom(uid!!)
+        }
+
+        loadProfile()
+        waitForOpponent()
 
         binding.logoutBtn.setOnClickListener {
             auth.signOut()
@@ -68,32 +84,16 @@ class DashboardFragment : Fragment() {
 
 
     private fun sendData () {
-        databaseReferenceForRooms!!.child(roomId!!).setValue(Room("room8", true, "123", RoomSateEnums.OPEN))
+       // databaseReferenceForRooms!!.child(roomId!!).setValue(Room("room8", true, "123", RoomSateEnums.OPEN))
     }
 
-    private fun addPlayerToRoom(playerId: String) {
-        // მაგალითი: მოთამაშის დამატება ოთახში
-        //roomRef.child("players").push().setValue(playerId)
-    }
+
 
     private fun sendCommand(playerId: String, command: String) {
         //roomRef.child("commands").child(playerId).setValue(command)
     }
 
-    private fun waitForOpponent() {
-        // მაგალითი: ლოდინი სხვა მოთამაშეზე
-      /*  roomRef.child("players").addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                if (dataSnapshot.childrenCount == 2) {
-                    // ორი მოთამაშე არის, თამაში იწყება
-                }
-            }
 
-            override fun onCancelled(databaseError: DatabaseError) {
-                // შეცდომის დამუხტვა
-            }
-        })*/
-    }
 
     private fun getData() {
         databaseReferenceForRooms!!.addValueEventListener(
@@ -109,7 +109,7 @@ class DashboardFragment : Fragment() {
                         sb.append("${i.key} $name")
                     }
 
-                    binding.tvAnswer.text = sb
+                    //binding.tvAnswer.text = sb
 
                     //val user  = p0.getValue(User::class.java)
                 }
@@ -146,17 +146,71 @@ class DashboardFragment : Fragment() {
         })
     }
 
+    private fun addPlayerToRoom_(playerId: String) {
+        databaseReferenceForRooms?.child(roomId!!)?.child("players")?.push()?.setValue(playerId)
+    }
+
+    private fun addPlayerToRoom(playerId: String) {
+        val playersRef = databaseReferenceForRooms?.child(roomId!!)?.child("players")
+
+        playersRef?.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val playersCount = dataSnapshot.childrenCount.toInt()
+                val newPlayerIndex = playersCount + 1
+                playersRef.child(newPlayerIndex.toString()).setValue(playerId)
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {}
+        })
+    }
+
+
+    private fun waitForOpponent() {
+        databaseReferenceForRooms?.child(roomId!!)?.child("players")?.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val players = dataSnapshot.children.mapNotNull { it.value as? String }
+                if (players.size == 2) {
+                    val otherPlayerId = players.firstOrNull { it != uid }
+                    if (otherPlayerId != null) {
+                        loadOpponentProfile(otherPlayerId)
+                    }
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) { }
+        })
+    }
+
+    private fun loadOpponentProfile(otherPlayerId: String) {
+        databaseReference?.child(otherPlayerId)?.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(p0: DataSnapshot) {
+                binding.tvPlayerTwoName.text = p0.child("firstname").value.toString()
+                binding.tvPlayerTwoScore.text = p0.child("coin").value.toString()
+
+                Glide.with(requireActivity())
+                    .load(p0.child("photo").value.toString())
+                    .placeholder(R.drawable.male)
+                    .error(R.drawable.male)
+                    .into(binding.ivOpponent)
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+        })
+    }
+
     private fun loadProfile() {
-        val user = auth.currentUser
-        val userReference = databaseReference?.child(user?.uid!!)
-        //binding.emailTv.text = user?.email
         userReference?.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
-                //binding.firstNameTv.text = p0.child("firstname").value.toString()
+                binding.tvPlayerOneName.text = p0.child("firstname").value.toString()
+                binding.tvPlayerOneScore.text = p0.child("coin").value.toString()
 
-                /*Glide.with(requireActivity())
-                    .load(user?.photoUrl)
-                    .into(binding.profileImg)*/
+                Glide.with(requireActivity())
+                    .load(p0.child("photo").value.toString())
+                    .placeholder(R.drawable.male)
+                    .error(R.drawable.male)
+                    .into(binding.ivPlayer)
             }
 
             override fun onCancelled(p0: DatabaseError) {

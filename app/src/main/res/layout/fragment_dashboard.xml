@@ -4,13 +4,130 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:keepScreenOn="true"
     tools:context=".main.presentation.fragments.DashboardFragment">
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/leftGuide"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="5dp"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/rightGuide"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintGuide_end="5dp" />
+
+    <com.mikhaellopez.circularimageview.CircularImageView
+        android:id="@+id/iv_player"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="25dp"
+        android:src="@drawable/male"
+        app:civ_border_width="3dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_playerOneName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@+id/iv_player"
+        app:layout_constraintTop_toBottomOf="@+id/iv_player"
+        tools:text="Player" />
+
+    <TextView
+        android:id="@+id/tv_playerOneScore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/gold"
+        android:textColor="@color/text_color_gold"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@+id/tv_playerOneName"
+        app:layout_constraintTop_toBottomOf="@+id/tv_playerOneName" />
+
+    <com.mikhaellopez.circularimageview.CircularImageView
+        android:id="@+id/iv_opponent"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginEnd="35dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="25dp"
+        android:src="@drawable/male"
+        app:civ_border_width="3dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_playerTwoName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@+id/iv_opponent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_opponent"
+        tools:text="Opponent" />
+
+    <TextView
+        android:id="@+id/tv_playerTwoScore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/gold"
+        android:textColor="@color/text_color_gold"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@+id/tv_playerTwoName"
+        app:layout_constraintTop_toBottomOf="@+id/tv_playerTwoName" />
+
+    <LinearLayout
+        android:id="@+id/ll_stones"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:animateLayoutChanges="true"
+        android:gravity="center|start"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toStartOf="@id/rightGuide"
+        app:layout_constraintStart_toEndOf="@id/leftGuide"
+        app:layout_constraintTop_toBottomOf="@+id/tv_playerOneScore" />
+
+    <LinearLayout
+        android:id="@+id/ll_cards"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toStartOf="@id/rightGuide"
+        app:layout_constraintStart_toEndOf="@id/leftGuide"
+        app:layout_constraintTop_toBottomOf="@id/ll_stones" />
+
+
+
 <LinearLayout
+    android:id="@+id/ll_test"
     android:orientation="vertical"
     android:gravity="center"
+    android:layout_marginTop="50dp"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/ll_cards"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
 <TextView
     android:id="@+id/tv_answer"

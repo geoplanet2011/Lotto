@@ -97,4 +97,6 @@
     <string name="money">Деньги</string>
     <string name="bet_coins">Делать ставку</string>
     <string name="_0">0</string>
+    <string name="free">Бесплатно</string>
+    <string name="bet_is">Ставка</string>
 </resources>

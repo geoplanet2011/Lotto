@@ -1,5 +1,6 @@
 package ge.gogichaishvili.lotto.main.presentation.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.InputType
 import android.view.LayoutInflater
@@ -15,6 +16,7 @@ import com.google.firebase.database.ValueEventListener
 import ge.gogichaishvili.lotto.R
 import ge.gogichaishvili.lotto.app.tools.hideKeyboard
 import ge.gogichaishvili.lotto.databinding.FragmentCreateRoomBinding
+import ge.gogichaishvili.lotto.main.enums.PlayerStatusEnum
 import ge.gogichaishvili.lotto.main.enums.RoomSateEnums
 import ge.gogichaishvili.lotto.main.models.Room
 import ge.gogichaishvili.lotto.main.presentation.fragments.base.BaseFragment
@@ -51,7 +53,9 @@ class CreateRoomFragment : BaseFragment<CreateRoomViewModel>(CreateRoomViewModel
 
         binding.coinSwitch.setOnCheckedChangeListener { _, isChecked ->
             binding.coinTextInputLayout.visibility = if (isChecked) View.VISIBLE else View.GONE
+            binding.tvBalance.visibility = if (isChecked) View.VISIBLE else View.GONE
             if (!isChecked) binding.etCoin.text?.clear()
+            showUserBalance()
         }
 
         binding.createRoomButton.setOnClickListener {
@@ -123,9 +127,10 @@ class CreateRoomFragment : BaseFragment<CreateRoomViewModel>(CreateRoomViewModel
                                                     getString(R.string.room_created),
                                                     Toast.LENGTH_SHORT
                                                 ).show()
-                                                if (requireActivity().supportFragmentManager.backStackEntryCount > 0) {
+                                                /*if (requireActivity().supportFragmentManager.backStackEntryCount > 0) {
                                                     requireActivity().supportFragmentManager.popBackStackImmediate()
-                                                }
+                                                }*/
+                                                navigateToDashboard(roomName)
                                             } else {
                                                 val errorMessage =
                                                     task.exception?.message
@@ -165,7 +170,7 @@ class CreateRoomFragment : BaseFragment<CreateRoomViewModel>(CreateRoomViewModel
                 .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
                         val userMoney = snapshot.child("coin").value?.toString()
-                        val coin =  binding.etCoin.text.toString().trim().ifEmpty { "0" }
+                        val coin = binding.etCoin.text.toString().trim().ifEmpty { "0" }
 
                         if (!userMoney.isNullOrEmpty() && userMoney.toLong() >= coin.toLong()) {
                             callback.onCheckSuccess()
@@ -188,6 +193,22 @@ class CreateRoomFragment : BaseFragment<CreateRoomViewModel>(CreateRoomViewModel
         } ?: callback.onCheckFailure()
     }
 
+    private fun showUserBalance() {
+        val userUid = FirebaseAuth.getInstance().currentUser?.uid
+        val databaseReference = FirebaseDatabase.getInstance().getReference("Users")
+        userUid?.let { uid ->
+            databaseReference.child(uid)
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    @SuppressLint("SetTextI18n")
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        binding.tvBalance.text =
+                            "${getString(R.string.your_balance)} ${snapshot.child("coin").value?.toString()}"
+                    }
+
+                    override fun onCancelled(databaseError: DatabaseError) {}
+                })
+        }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -201,6 +222,19 @@ class CreateRoomFragment : BaseFragment<CreateRoomViewModel>(CreateRoomViewModel
     private fun hideLoader() {
         if (binding.progressBar.isVisible) {
             binding.progressBar.visibility = View.INVISIBLE
+        }
+    }
+
+    fun navigateToDashboard(roomName: String) {
+        parentFragmentManager.beginTransaction().apply {
+            replace(R.id.fragmentContainerView, DashboardFragment().apply {
+                arguments = Bundle().apply {
+                    putString("roomId", roomName)
+                    putInt("playerStatus", PlayerStatusEnum.CREATOR.value)
+                }
+            })
+            addToBackStack(null)
+            commit()
         }
     }
 }

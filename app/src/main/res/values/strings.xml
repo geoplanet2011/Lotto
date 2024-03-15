@@ -103,6 +103,8 @@
     <string name="money">Money</string>
     <string name="bet_coins">"Set bet "</string>
     <string name="_0">0</string>
+    <string name="free">Free</string>
+    <string name="bet_is">Bet is</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

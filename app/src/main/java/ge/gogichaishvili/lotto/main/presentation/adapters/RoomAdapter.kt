@@ -1,8 +1,8 @@
 package ge.gogichaishvili.lotto.main.presentation.adapters
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
-import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.text.InputType
@@ -15,6 +15,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import ge.gogichaishvili.lotto.R
 import ge.gogichaishvili.lotto.databinding.ViewRoomItemBinding
+import ge.gogichaishvili.lotto.main.enums.PlayerStatusEnum
 import ge.gogichaishvili.lotto.main.models.Room
 import ge.gogichaishvili.lotto.main.presentation.fragments.DashboardFragment
 
@@ -27,12 +28,19 @@ class RoomAdapter(private val context: Context, private val roomList: List<Room>
         return RoomViewHolder(binding)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: RoomViewHolder, position: Int) {
         val room = roomList[position]
         with(holder.binding) {
             tvName.text = room.name
             passwordLogo.visibility =
                 if (room.locked == true) View.VISIBLE else View.GONE
+
+            if (!room.money.isNullOrEmpty() && room.money.toLong() > 0) {
+                tvMoney.text = "${context.getString(R.string.bet_is)} ${room.money}"
+            } else {
+                tvMoney.text = context.getString(R.string.free)
+            }
 
             root.setOnCreateContextMenuListener { contextMenu, _, _ ->
                 contextMenu.add(position, 0, 0, context.getString(R.string.delete))
@@ -89,7 +97,10 @@ class RoomAdapter(private val context: Context, private val roomList: List<Room>
         roomName?.let {
             (context as? FragmentActivity)?.supportFragmentManager?.beginTransaction()?.apply {
                 replace(R.id.fragmentContainerView, DashboardFragment().apply {
-                    arguments = Bundle().apply { putString("roomId", it) }
+                    arguments = Bundle().apply {
+                        putString("roomId", it)
+                        putInt("playerStatus", PlayerStatusEnum.JOINER.value)
+                    }
                 })
                 addToBackStack(null)
                 commit()
