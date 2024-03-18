@@ -67,6 +67,8 @@
         android:layout_marginBottom="25dp"
         android:src="@drawable/male"
         app:civ_border_width="3dp"
+        android:visibility="invisible"
+        tools:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -78,7 +80,7 @@
         android:gravity="center"
         android:textColor="@color/black"
         android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="@+id/iv_opponent"
+        app:layout_constraintStart_toStartOf="@+id/iv_opponent"
         app:layout_constraintTop_toBottomOf="@+id/iv_opponent"
         tools:text="Opponent" />
 
@@ -87,7 +89,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="@string/gold"
+        tools:text="@string/gold"
         android:textColor="@color/text_color_gold"
         android:textSize="14sp"
         app:layout_constraintStart_toStartOf="@+id/tv_playerTwoName"

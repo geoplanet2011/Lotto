@@ -28,18 +28,14 @@ class DashboardFragment : Fragment() {
 
     private var roomId: String? = null
     private var playerStatus: PlayerStatusEnum? = null
-    private var playerId: String? = null
-    private var opponentId: String? = null
 
     private var firebaseUser: FirebaseUser? = null
-
     private lateinit var auth: FirebaseAuth
     private var databaseReference: DatabaseReference? = null
     private var databaseReferenceForRooms: DatabaseReference? = null
     private var database: FirebaseDatabase? = null
     private var userReference: DatabaseReference? = null
     private var uid: String? = null
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -87,13 +83,9 @@ class DashboardFragment : Fragment() {
        // databaseReferenceForRooms!!.child(roomId!!).setValue(Room("room8", true, "123", RoomSateEnums.OPEN))
     }
 
-
-
     private fun sendCommand(playerId: String, command: String) {
         //roomRef.child("commands").child(playerId).setValue(command)
     }
-
-
 
     private fun getData() {
         databaseReferenceForRooms!!.addValueEventListener(
@@ -110,25 +102,24 @@ class DashboardFragment : Fragment() {
                     }
 
                     //binding.tvAnswer.text = sb
-
                     //val user  = p0.getValue(User::class.java)
                 }
             }
         )
     }
 
-    private fun sendMessage(senderId: String, receiverId: String, message: String) {
+
+
+    private fun sendChatMessage(senderId: String, receiverId: String, message: String) {
         val hashMap: HashMap<String, String> = HashMap()
         hashMap["senderId"] = senderId
         hashMap["receiverId"] = receiverId
         hashMap["message"] = message
-
         databaseReference?.child("Chat")?.push()?.setValue(hashMap)
-
     }
 
     @SuppressLint("SuspiciousIndentation")
-    private fun readMessage(senderId: String, receiverId: String) {
+    private fun readChatMessage(senderId: String, receiverId: String) {
       val reference = FirebaseDatabase.getInstance().getReference("Chat")
         reference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -138,16 +129,8 @@ class DashboardFragment : Fragment() {
                     chatList.add(chat!!)
                 }
             }
-
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-
+            override fun onCancelled(error: DatabaseError) {}
         })
-    }
-
-    private fun addPlayerToRoom_(playerId: String) {
-        databaseReferenceForRooms?.child(roomId!!)?.child("players")?.push()?.setValue(playerId)
     }
 
     private fun addPlayerToRoom(playerId: String) {
@@ -163,7 +146,6 @@ class DashboardFragment : Fragment() {
             override fun onCancelled(databaseError: DatabaseError) {}
         })
     }
-
 
     private fun waitForOpponent() {
         databaseReferenceForRooms?.child(roomId!!)?.child("players")?.addValueEventListener(object : ValueEventListener {
@@ -184,14 +166,16 @@ class DashboardFragment : Fragment() {
     private fun loadOpponentProfile(otherPlayerId: String) {
         databaseReference?.child(otherPlayerId)?.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
-                binding.tvPlayerTwoName.text = p0.child("firstname").value.toString()
-                binding.tvPlayerTwoScore.text = p0.child("coin").value.toString()
 
                 Glide.with(requireActivity())
                     .load(p0.child("photo").value.toString())
                     .placeholder(R.drawable.male)
                     .error(R.drawable.male)
                     .into(binding.ivOpponent)
+
+                binding.ivOpponent.visibility = View.VISIBLE
+                binding.tvPlayerTwoName.text = p0.child("firstname").value.toString()
+                binding.tvPlayerTwoScore.text = p0.child("coin").value.toString()
             }
 
             override fun onCancelled(p0: DatabaseError) {
@@ -203,14 +187,15 @@ class DashboardFragment : Fragment() {
     private fun loadProfile() {
         userReference?.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
-                binding.tvPlayerOneName.text = p0.child("firstname").value.toString()
-                binding.tvPlayerOneScore.text = p0.child("coin").value.toString()
 
                 Glide.with(requireActivity())
                     .load(p0.child("photo").value.toString())
                     .placeholder(R.drawable.male)
                     .error(R.drawable.male)
                     .into(binding.ivPlayer)
+
+                binding.tvPlayerOneName.text = p0.child("firstname").value.toString()
+                binding.tvPlayerOneScore.text = p0.child("coin").value.toString()
             }
 
             override fun onCancelled(p0: DatabaseError) {

@@ -74,11 +74,11 @@ class RoomAdapter(private val context: Context, private val roomList: List<Room>
 
         builder.setView(input)
 
-        builder.setPositiveButton(context.getString(R.string.yes)) { _, _ ->
+        builder.setPositiveButton(context.getString(R.string.yes)) { dialog, _ ->
             val text = input.text.toString().trim()
             if (text == roomPassword.trim()) {
                 navigateToDashboardFragment(roomName)
-
+                dialog.cancel()
             } else {
                 MediaPlayer.create(context, R.raw.wrong)?.start()
                 Toast.makeText(
