@@ -117,42 +117,4 @@
         app:layout_constraintEnd_toStartOf="@id/rightGuide"
         app:layout_constraintStart_toEndOf="@id/leftGuide"
         app:layout_constraintTop_toBottomOf="@id/ll_stones" />
-
-
-
-<LinearLayout
-    android:id="@+id/ll_test"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:layout_marginTop="50dp"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/ll_cards"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
-<TextView
-    android:id="@+id/tv_answer"
-    android:layout_margin="10dp"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"/>
-
-    <EditText
-        android:id="@+id/inputTxt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="enter text"/>
-
-    <Button
-        android:id="@+id/sendBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Send" />
-
-    <Button
-        android:id="@+id/logoutBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="log out" />
-</LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

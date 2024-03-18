@@ -9,5 +9,6 @@ data class Room (
     val state: RoomSateEnums? = RoomSateEnums.OPEN,
     val money: String? = "0",
     val players: MutableList<String> = mutableListOf(),
-    val commands: Map<String, String>? = null
+    val commands: Map<String, String>? = null,
+    val stones: MutableList<Int>? = mutableListOf()
 )

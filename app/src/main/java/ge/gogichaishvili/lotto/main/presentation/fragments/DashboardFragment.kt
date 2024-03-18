@@ -1,11 +1,16 @@
 package ge.gogichaishvili.lotto.main.presentation.fragments
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
+import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -15,16 +20,24 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import ge.gogichaishvili.lotto.R
+import ge.gogichaishvili.lotto.app.tools.Utils
+import ge.gogichaishvili.lotto.app.tools.koreqtulMicemitBrunvashiGadayvana
 import ge.gogichaishvili.lotto.databinding.FragmentDashboardBinding
+import ge.gogichaishvili.lotto.main.enums.GameOverStatusEnum
 import ge.gogichaishvili.lotto.main.enums.PlayerStatusEnum
-import ge.gogichaishvili.lotto.main.enums.RoomSateEnums
-import ge.gogichaishvili.lotto.main.models.Room
+import ge.gogichaishvili.lotto.main.models.LottoDrawResult
 import ge.gogichaishvili.lotto.main.models.User
+import ge.gogichaishvili.lotto.main.presentation.fragments.base.BaseFragment
+import ge.gogichaishvili.lotto.main.presentation.viewmodels.DashboardViewModel
+import java.util.Timer
+import java.util.TimerTask
 
-class DashboardFragment : Fragment() {
+class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::class) {
 
     private var _binding: FragmentDashboardBinding? = null
     private val binding get() = _binding!!
+
+    private var timer: Timer = Timer()
 
     private var roomId: String? = null
     private var playerStatus: PlayerStatusEnum? = null
@@ -67,16 +80,12 @@ class DashboardFragment : Fragment() {
         loadProfile()
         waitForOpponent()
 
-        binding.logoutBtn.setOnClickListener {
+        /*binding.logoutBtn.setOnClickListener {
             auth.signOut()
-        }
+        }*/
 
-        binding.sendBtn.setOnClickListener {
-           sendData()
-        }
-
-        getData ()
     }
+
 
 
     private fun sendData () {
@@ -133,6 +142,7 @@ class DashboardFragment : Fragment() {
         })
     }
 
+
     private fun addPlayerToRoom(playerId: String) {
         val playersRef = databaseReferenceForRooms?.child(roomId!!)?.child("players")
 
@@ -155,6 +165,7 @@ class DashboardFragment : Fragment() {
                     val otherPlayerId = players.firstOrNull { it != uid }
                     if (otherPlayerId != null) {
                         loadOpponentProfile(otherPlayerId)
+                        startGame()
                     }
                 }
             }
@@ -207,6 +218,175 @@ class DashboardFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun startGame() {
+        if (playerStatus == PlayerStatusEnum.CREATOR) {
+            mViewModel.generateCard(requireContext(), binding.llCards)
+            Thread.sleep(3000)
+            getLottoStones()
+        }
+    }
+
+    private fun getLottoStones() {
+        val period = mViewModel.getGameSpeed()
+        timer.schedule(object : TimerTask() {
+            override fun run() {
+                activity?.runOnUiThread(Runnable {
+                    mViewModel.getNumberFromBag()
+                })
+            }
+
+        }, 0, period)
+    }
+
+    private fun handleLottoDrawResult(result: LottoDrawResult) {
+        if (result.isEmpty) {
+            println("bag is empty")
+            mViewModel.checkGameResult(GameOverStatusEnum.Draw, requireContext())
+            resetGame()
+        } else {
+            val newNumber = result.numbers.last()
+            addLottoStoneButton(newNumber)
+        }
+    }
+
+    @SuppressLint("DiscouragedApi")
+    private fun addLottoStoneButton(number: Int) {
+        val lottoStone = Button(requireContext()).apply {
+            layoutParams = LinearLayout.LayoutParams(180, 180).apply {
+                setMargins(0, 0, 0, 0)
+            }
+            setBackgroundResource(R.drawable.st)
+            setPadding(0, 0, 0, 25)
+            text = number.toString()
+            textSize = 18f
+            setTextColor(Color.rgb(112, 40, 31))
+            visibility = View.INVISIBLE
+        }
+        if (binding.llStones.childCount == 3) {
+            removeOldestLottoStone()
+        }
+        binding.llStones.addView(lottoStone, 0)
+        animateLottoStoneAppearance(lottoStone)
+        if (mViewModel.isSoundEnabled()) {
+            playSoundForNumber(number)
+        }
+    }
+
+    private fun removeOldestLottoStone() {
+        val lastLottoNumberID = binding.llStones.childCount - 1
+        val lastLottoNumberView = binding.llStones.getChildAt(lastLottoNumberID)
+        lastLottoNumberView.startAnimation(
+            AnimationUtils.loadAnimation(
+                requireContext(),
+                R.anim.scale_down
+            ).apply {
+                setAnimationListener(object : Animation.AnimationListener {
+                    override fun onAnimationStart(p0: Animation?) {}
+                    override fun onAnimationRepeat(p0: Animation?) {}
+                    override fun onAnimationEnd(p0: Animation?) {
+                        binding.llStones.removeView(lastLottoNumberView)
+                    }
+                })
+            })
+    }
+
+    private fun animateLottoStoneAppearance(lottoStone: Button) {
+        val animation = AnimationUtils.loadAnimation(requireContext(), R.anim.scale_up).apply {
+            setAnimationListener(object : Animation.AnimationListener {
+                override fun onAnimationStart(p0: Animation?) {
+                    lottoStone.visibility = View.VISIBLE
+                }
+
+                override fun onAnimationRepeat(p0: Animation?) {}
+                override fun onAnimationEnd(p0: Animation?) {}
+            })
+        }
+        lottoStone.startAnimation(animation)
+    }
+
+    @SuppressLint("DiscouragedApi")
+    private fun playSoundForNumber(number: Int) {
+        var soundFileName = ""
+        when (mViewModel.getSelectedLanguage()) {
+            "en" -> {
+                soundFileName = "a$number"
+            }
+            "ru" -> {
+                soundFileName = "r$number"
+            }
+            "ka" -> {
+                soundFileName = "g$number"
+            }
+        }
+        val resID = resources.getIdentifier(soundFileName, "raw", activity?.packageName)
+        Utils.playSound(activity, resID)
+    }
+
+    private fun resetGame() {
+        timer.cancel()
+        timer.purge()
+  /*      mViewModel.resetManagers()
+        mViewModel.generateOpponentCard()
+        mViewModel.redrawCard(requireContext(), binding.llCards)
+        binding.llStones.removeAllViews()
+        binding.llDrawChips.removeAllViews()
+        binding.btnChange.visibility = View.VISIBLE
+        binding.btnStart.visibility = View.VISIBLE
+        binding.btnPause.visibility = View.GONE
+        binding.llChips.visibility = View.VISIBLE
+        binding.betText.visibility = View.VISIBLE
+        binding.llDrawChips.visibility = View.VISIBLE*/
+    }
+
+    override fun bindObservers() {
+
+        mViewModel.requestStateLiveData.observe(viewLifecycleOwner) { it ->
+            handleLottoDrawResult(it)
+
+            if (it.numbers.isNotEmpty()) {
+
+                sendStoneNumberToOpponent(it.numbers)
+
+                if (mViewModel.isHintEnabled()) {
+                    mViewModel.lottoCardManager.setHints(it.numbers, binding.llCards)
+                }
+
+                val removedNumbers =
+                    mViewModel.lottoCardManager.previousNumbers - it.numbers.toSet()
+
+                mViewModel.lottoCardManager.setLoss(removedNumbers, binding.llCards)
+
+                mViewModel.lottoCardManager.previousNumbers = it.numbers
+
+                //mViewModel.checkOpponentGameCompletion(it.numbers.last())
+            }
+
+        }
+
+    }
+
+    private fun sendStoneNumberToOpponent(stoneNumbers: List<Int>) {
+
+        databaseReferenceForRooms?.child(roomId!!)?.child("stones")?.setValue(stoneNumbers)
+            ?.addOnSuccessListener {
+                println("List Update successful")
+            }?.addOnFailureListener { e ->
+                println("List Update failed: ${e.message}")
+            }
+
+    }
+
+    private fun sendCommand(command: String) {
+        val updates = hashMapOf<String, Any>(
+            "commandKey" to command
+        )
+        databaseReferenceForRooms?.child(roomId!!)?.child("commands")?.updateChildren(updates)?.addOnSuccessListener {
+            println("List Update successful")
+        }?.addOnFailureListener { e ->
+            println("List Update failed: ${e.message}")
+        }
     }
 
 }
