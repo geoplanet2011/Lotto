@@ -342,6 +342,16 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
 
     override fun bindObservers() {
 
+        mViewModel.lineCompletionEvent.observe(viewLifecycleOwner) {
+            Toast.makeText(requireContext(), getString(R.string.line_is_filled), Toast.LENGTH_SHORT).show()
+            sendCommand("The line is filled")
+        }
+        mViewModel.cardCompletionEvent.observe(viewLifecycleOwner) {
+            mViewModel.checkGameResult(GameOverStatusEnum.PLAYER_WIN, requireContext())
+            sendCommand("PLAYER_WIN")
+            //resetGame()
+        }
+
         mViewModel.requestStateLiveData.observe(viewLifecycleOwner) { it ->
             handleLottoDrawResult(it)
 

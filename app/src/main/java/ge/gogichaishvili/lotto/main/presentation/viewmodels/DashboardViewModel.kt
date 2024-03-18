@@ -3,6 +3,7 @@ package ge.gogichaishvili.lotto.main.presentation.viewmodels
 import android.content.Context
 import android.widget.LinearLayout
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import ge.gogichaishvili.lotto.app.tools.SharedPreferenceManager
 import ge.gogichaishvili.lotto.app.tools.SingleLiveEvent
@@ -70,4 +71,22 @@ class DashboardViewModel (
     fun bagShuffle () {
         lottoManager.shuffle()
     }
+
+    val lineCompletionEvent = MutableLiveData<Unit>()
+    val cardCompletionEvent = MutableLiveData<Unit>()
+
+    init {
+        setupLottoCardManager()
+    }
+
+    private fun setupLottoCardManager() {
+        lottoCardManager.setOnLineCompleteListener {
+            lineCompletionEvent.postValue(Unit)
+        }
+
+        lottoCardManager.setOnCardCompleteListener {
+            cardCompletionEvent.postValue(Unit)
+        }
+    }
+
 }
