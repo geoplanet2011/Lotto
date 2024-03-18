@@ -77,7 +77,8 @@ class RoomListFragment : BaseFragment<RoomListViewModel>(RoomListViewModel::clas
                 requireActivity().supportFragmentManager.popBackStackImmediate()
             }
         }
-        //onlineUserStatus("Online")
+
+        onlineUserStatus("Online")
 
     }
 
@@ -115,7 +116,9 @@ class RoomListFragment : BaseFragment<RoomListViewModel>(RoomListViewModel::clas
 
     private fun searchRooms(s: String) {
         mViewModel.setLoading(true)
-        val query = FirebaseDatabase.getInstance().getReference("Rooms").orderByChild("name").startAt(s).endAt("$s\uf8ff")
+        val query =
+            FirebaseDatabase.getInstance().getReference("Rooms").orderByChild("name").startAt(s)
+                .endAt("$s\uf8ff")
         query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 roomList.clear()
@@ -144,21 +147,25 @@ class RoomListFragment : BaseFragment<RoomListViewModel>(RoomListViewModel::clas
 
     private fun onlineUserStatus(status: String) {
         val firebaseUser = FirebaseAuth.getInstance().currentUser
-        val databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser!!.uid)
-        val hashMap = HashMap<String, Any>()
-        hashMap["status"] = status
-        databaseReference.updateChildren(hashMap)
+        val databaseReference =
+            FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser!!.uid)
+
+        databaseReference.updateChildren(mapOf("status" to status))
+            .addOnSuccessListener {
+            }
+            .addOnFailureListener {
+            }
     }
 
-  /*  override fun onResume() {
-        super.onResume()
-        onlineUserStatus("Online")
-    }
+      override fun onResume() {
+          super.onResume()
+          onlineUserStatus("Online")
+      }
 
-    override fun onPause() {
-        super.onPause()
-       onlineUserStatus("Offline")
-    }*/
+      override fun onPause() {
+          super.onPause()
+         onlineUserStatus("Offline")
+      }
 
     override fun bindObservers() {
         super.bindObservers()
