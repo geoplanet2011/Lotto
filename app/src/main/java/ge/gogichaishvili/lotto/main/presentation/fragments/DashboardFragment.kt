@@ -18,6 +18,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.GenericTypeIndicator
 import com.google.firebase.database.ValueEventListener
 import ge.gogichaishvili.lotto.R
 import ge.gogichaishvili.lotto.app.tools.Utils
@@ -86,16 +87,6 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
 
     }
 
-
-
-    private fun sendData () {
-       // databaseReferenceForRooms!!.child(roomId!!).setValue(Room("room8", true, "123", RoomSateEnums.OPEN))
-    }
-
-    private fun sendCommand(playerId: String, command: String) {
-        //roomRef.child("commands").child(playerId).setValue(command)
-    }
-
     private fun getData() {
         databaseReferenceForRooms!!.addValueEventListener(
             object : ValueEventListener {
@@ -106,18 +97,15 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
                     val sb = StringBuilder()
                     for (i in p0.children) {
                         val name = i.child("name")
-                        //val status = i.child("status")
+                        val status = i.child("status")
                         sb.append("${i.key} $name")
                     }
 
-                    //binding.tvAnswer.text = sb
-                    //val user  = p0.getValue(User::class.java)
+                    val user = p0.getValue(User::class.java)
                 }
             }
         )
     }
-
-
 
     private fun sendChatMessage(senderId: String, receiverId: String, message: String) {
         val hashMap: HashMap<String, String> = HashMap()
@@ -129,7 +117,7 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
 
     @SuppressLint("SuspiciousIndentation")
     private fun readChatMessage(senderId: String, receiverId: String) {
-      val reference = FirebaseDatabase.getInstance().getReference("Chat")
+        val reference = FirebaseDatabase.getInstance().getReference("Chat")
         reference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (dataSnapshot: DataSnapshot in snapshot.children) {
@@ -138,10 +126,10 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
                     chatList.add(chat!!)
                 }
             }
+
             override fun onCancelled(error: DatabaseError) {}
         })
     }
-
 
     private fun addPlayerToRoom(playerId: String) {
         val playersRef = databaseReferenceForRooms?.child(roomId!!)?.child("players")
@@ -154,44 +142,6 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
             }
 
             override fun onCancelled(databaseError: DatabaseError) {}
-        })
-    }
-
-    private fun waitForOpponent() {
-        databaseReferenceForRooms?.child(roomId!!)?.child("players")?.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val players = dataSnapshot.children.mapNotNull { it.value as? String }
-                if (players.size == 2) {
-                    val otherPlayerId = players.firstOrNull { it != uid }
-                    if (otherPlayerId != null) {
-                        loadOpponentProfile(otherPlayerId)
-                        startGame()
-                    }
-                }
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) { }
-        })
-    }
-
-    private fun loadOpponentProfile(otherPlayerId: String) {
-        databaseReference?.child(otherPlayerId)?.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(p0: DataSnapshot) {
-
-                Glide.with(requireActivity())
-                    .load(p0.child("photo").value.toString())
-                    .placeholder(R.drawable.male)
-                    .error(R.drawable.male)
-                    .into(binding.ivOpponent)
-
-                binding.ivOpponent.visibility = View.VISIBLE
-                binding.tvPlayerTwoName.text = p0.child("firstname").value.toString()
-                binding.tvPlayerTwoScore.text = p0.child("coin").value.toString()
-            }
-
-            override fun onCancelled(p0: DatabaseError) {
-
-            }
         })
     }
 
@@ -215,18 +165,69 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
         })
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    private fun waitForOpponent() {
+        databaseReferenceForRooms?.child(roomId!!)?.child("players")
+            ?.addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val players = dataSnapshot.children.mapNotNull { it.value as? String }
+                    if (players.size == 2) {
+                        val otherPlayerId = players.firstOrNull { it != uid }
+                        if (otherPlayerId != null) {
+                            loadOpponentProfile(otherPlayerId)
+                            startGame()
+                        }
+                    }
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {}
+            })
+    }
+
+    private fun loadOpponentProfile(otherPlayerId: String) {
+        databaseReference?.child(otherPlayerId)?.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(p0: DataSnapshot) {
+
+                Glide.with(requireActivity())
+                    .load(p0.child("photo").value.toString())
+                    .placeholder(R.drawable.male)
+                    .error(R.drawable.male)
+                    .into(binding.ivOpponent)
+
+                binding.ivOpponent.visibility = View.VISIBLE
+                binding.tvPlayerTwoName.text = p0.child("firstname").value.toString()
+                binding.tvPlayerTwoScore.text = p0.child("coin").value.toString()
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+        })
     }
 
     private fun startGame() {
         if (playerStatus == PlayerStatusEnum.CREATOR) {
             mViewModel.generateCard(requireContext(), binding.llCards)
-            Thread.sleep(3000)
+            //Thread.sleep(3000)
             getLottoStones()
+        } else {
+            mViewModel.generateCard(requireContext(), binding.llCards)
+            getLottoStonesFromServer()
         }
     }
+
+    private fun getLottoStonesFromServer() {
+        databaseReferenceForRooms?.child(roomId!!)?.child("stones")
+            ?.addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val stonesType = object : GenericTypeIndicator<List<Int>>() {}
+                    val stonesList: List<Int> = snapshot.getValue(stonesType) ?: emptyList()
+                    mViewModel.getNumberFromServer(stonesList)
+                }
+
+                override fun onCancelled(error: DatabaseError) {}
+            })
+    }
+
 
     private fun getLottoStones() {
         val period = mViewModel.getGameSpeed()
@@ -244,10 +245,13 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
         if (result.isEmpty) {
             println("bag is empty")
             mViewModel.checkGameResult(GameOverStatusEnum.Draw, requireContext())
+            sendCommand("Draw")
             resetGame()
         } else {
-            val newNumber = result.numbers.last()
-            addLottoStoneButton(newNumber)
+            if (result.numbers.isNotEmpty()) {
+                val newNumber = result.numbers.last()
+                addLottoStoneButton(newNumber)
+            }
         }
     }
 
@@ -313,9 +317,11 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
             "en" -> {
                 soundFileName = "a$number"
             }
+
             "ru" -> {
                 soundFileName = "r$number"
             }
+
             "ka" -> {
                 soundFileName = "g$number"
             }
@@ -327,29 +333,42 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
     private fun resetGame() {
         timer.cancel()
         timer.purge()
-  /*      mViewModel.resetManagers()
-        mViewModel.generateOpponentCard()
-        mViewModel.redrawCard(requireContext(), binding.llCards)
-        binding.llStones.removeAllViews()
-        binding.llDrawChips.removeAllViews()
-        binding.btnChange.visibility = View.VISIBLE
-        binding.btnStart.visibility = View.VISIBLE
-        binding.btnPause.visibility = View.GONE
-        binding.llChips.visibility = View.VISIBLE
-        binding.betText.visibility = View.VISIBLE
-        binding.llDrawChips.visibility = View.VISIBLE*/
+        /*      mViewModel.resetManagers()
+              mViewModel.generateOpponentCard()
+              mViewModel.redrawCard(requireContext(), binding.llCards)
+              binding.llStones.removeAllViews()
+              binding.llDrawChips.removeAllViews()
+              binding.btnChange.visibility = View.VISIBLE
+              binding.btnStart.visibility = View.VISIBLE
+              binding.btnPause.visibility = View.GONE
+              binding.llChips.visibility = View.VISIBLE
+              binding.betText.visibility = View.VISIBLE
+              binding.llDrawChips.visibility = View.VISIBLE*/
     }
 
     override fun bindObservers() {
 
         mViewModel.lineCompletionEvent.observe(viewLifecycleOwner) {
-            Toast.makeText(requireContext(), getString(R.string.line_is_filled), Toast.LENGTH_SHORT).show()
-            sendCommand("The line is filled")
+            if (playerStatus == PlayerStatusEnum.CREATOR) {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.line_is_filled),
+                    Toast.LENGTH_SHORT
+                )
+                    .show()
+                sendCommand("Player line is filled")
+            } else {
+                sendCommand("Opponent line is filled")
+            }
         }
         mViewModel.cardCompletionEvent.observe(viewLifecycleOwner) {
-            mViewModel.checkGameResult(GameOverStatusEnum.PLAYER_WIN, requireContext())
-            sendCommand("PLAYER_WIN")
-            //resetGame()
+            if (playerStatus == PlayerStatusEnum.CREATOR) {
+                mViewModel.checkGameResult(GameOverStatusEnum.PLAYER_WIN, requireContext())
+                sendCommand("PLAYER_WIN")
+            } else {
+                sendCommand("OPPONENT_WIN")
+            }
+            resetGame()
         }
 
         mViewModel.requestStateLiveData.observe(viewLifecycleOwner) { it ->
@@ -357,7 +376,9 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
 
             if (it.numbers.isNotEmpty()) {
 
-                sendStoneNumberToOpponent(it.numbers)
+                if (playerStatus == PlayerStatusEnum.CREATOR) {
+                    sendStoneNumberToOpponent(it.numbers)
+                }
 
                 if (mViewModel.isHintEnabled()) {
                     mViewModel.lottoCardManager.setHints(it.numbers, binding.llCards)
@@ -370,7 +391,7 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
 
                 mViewModel.lottoCardManager.previousNumbers = it.numbers
 
-                //mViewModel.checkOpponentGameCompletion(it.numbers.last())
+                checkOpponentGameCompletion()
             }
 
         }
@@ -378,25 +399,63 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
     }
 
     private fun sendStoneNumberToOpponent(stoneNumbers: List<Int>) {
-
         databaseReferenceForRooms?.child(roomId!!)?.child("stones")?.setValue(stoneNumbers)
             ?.addOnSuccessListener {
                 println("List Update successful")
             }?.addOnFailureListener { e ->
                 println("List Update failed: ${e.message}")
             }
-
     }
 
     private fun sendCommand(command: String) {
         val updates = hashMapOf<String, Any>(
             "commandKey" to command
         )
-        databaseReferenceForRooms?.child(roomId!!)?.child("commands")?.updateChildren(updates)?.addOnSuccessListener {
-            println("List Update successful")
-        }?.addOnFailureListener { e ->
-            println("List Update failed: ${e.message}")
-        }
+        databaseReferenceForRooms?.child(roomId!!)?.child("commands")?.updateChildren(updates)
+            ?.addOnSuccessListener {
+
+            }?.addOnFailureListener { e ->
+
+            }
+    }
+
+    private fun checkOpponentGameCompletion() {
+        databaseReferenceForRooms?.child(roomId!!)?.child("commands")
+            ?.addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.exists()) {
+                        val commandKeyValue = snapshot.child("commandKey").value as? String
+                        when {
+
+                            commandKeyValue.equals("PLAYER_WIN") -> {
+                                if (playerStatus == PlayerStatusEnum.JOINER) {
+                                    mViewModel.checkGameResult(GameOverStatusEnum.OPPONENT_WIN, requireContext())
+                                }
+                            }
+
+                            commandKeyValue.equals("Draw") -> {
+                                if (playerStatus == PlayerStatusEnum.JOINER) {
+                                    mViewModel.checkGameResult(GameOverStatusEnum.Draw, requireContext())
+                                }
+                            }
+
+                            commandKeyValue.equals("Player line is filled") -> {
+                                if (playerStatus == PlayerStatusEnum.JOINER) {
+                                    Toast.makeText(requireContext(), "${binding.tvPlayerTwoName.text.toString().koreqtulMicemitBrunvashiGadayvana()} ${getString(R.string.opponent_line_is_filled)}", Toast.LENGTH_SHORT)
+                                        .show()
+                                }
+                            }
+                        }
+                    }
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {}
+            })
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }

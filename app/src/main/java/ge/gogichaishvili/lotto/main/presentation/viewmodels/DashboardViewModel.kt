@@ -11,19 +11,15 @@ import ge.gogichaishvili.lotto.main.enums.GameOverStatusEnum
 import ge.gogichaishvili.lotto.main.helpers.GameManager
 import ge.gogichaishvili.lotto.main.helpers.LottoCardManager
 import ge.gogichaishvili.lotto.main.helpers.LottoStonesManager
-import ge.gogichaishvili.lotto.main.helpers.OpponentCardManager
-import ge.gogichaishvili.lotto.main.helpers.OpponentManager
 import ge.gogichaishvili.lotto.main.models.LottoDrawResult
 import ge.gogichaishvili.lotto.main.presentation.viewmodels.base.BaseViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class DashboardViewModel (
+class DashboardViewModel(
     private val lottoManager: LottoStonesManager,
     val lottoCardManager: LottoCardManager,
-    private val pref: SharedPreferenceManager,
-    private val opponentManager: OpponentManager,
-    private val opponentCardManager: OpponentCardManager
+    private val pref: SharedPreferenceManager
 ) : BaseViewModel() {
 
     private val _requestStateLiveData = SingleLiveEvent<LottoDrawResult>()
@@ -32,6 +28,13 @@ class DashboardViewModel (
     fun getNumberFromBag() {
         viewModelScope.launch(Dispatchers.Main.immediate) {
             val result = lottoManager.getNumberFromBag()
+            _requestStateLiveData.postValue(result)
+        }
+    }
+
+    fun getNumberFromServer(numbers: List<Int>) {
+        val result = LottoDrawResult(false, numbers)
+        viewModelScope.launch(Dispatchers.Main.immediate) {
             _requestStateLiveData.postValue(result)
         }
     }
@@ -66,10 +69,6 @@ class DashboardViewModel (
 
     fun getGameSpeed(): Long {
         return pref.getGameSpeed()
-    }
-
-    fun bagShuffle () {
-        lottoManager.shuffle()
     }
 
     val lineCompletionEvent = MutableLiveData<Unit>()

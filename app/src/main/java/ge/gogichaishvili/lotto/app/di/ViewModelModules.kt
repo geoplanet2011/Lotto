@@ -52,9 +52,7 @@ object ViewModelModules {
             DashboardViewModel(
                 lottoManager = get(),
                 lottoCardManager = get(),
-                pref = get(),
-                opponentManager = get(),
-                opponentCardManager = get()
+                pref = get()
             )
         }
 
