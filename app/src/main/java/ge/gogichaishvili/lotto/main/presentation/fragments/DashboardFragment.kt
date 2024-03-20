@@ -441,7 +441,7 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
                             }
 
                             commandKeyValue.equals("Player line is filled") -> {
-                                if (playerStatus == PlayerStatusEnum.JOINER && isOpponentLineCompleted) {
+                                if (playerStatus == PlayerStatusEnum.JOINER && !isOpponentLineCompleted) {
                                     Toast.makeText(
                                         requireContext(),
                                         "${

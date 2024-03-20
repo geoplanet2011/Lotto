@@ -317,27 +317,29 @@ object LottoCardManager {
     }
 
     private fun checkCardCompletion(tableLayout: TableLayout) {
-        var completedLines = 0
+        val numberOfRows = tableLayout.childCount
+        var completedRowsCount = 0
 
-        for (i in 0 until tableLayout.childCount) {
+        for (i in 0 until numberOfRows) {
             val row = tableLayout.getChildAt(i) as TableRow
-            var clickableTextViews = 0
+            var filledCellsCount = 0
 
             for (j in 0 until row.childCount) {
-                val frameLayout = row.getChildAt(j) as? FrameLayout
-                frameLayout?.children?.filterIsInstance<TextView>()?.forEach { textView ->
-                    if (textView.text.isNotEmpty() && !textView.isClickable) {
-                        clickableTextViews++
-                    }
+                val cell = row.getChildAt(j) as FrameLayout
+                val textView = cell.getChildAt(0) as TextView
+                val imageView = cell.getChildAt(1) as ImageView
+
+                if (imageView.visibility == View.VISIBLE && textView.text.isNotEmpty()) {
+                    filledCellsCount++
                 }
             }
 
-            if (clickableTextViews >= 5) {
-                completedLines++
+            if (filledCellsCount == row.childCount) {
+                completedRowsCount++
             }
         }
 
-        if (completedLines == tableLayout.childCount) {
+        if (completedRowsCount == numberOfRows) {
             onCardCompleteListener?.invoke()
             println("ბილეთი მთლიანად შევსებულია!")
         }
