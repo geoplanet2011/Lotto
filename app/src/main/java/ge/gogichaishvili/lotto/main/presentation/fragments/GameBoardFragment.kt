@@ -410,6 +410,7 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
         binding.llChips.visibility = View.VISIBLE
         binding.betText.visibility = View.VISIBLE
         binding.llDrawChips.visibility = View.VISIBLE
+
     }
 
     private val sensorListener: SensorEventListener = object : SensorEventListener {

@@ -239,7 +239,7 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
     private fun handleLottoDrawResult(result: LottoDrawResult) {
         if (result.isEmpty) {
             println("bag is empty")
-            mViewModel.checkGameResult(GameOverStatusEnum.Draw, requireContext())
+            //mViewModel.checkGameResult(GameOverStatusEnum.Draw, requireContext())
             sendCommand("Draw")
             resetGame()
         } else {
@@ -369,24 +369,24 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
         }
 
         mViewModel.lineCompletionEvent.observe(viewLifecycleOwner) {
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.line_is_filled),
+                Toast.LENGTH_SHORT
+            ).show()
             if (playerStatus == PlayerStatusEnum.CREATOR) {
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.line_is_filled),
-                    Toast.LENGTH_SHORT
-                ).show()
-                sendCommand("Player line is filled")
+                sendCommand("Creator line is filled")
             } else {
-                sendCommand("Opponent line is filled")
+                sendCommand("Joiner line is filled")
             }
         }
 
         mViewModel.cardCompletionEvent.observe(viewLifecycleOwner) {
+            mViewModel.checkGameResult(GameOverStatusEnum.PLAYER_WIN, requireContext())
             if (playerStatus == PlayerStatusEnum.CREATOR) {
-                mViewModel.checkGameResult(GameOverStatusEnum.PLAYER_WIN, requireContext())
-                sendCommand("PLAYER_WIN")
+                sendCommand("CREATOR_WIN")
             } else {
-                sendCommand("OPPONENT_WIN")
+                sendCommand("JOINER_WIN")
             }
             resetGame()
         }
@@ -420,7 +420,7 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
                         val commandKeyValue = snapshot.child("commandKey").value as? String
                         when {
 
-                            commandKeyValue.equals("PLAYER_WIN") -> {
+                            commandKeyValue.equals("CREATOR_WIN") -> {
                                 if (playerStatus == PlayerStatusEnum.JOINER && !isOpponentWin) {
                                     mViewModel.checkGameResult(
                                         GameOverStatusEnum.OPPONENT_WIN,
@@ -430,17 +430,17 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
                                 }
                             }
 
-                            commandKeyValue.equals("Draw") -> {
-                                if (playerStatus == PlayerStatusEnum.JOINER && !isDraw ) {
+                            commandKeyValue.equals("JOINER_WIN") -> {
+                                if (playerStatus == PlayerStatusEnum.CREATOR && !isOpponentWin) {
                                     mViewModel.checkGameResult(
-                                        GameOverStatusEnum.Draw,
+                                        GameOverStatusEnum.OPPONENT_WIN,
                                         requireContext()
                                     )
-                                    isDraw = true
+                                    isOpponentWin = true
                                 }
                             }
 
-                            commandKeyValue.equals("Player line is filled") -> {
+                            commandKeyValue.equals("Creator line is filled") -> {
                                 if (playerStatus == PlayerStatusEnum.JOINER && !isOpponentLineCompleted) {
                                     Toast.makeText(
                                         requireContext(),
@@ -453,6 +453,32 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
                                     isOpponentLineCompleted = true
                                 }
                             }
+
+                            commandKeyValue.equals("Joiner line is filled") -> {
+                                if (playerStatus == PlayerStatusEnum.CREATOR && !isOpponentLineCompleted) {
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "${
+                                            binding.tvPlayerTwoName.text.toString()
+                                                .koreqtulMicemitBrunvashiGadayvana()
+                                        } ${getString(R.string.opponent_line_is_filled)}",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    isOpponentLineCompleted = true
+                                }
+                            }
+
+                            commandKeyValue.equals("Draw") -> {
+                                if (!isDraw) {
+                                    mViewModel.checkGameResult(
+                                        GameOverStatusEnum.Draw,
+                                        requireContext()
+                                    )
+                                    isDraw = true
+                                }
+                            }
+
+
                         }
                     }
                 }
