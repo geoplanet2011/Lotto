@@ -25,10 +25,13 @@ class DashboardViewModel(
     private val _requestStateLiveData = SingleLiveEvent<LottoDrawResult>()
     val requestStateLiveData: LiveData<LottoDrawResult> get() = _requestStateLiveData
 
+    private val _requestStateStonesLiveData = SingleLiveEvent<LottoDrawResult>()
+    val requestStateStonesLiveData: LiveData<LottoDrawResult> get() = _requestStateStonesLiveData
+
     fun getNumberFromBag() {
         viewModelScope.launch(Dispatchers.Main.immediate) {
             val result = lottoManager.getNumberFromBag()
-            _requestStateLiveData.postValue(result)
+            _requestStateStonesLiveData.postValue(result)
         }
     }
 

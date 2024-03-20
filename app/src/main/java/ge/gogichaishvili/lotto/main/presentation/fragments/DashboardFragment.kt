@@ -51,6 +51,10 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
     private var userReference: DatabaseReference? = null
     private var uid: String? = null
 
+    private var isDraw: Boolean = false
+    private var isOpponentWin: Boolean = false
+    private var isOpponentLineCompleted: Boolean = false
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -133,7 +137,6 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
 
     private fun addPlayerToRoom(playerId: String) {
         val playersRef = databaseReferenceForRooms?.child(roomId!!)?.child("players")
-
         playersRef?.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val playersCount = dataSnapshot.childrenCount.toInt()
@@ -159,9 +162,7 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
                 binding.tvPlayerOneScore.text = p0.child("coin").value.toString()
             }
 
-            override fun onCancelled(p0: DatabaseError) {
-
-            }
+            override fun onCancelled(p0: DatabaseError) {}
         })
     }
 
@@ -198,21 +199,28 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
                 binding.tvPlayerTwoScore.text = p0.child("coin").value.toString()
             }
 
-            override fun onCancelled(p0: DatabaseError) {
-
-            }
+            override fun onCancelled(p0: DatabaseError) {}
         })
     }
 
     private fun startGame() {
+        mViewModel.generateCard(requireContext(), binding.llCards)
         if (playerStatus == PlayerStatusEnum.CREATOR) {
-            mViewModel.generateCard(requireContext(), binding.llCards)
-            //Thread.sleep(3000)
             getLottoStones()
-        } else {
-            mViewModel.generateCard(requireContext(), binding.llCards)
-            getLottoStonesFromServer()
         }
+        getLottoStonesFromServer()
+    }
+
+    private fun getLottoStones() {
+        val period = mViewModel.getGameSpeed()
+        timer.schedule(object : TimerTask() {
+            override fun run() {
+                activity?.runOnUiThread(Runnable {
+                    mViewModel.getNumberFromBag()
+                })
+            }
+
+        }, 0, period)
     }
 
     private fun getLottoStonesFromServer() {
@@ -226,19 +234,6 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
 
                 override fun onCancelled(error: DatabaseError) {}
             })
-    }
-
-
-    private fun getLottoStones() {
-        val period = mViewModel.getGameSpeed()
-        timer.schedule(object : TimerTask() {
-            override fun run() {
-                activity?.runOnUiThread(Runnable {
-                    mViewModel.getNumberFromBag()
-                })
-            }
-
-        }, 0, period)
     }
 
     private fun handleLottoDrawResult(result: LottoDrawResult) {
@@ -348,37 +343,14 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
 
     override fun bindObservers() {
 
-        mViewModel.lineCompletionEvent.observe(viewLifecycleOwner) {
-            if (playerStatus == PlayerStatusEnum.CREATOR) {
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.line_is_filled),
-                    Toast.LENGTH_SHORT
-                )
-                    .show()
-                sendCommand("Player line is filled")
-            } else {
-                sendCommand("Opponent line is filled")
-            }
-        }
-        mViewModel.cardCompletionEvent.observe(viewLifecycleOwner) {
-            if (playerStatus == PlayerStatusEnum.CREATOR) {
-                mViewModel.checkGameResult(GameOverStatusEnum.PLAYER_WIN, requireContext())
-                sendCommand("PLAYER_WIN")
-            } else {
-                sendCommand("OPPONENT_WIN")
-            }
-            resetGame()
+        mViewModel.requestStateStonesLiveData.observe(viewLifecycleOwner) {
+            sendStoneNumberToOpponent(it.numbers)
         }
 
         mViewModel.requestStateLiveData.observe(viewLifecycleOwner) { it ->
             handleLottoDrawResult(it)
 
             if (it.numbers.isNotEmpty()) {
-
-                if (playerStatus == PlayerStatusEnum.CREATOR) {
-                    sendStoneNumberToOpponent(it.numbers)
-                }
 
                 if (mViewModel.isHintEnabled()) {
                     mViewModel.lottoCardManager.setHints(it.numbers, binding.llCards)
@@ -391,9 +363,32 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
 
                 mViewModel.lottoCardManager.previousNumbers = it.numbers
 
-                checkOpponentGameCompletion()
             }
 
+            checkOpponentGameCompletion()
+        }
+
+        mViewModel.lineCompletionEvent.observe(viewLifecycleOwner) {
+            if (playerStatus == PlayerStatusEnum.CREATOR) {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.line_is_filled),
+                    Toast.LENGTH_SHORT
+                ).show()
+                sendCommand("Player line is filled")
+            } else {
+                sendCommand("Opponent line is filled")
+            }
+        }
+
+        mViewModel.cardCompletionEvent.observe(viewLifecycleOwner) {
+            if (playerStatus == PlayerStatusEnum.CREATOR) {
+                mViewModel.checkGameResult(GameOverStatusEnum.PLAYER_WIN, requireContext())
+                sendCommand("PLAYER_WIN")
+            } else {
+                sendCommand("OPPONENT_WIN")
+            }
+            resetGame()
         }
 
     }
@@ -413,9 +408,7 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
         )
         databaseReferenceForRooms?.child(roomId!!)?.child("commands")?.updateChildren(updates)
             ?.addOnSuccessListener {
-
             }?.addOnFailureListener { e ->
-
             }
     }
 
@@ -428,21 +421,36 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
                         when {
 
                             commandKeyValue.equals("PLAYER_WIN") -> {
-                                if (playerStatus == PlayerStatusEnum.JOINER) {
-                                    mViewModel.checkGameResult(GameOverStatusEnum.OPPONENT_WIN, requireContext())
+                                if (playerStatus == PlayerStatusEnum.JOINER && !isOpponentWin) {
+                                    mViewModel.checkGameResult(
+                                        GameOverStatusEnum.OPPONENT_WIN,
+                                        requireContext()
+                                    )
+                                    isOpponentWin = true
                                 }
                             }
 
                             commandKeyValue.equals("Draw") -> {
-                                if (playerStatus == PlayerStatusEnum.JOINER) {
-                                    mViewModel.checkGameResult(GameOverStatusEnum.Draw, requireContext())
+                                if (playerStatus == PlayerStatusEnum.JOINER && !isDraw ) {
+                                    mViewModel.checkGameResult(
+                                        GameOverStatusEnum.Draw,
+                                        requireContext()
+                                    )
+                                    isDraw = true
                                 }
                             }
 
                             commandKeyValue.equals("Player line is filled") -> {
-                                if (playerStatus == PlayerStatusEnum.JOINER) {
-                                    Toast.makeText(requireContext(), "${binding.tvPlayerTwoName.text.toString().koreqtulMicemitBrunvashiGadayvana()} ${getString(R.string.opponent_line_is_filled)}", Toast.LENGTH_SHORT)
-                                        .show()
+                                if (playerStatus == PlayerStatusEnum.JOINER && isOpponentLineCompleted) {
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "${
+                                            binding.tvPlayerTwoName.text.toString()
+                                                .koreqtulMicemitBrunvashiGadayvana()
+                                        } ${getString(R.string.opponent_line_is_filled)}",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    isOpponentLineCompleted = true
                                 }
                             }
                         }
