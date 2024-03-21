@@ -71,6 +71,7 @@ class RoomListFragment : BaseFragment<RoomListViewModel>(RoomListViewModel::clas
         })
 
         binding.tvBack.setOnClickListener {
+            onlineUserStatus("Offline")
             FirebaseAuth.getInstance().signOut()
             if (requireActivity().supportFragmentManager.backStackEntryCount > 0) {
                 requireActivity().supportFragmentManager.popBackStackImmediate()
@@ -156,12 +157,20 @@ class RoomListFragment : BaseFragment<RoomListViewModel>(RoomListViewModel::clas
 
       override fun onResume() {
           super.onResume()
-          onlineUserStatus("Online")
+          try {
+              onlineUserStatus("Online")
+          } catch (e: Exception) {
+              println(e.message.toString())
+          }
       }
 
       override fun onPause() {
           super.onPause()
-         onlineUserStatus("Offline")
+          try {
+              onlineUserStatus("Offline")
+          } catch (e: Exception) {
+              println(e.message.toString())
+          }
       }
 
     override fun bindObservers() {
