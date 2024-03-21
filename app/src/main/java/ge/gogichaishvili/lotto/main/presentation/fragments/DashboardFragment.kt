@@ -43,8 +43,8 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
 
     private var roomId: String? = null
     private var playerStatus: PlayerStatusEnum? = null
-    private var bet: Int? = null
-    private var balance: Int? = null
+    private var bet: Long? = null
+    private var balance: Long? = null
 
     private var firebaseUser: FirebaseUser? = null
     private lateinit var auth: FirebaseAuth
@@ -72,7 +72,7 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
         roomId = arguments?.getString("roomId") ?: ""
         val playerStatusCode = arguments?.getInt("playerStatus") ?: PlayerStatusEnum.UNKNOWN.value
         playerStatus = PlayerStatusEnum.getEnumByCode(playerStatusCode)
-        bet = arguments?.getString("bet")?.toInt()
+        bet = arguments?.getString("bet")?.toLongOrNull()
 
         database = FirebaseDatabase.getInstance()
         databaseReference = database?.reference!!.child("Users")
@@ -164,7 +164,7 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
 
                 binding.tvPlayerOneName.text = p0.child("firstname").value.toString()
                 binding.tvPlayerOneScore.text = p0.child("coin").value.toString()
-                balance = p0.child("coin").value.toString().toInt()
+                balance = p0.child("coin").value.toString().toLongOrNull()
             }
 
             override fun onCancelled(p0: DatabaseError) {}
@@ -501,7 +501,7 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
 
     private fun calculateNewBalance(gameOverStatus: GameOverStatusEnum) {
 
-        if (bet != null && bet != 0) {
+        if (bet != null) {
 
             when (gameOverStatus) {
 
@@ -547,6 +547,20 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
             }
             ?.addOnFailureListener {
             }
+    }
+
+    fun deleteRoom() {
+        databaseReferenceForRooms?.orderByChild("name")?.equalTo(roomId)
+        ?.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    for (roomSnapshot in dataSnapshot.children) {
+                        roomSnapshot.ref.removeValue()
+                            .addOnSuccessListener {}
+                            .addOnFailureListener {}
+                    }
+                }
+                override fun onCancelled(databaseError: DatabaseError) {}
+            })
     }
 
     override fun onDestroyView() {

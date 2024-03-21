@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
+import androidx.core.widget.doAfterTextChanged
+import androidx.lifecycle.Observer
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -26,6 +28,8 @@ class CreateRoomFragment : BaseFragment<CreateRoomViewModel>(CreateRoomViewModel
 
     private var _binding: FragmentCreateRoomBinding? = null
     private val binding get() = _binding!!
+
+    private var balance: String? = null
 
     interface MoneyCheckCallback {
         fun onCheckSuccess()
@@ -54,6 +58,7 @@ class CreateRoomFragment : BaseFragment<CreateRoomViewModel>(CreateRoomViewModel
         binding.coinSwitch.setOnCheckedChangeListener { _, isChecked ->
             binding.coinTextInputLayout.visibility = if (isChecked) View.VISIBLE else View.GONE
             binding.tvBalance.visibility = if (isChecked) View.VISIBLE else View.GONE
+            binding.tvBalanceTitle.visibility = if (isChecked) View.VISIBLE else View.GONE
             if (!isChecked) binding.etCoin.text?.clear()
             showUserBalance()
         }
@@ -77,6 +82,11 @@ class CreateRoomFragment : BaseFragment<CreateRoomViewModel>(CreateRoomViewModel
                 requireActivity().supportFragmentManager.popBackStackImmediate()
             }
         }
+
+        binding.etCoin.doAfterTextChanged {
+            mViewModel.onTextChanged(it.toString())
+        }
+
     }
 
     private fun createRoom() {
@@ -202,7 +212,8 @@ class CreateRoomFragment : BaseFragment<CreateRoomViewModel>(CreateRoomViewModel
                     @SuppressLint("SetTextI18n")
                     override fun onDataChange(snapshot: DataSnapshot) {
                         binding.tvBalance.text =
-                            "${getString(R.string.your_balance)} ${snapshot.child("coin").value?.toString()}"
+                            "${snapshot.child("coin").value?.toString()}"
+                        balance = snapshot.child("coin").value?.toString()
                     }
 
                     override fun onCancelled(databaseError: DatabaseError) {}
@@ -238,4 +249,15 @@ class CreateRoomFragment : BaseFragment<CreateRoomViewModel>(CreateRoomViewModel
             commit()
         }
     }
+
+    @SuppressLint("SetTextI18n")
+    override fun bindObservers() {
+        mViewModel.inputText.observe(this, Observer { inputText ->
+            val currentTextValue = balance?.toLongOrNull() ?: 0
+            val editTextValue = inputText.toLongOrNull() ?: 0
+            val result = currentTextValue - editTextValue
+            binding.tvBalance.text = result.toString()
+        })
+    }
+
 }
