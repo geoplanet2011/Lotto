@@ -26,6 +26,7 @@ import ge.gogichaishvili.lotto.app.tools.koreqtulMicemitBrunvashiGadayvana
 import ge.gogichaishvili.lotto.databinding.FragmentDashboardBinding
 import ge.gogichaishvili.lotto.main.enums.GameOverStatusEnum
 import ge.gogichaishvili.lotto.main.enums.PlayerStatusEnum
+import ge.gogichaishvili.lotto.main.enums.RoomSateEnums
 import ge.gogichaishvili.lotto.main.models.LottoDrawResult
 import ge.gogichaishvili.lotto.main.models.User
 import ge.gogichaishvili.lotto.main.presentation.fragments.base.BaseFragment
@@ -176,6 +177,8 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     val players = dataSnapshot.children.mapNotNull { it.value as? String }
                     if (players.size == 2) {
+                        binding.progressBar.visibility = View.GONE
+                        closeRoom()
                         val otherPlayerId = players.firstOrNull { it != uid }
                         if (otherPlayerId != null) {
                             loadOpponentProfile(otherPlayerId)
@@ -247,6 +250,7 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
             calculateNewBalance(GameOverStatusEnum.Draw)
             sendCommand("Draw")
             resetGame()
+            finishRoom()
         } else {
             if (result.numbers.isNotEmpty()) {
                 val newNumber = result.numbers.last()
@@ -390,6 +394,7 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
                 sendCommand("JOINER_WIN")
             }
             resetGame()
+            finishRoom()
         }
 
     }
@@ -442,6 +447,7 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
                                     isOpponentWin = true
                                     calculateNewBalance(GameOverStatusEnum.OPPONENT_WIN)
                                     resetGame()
+                                    finishRoom()
                                 }
                             }
 
@@ -525,6 +531,22 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
                 ?.addOnFailureListener {
                 }
         }
+    }
+
+    private fun closeRoom() {
+        databaseReferenceForRooms?.child(roomId!!)?.child("state")?.setValue(RoomSateEnums.CLOSE)
+            ?.addOnSuccessListener {
+            }
+            ?.addOnFailureListener {
+            }
+    }
+
+    private fun finishRoom() {
+        databaseReferenceForRooms?.child(roomId!!)?.child("state")?.setValue(RoomSateEnums.FINISH)
+            ?.addOnSuccessListener {
+            }
+            ?.addOnFailureListener {
+            }
     }
 
     override fun onDestroyView() {

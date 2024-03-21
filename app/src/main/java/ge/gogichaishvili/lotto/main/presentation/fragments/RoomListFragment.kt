@@ -6,7 +6,6 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
@@ -99,11 +98,9 @@ class RoomListFragment : BaseFragment<RoomListViewModel>(RoomListViewModel::clas
                     binding.roomListRv.adapter = adapter
                     mViewModel.setLoading(false)
                     if (roomList.isEmpty()) {
-                        Toast.makeText(
-                            requireContext(),
-                            R.string.room_not_found,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        binding.tvNoRoom.visibility = View.VISIBLE
+                    } else {
+                        binding.tvNoRoom.visibility = View.GONE
                     }
                 }
             }

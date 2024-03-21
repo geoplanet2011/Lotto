@@ -42,10 +42,10 @@ class RoomAdapter(private val context: Context, private val roomList: List<Room>
                 tvMoney.text = context.getString(R.string.free)
             }
 
-            root.setOnCreateContextMenuListener { contextMenu, _, _ ->
+            /*root.setOnCreateContextMenuListener { contextMenu, _, _ ->
                 contextMenu.add(position, 0, 0, context.getString(R.string.delete))
                 contextMenu.add(position, 1, 0, context.getString(R.string.edit))
-            }
+            }*/
 
             root.setOnClickListener {
                 if (room.locked == true) {
