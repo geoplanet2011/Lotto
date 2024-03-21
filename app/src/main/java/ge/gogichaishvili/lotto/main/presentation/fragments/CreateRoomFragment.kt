@@ -130,7 +130,7 @@ class CreateRoomFragment : BaseFragment<CreateRoomViewModel>(CreateRoomViewModel
                                                 /*if (requireActivity().supportFragmentManager.backStackEntryCount > 0) {
                                                     requireActivity().supportFragmentManager.popBackStackImmediate()
                                                 }*/
-                                                navigateToDashboard(roomName)
+                                                navigateToDashboard(roomName, money)
                                             } else {
                                                 val errorMessage =
                                                     task.exception?.message
@@ -225,12 +225,13 @@ class CreateRoomFragment : BaseFragment<CreateRoomViewModel>(CreateRoomViewModel
         }
     }
 
-    fun navigateToDashboard(roomName: String) {
+    fun navigateToDashboard(roomName: String, bet: String) {
         parentFragmentManager.beginTransaction().apply {
             replace(R.id.fragmentContainerView, DashboardFragment().apply {
                 arguments = Bundle().apply {
                     putString("roomId", roomName)
                     putInt("playerStatus", PlayerStatusEnum.CREATOR.value)
+                    putString("bet", bet)
                 }
             })
             addToBackStack(null)

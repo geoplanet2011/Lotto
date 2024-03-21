@@ -42,6 +42,8 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
 
     private var roomId: String? = null
     private var playerStatus: PlayerStatusEnum? = null
+    private var bet: Int? = null
+    private var balance: Int? = null
 
     private var firebaseUser: FirebaseUser? = null
     private lateinit var auth: FirebaseAuth
@@ -69,6 +71,7 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
         roomId = arguments?.getString("roomId") ?: ""
         val playerStatusCode = arguments?.getInt("playerStatus") ?: PlayerStatusEnum.UNKNOWN.value
         playerStatus = PlayerStatusEnum.getEnumByCode(playerStatusCode)
+        bet = arguments?.getString("bet")?.toInt()
 
         database = FirebaseDatabase.getInstance()
         databaseReference = database?.reference!!.child("Users")
@@ -160,6 +163,7 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
 
                 binding.tvPlayerOneName.text = p0.child("firstname").value.toString()
                 binding.tvPlayerOneScore.text = p0.child("coin").value.toString()
+                balance = p0.child("coin").value.toString().toInt()
             }
 
             override fun onCancelled(p0: DatabaseError) {}
@@ -239,7 +243,8 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
     private fun handleLottoDrawResult(result: LottoDrawResult) {
         if (result.isEmpty) {
             println("bag is empty")
-            //mViewModel.checkGameResult(GameOverStatusEnum.Draw, requireContext())
+            mViewModel.checkGameResult(GameOverStatusEnum.Draw, requireContext())
+            calculateNewBalance(GameOverStatusEnum.Draw)
             sendCommand("Draw")
             resetGame()
         } else {
@@ -328,17 +333,12 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
     private fun resetGame() {
         timer.cancel()
         timer.purge()
-        /*      mViewModel.resetManagers()
-              mViewModel.generateOpponentCard()
-              mViewModel.redrawCard(requireContext(), binding.llCards)
-              binding.llStones.removeAllViews()
-              binding.llDrawChips.removeAllViews()
-              binding.btnChange.visibility = View.VISIBLE
-              binding.btnStart.visibility = View.VISIBLE
-              binding.btnPause.visibility = View.GONE
-              binding.llChips.visibility = View.VISIBLE
-              binding.betText.visibility = View.VISIBLE
-              binding.llDrawChips.visibility = View.VISIBLE*/
+        mViewModel.resetManagers()
+        //mViewModel.redrawCard(requireContext(), binding.llCards)
+        binding.llStones.removeAllViews()
+        //isDraw = false
+        //isOpponentWin = false
+        //isOpponentLineCompleted = false
     }
 
     override fun bindObservers() {
@@ -383,6 +383,7 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
 
         mViewModel.cardCompletionEvent.observe(viewLifecycleOwner) {
             mViewModel.checkGameResult(GameOverStatusEnum.PLAYER_WIN, requireContext())
+            calculateNewBalance(GameOverStatusEnum.PLAYER_WIN)
             if (playerStatus == PlayerStatusEnum.CREATOR) {
                 sendCommand("CREATOR_WIN")
             } else {
@@ -427,6 +428,8 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
                                         requireContext()
                                     )
                                     isOpponentWin = true
+                                    calculateNewBalance(GameOverStatusEnum.OPPONENT_WIN)
+                                    resetGame()
                                 }
                             }
 
@@ -437,6 +440,8 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
                                         requireContext()
                                     )
                                     isOpponentWin = true
+                                    calculateNewBalance(GameOverStatusEnum.OPPONENT_WIN)
+                                    resetGame()
                                 }
                             }
 
@@ -475,9 +480,10 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
                                         requireContext()
                                     )
                                     isDraw = true
+                                    calculateNewBalance(GameOverStatusEnum.Draw)
+                                    resetGame()
                                 }
                             }
-
 
                         }
                     }
@@ -485,6 +491,40 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
 
                 override fun onCancelled(databaseError: DatabaseError) {}
             })
+    }
+
+    private fun calculateNewBalance(gameOverStatus: GameOverStatusEnum) {
+
+        if (bet != null && bet != 0) {
+
+            when (gameOverStatus) {
+
+                GameOverStatusEnum.PLAYER_WIN -> {
+                    if (balance != null && bet != null) {
+                        balance = balance!! + bet!! * 2
+                    }
+                }
+
+                GameOverStatusEnum.OPPONENT_WIN -> {
+                    balance = balance!! - bet!!
+                }
+
+                GameOverStatusEnum.Draw -> {
+                    if (balance != null && bet != null) {
+                        balance = balance!! + bet!!
+                    }
+                }
+
+            }
+
+            binding.tvPlayerOneScore.text = balance.toString()
+
+            userReference?.child("coin")?.setValue(balance.toString())
+                ?.addOnSuccessListener {
+                }
+                ?.addOnFailureListener {
+                }
+        }
     }
 
     override fun onDestroyView() {

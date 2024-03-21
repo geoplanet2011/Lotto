@@ -49,9 +49,9 @@ class RoomAdapter(private val context: Context, private val roomList: List<Room>
 
             root.setOnClickListener {
                 if (room.locked == true) {
-                    alertWithInputText(context, room.password!!, room.name!!)
+                    alertWithInputText(context, room.password!!, room.name!!, room.money)
                 } else {
-                    navigateToDashboardFragment(room.name)
+                    navigateToDashboardFragment(room.name, room.money)
                 }
             }
         }
@@ -61,7 +61,7 @@ class RoomAdapter(private val context: Context, private val roomList: List<Room>
 
     class RoomViewHolder(val binding: ViewRoomItemBinding) : RecyclerView.ViewHolder(binding.root)
 
-    private fun alertWithInputText(context: Context, roomPassword: String, roomName: String) {
+    private fun alertWithInputText(context: Context, roomPassword: String, roomName: String, bet: String?) {
         val builder = AlertDialog.Builder(context)
         builder.setTitle(context.getString(R.string.notification))
             .setCancelable(false)
@@ -77,7 +77,7 @@ class RoomAdapter(private val context: Context, private val roomList: List<Room>
         builder.setPositiveButton(context.getString(R.string.yes)) { dialog, _ ->
             val text = input.text.toString().trim()
             if (text == roomPassword.trim()) {
-                navigateToDashboardFragment(roomName)
+                navigateToDashboardFragment(roomName, bet)
                 dialog.cancel()
             } else {
                 MediaPlayer.create(context, R.raw.wrong)?.start()
@@ -93,13 +93,14 @@ class RoomAdapter(private val context: Context, private val roomList: List<Room>
     }
 
 
-    private fun navigateToDashboardFragment(roomName: String?) {
+    private fun navigateToDashboardFragment(roomName: String?, bet: String?) {
         roomName?.let {
             (context as? FragmentActivity)?.supportFragmentManager?.beginTransaction()?.apply {
                 replace(R.id.fragmentContainerView, DashboardFragment().apply {
                     arguments = Bundle().apply {
                         putString("roomId", it)
                         putInt("playerStatus", PlayerStatusEnum.JOINER.value)
+                        putString("bet", bet)
                     }
                 })
                 addToBackStack(null)
