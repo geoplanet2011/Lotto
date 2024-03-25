@@ -35,8 +35,7 @@ class DashboardViewModel(
         }
     }
 
-    fun getNumberFromServer(numbers: List<Int>) {
-        val result = LottoDrawResult(false, numbers)
+    fun getNumberFromServer(result: LottoDrawResult) {
         viewModelScope.launch(Dispatchers.Main.immediate) {
             _requestStateLiveData.postValue(result)
         }
@@ -72,12 +71,6 @@ class DashboardViewModel(
 
     fun getGameSpeed(): Long {
         return pref.getGameSpeed()
-    }
-
-    fun redrawCard(context: Context, linearLayout: LinearLayout) {
-        viewModelScope.launch(Dispatchers.Main.immediate) {
-            lottoCardManager.redrawCards(context, linearLayout, _requestStateLiveData)
-        }
     }
 
     val lineCompletionEvent = MutableLiveData<Unit>()

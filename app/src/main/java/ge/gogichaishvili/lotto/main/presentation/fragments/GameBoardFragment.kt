@@ -254,13 +254,12 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
             Toast.makeText(requireContext(), getString(R.string.line_is_filled), Toast.LENGTH_SHORT).show()
         }
         mViewModel.cardCompletionEvent.observe(viewLifecycleOwner) {
-            //Toast.makeText(requireContext(), "ბილეთი შევსებულია!", Toast.LENGTH_SHORT).show()
             calculateNewBalance(GameOverStatusEnum.PLAYER_WIN)
             mViewModel.checkGameResult(GameOverStatusEnum.PLAYER_WIN, requireContext())
             resetGame()
         }
 
-        mViewModel.requestStateLiveData.observe(viewLifecycleOwner) { it ->
+        mViewModel.requestStateLiveData.observe(viewLifecycleOwner) {
             handleLottoDrawResult(it)
 
             if (it.numbers.isNotEmpty()) {
@@ -286,7 +285,6 @@ class GameBoardFragment : BaseFragment<GameBoardViewModel>(GameBoardViewModel::c
                 .show()
         }
         mViewModel.opponentCardCompletionEvent.observe(viewLifecycleOwner) {
-            //Toast.makeText(requireContext(), "ოპონენტის ბილეთი შევსებულია!", Toast.LENGTH_SHORT).show()
             calculateNewBalance(GameOverStatusEnum.OPPONENT_WIN)
             mViewModel.checkGameResult(GameOverStatusEnum.OPPONENT_WIN, requireContext())
             resetGame()

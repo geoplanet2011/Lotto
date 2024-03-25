@@ -38,8 +38,6 @@ class RoomAdapter(private val context: Context, private val roomList: List<Room>
 
             if (!room.money.isNullOrEmpty() && room.money.toLong() > 0) {
                 tvMoney.text = "${context.getString(R.string.bet_is)} ${room.money}"
-            } else {
-                tvMoney.text = context.getString(R.string.free)
             }
 
             /*root.setOnCreateContextMenuListener { contextMenu, _, _ ->

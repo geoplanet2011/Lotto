@@ -9,16 +9,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
 import ge.gogichaishvili.lotto.R
 import ge.gogichaishvili.lotto.app.tools.hideKeyboard
 import ge.gogichaishvili.lotto.databinding.FragmentLoginBinding
 import ge.gogichaishvili.lotto.login.presentation.viewmodels.LoginViewModel
-import ge.gogichaishvili.lotto.main.presentation.fragments.DashboardFragment
 import ge.gogichaishvili.lotto.main.presentation.fragments.RoomListFragment
 import ge.gogichaishvili.lotto.main.presentation.fragments.base.BaseFragment
-import ge.gogichaishvili.lotto.main.presentation.viewmodels.CreateRoomViewModel
 import ge.gogichaishvili.lotto.recovery.presentation.fragments.RecoveryFragment
 import ge.gogichaishvili.lotto.register.presentation.fragments.RegisterFragment
 
@@ -99,12 +96,12 @@ class LoginFragment : BaseFragment<LoginViewModel>(LoginViewModel::class) {
                 ).commit()
         }
 
-        binding.passwordInput.setOnTouchListener { v, event ->
+        binding.passwordInput.setOnTouchListener { _, event ->
 
-            val DRAWABLE_RIGHT = 2
+            val drawableRight = 2
 
             if (event.action == MotionEvent.ACTION_UP) {
-                if (event.rawX >= (binding.passwordInput.right - binding.passwordInput.compoundDrawables[DRAWABLE_RIGHT].bounds.width())) {
+                if (event.rawX >= (binding.passwordInput.right - binding.passwordInput.compoundDrawables[drawableRight].bounds.width())) {
                     isPasswordVisible = !isPasswordVisible
                     if (isPasswordVisible) {
                         binding.passwordInput.inputType =
@@ -128,20 +125,20 @@ class LoginFragment : BaseFragment<LoginViewModel>(LoginViewModel::class) {
 
     }
 
-   /* override fun onStart() {
-        super.onStart()
+    /* override fun onStart() {
+         super.onStart()
 
-        val user = auth.currentUser
-        if (user != null) {
-            parentFragmentManager.beginTransaction()
-                .replace(
-                    R.id.fragmentContainerView,
-                    DashboardFragment()
-                ).addToBackStack(
-                    DashboardFragment::class.java.name
-                ).commit()
-        }
-    }*/
+         val user = auth.currentUser
+         if (user != null) {
+             parentFragmentManager.beginTransaction()
+                 .replace(
+                     R.id.fragmentContainerView,
+                     DashboardFragment()
+                 ).addToBackStack(
+                     DashboardFragment::class.java.name
+                 ).commit()
+         }
+     }*/
 
     private fun login() {
 
@@ -189,7 +186,7 @@ class LoginFragment : BaseFragment<LoginViewModel>(LoginViewModel::class) {
         }
     }
 
-    private fun setUserRemember () {
+    private fun setUserRemember() {
         if (binding.rbRemember.isChecked && binding.emailInput.text.toString().trim()
                 .isNotEmpty()
         ) {
@@ -200,12 +197,12 @@ class LoginFragment : BaseFragment<LoginViewModel>(LoginViewModel::class) {
         }
     }
 
-    private fun logoutUser() {
+    /*private fun logoutUser() {
         FirebaseAuth.getInstance().signOut()
         if (requireActivity().supportFragmentManager.backStackEntryCount > 0) {
             requireActivity().supportFragmentManager.popBackStackImmediate()
         }
-    }
+    }*/
 
     override fun onDestroyView() {
         super.onDestroyView()

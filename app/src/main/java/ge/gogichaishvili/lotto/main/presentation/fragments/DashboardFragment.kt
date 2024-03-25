@@ -11,6 +11,7 @@ import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -69,6 +70,13 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                requireActivity().moveTaskToBack(true)
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+
         roomId = arguments?.getString("roomId") ?: ""
         val playerStatusCode = arguments?.getInt("playerStatus") ?: PlayerStatusEnum.UNKNOWN.value
         playerStatus = PlayerStatusEnum.getEnumByCode(playerStatusCode)
@@ -88,10 +96,6 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
 
         loadProfile()
         waitForOpponent()
-
-        /*binding.logoutBtn.setOnClickListener {
-            auth.signOut()
-        }*/
 
     }
 
@@ -215,7 +219,7 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
         if (playerStatus == PlayerStatusEnum.CREATOR) {
             getLottoStones()
         }
-        getLottoStonesFromServer()
+        getLottoResultFromServer()
     }
 
     private fun getLottoStones() {
@@ -236,7 +240,20 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val stonesType = object : GenericTypeIndicator<List<Int>>() {}
                     val stonesList: List<Int> = snapshot.getValue(stonesType) ?: emptyList()
-                    mViewModel.getNumberFromServer(stonesList)
+                }
+
+                override fun onCancelled(error: DatabaseError) {}
+            })
+    }
+
+    private fun getLottoResultFromServer() {
+        databaseReferenceForRooms?.child(roomId!!)?.child("lottoResult")
+            ?.addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val result = snapshot.getValue(LottoDrawResult::class.java)
+                    if (result != null) {
+                        mViewModel.getNumberFromServer(result)
+                    }
                 }
 
                 override fun onCancelled(error: DatabaseError) {}
@@ -246,10 +263,7 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
     private fun handleLottoDrawResult(result: LottoDrawResult) {
         if (result.isEmpty) {
             println("bag is empty")
-            mViewModel.checkGameResult(GameOverStatusEnum.Draw, requireContext())
-            calculateNewBalance(GameOverStatusEnum.Draw)
             sendCommand("Draw")
-            resetGame()
             finishRoom()
         } else {
             if (result.numbers.isNotEmpty()) {
@@ -348,10 +362,10 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
     override fun bindObservers() {
 
         mViewModel.requestStateStonesLiveData.observe(viewLifecycleOwner) {
-            sendStoneNumberToOpponent(it.numbers)
+            sendLottoDrawResultToOpponent(it)
         }
 
-        mViewModel.requestStateLiveData.observe(viewLifecycleOwner) { it ->
+        mViewModel.requestStateLiveData.observe(viewLifecycleOwner) {
             handleLottoDrawResult(it)
 
             if (it.numbers.isNotEmpty()) {
@@ -408,14 +422,23 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
             }
     }
 
+    private fun sendLottoDrawResultToOpponent(result: LottoDrawResult) {
+        databaseReferenceForRooms?.child(roomId!!)?.child("lottoResult")?.setValue(result)
+            ?.addOnSuccessListener {
+                println("LottoDrawResult update successful")
+            }
+            ?.addOnFailureListener { e ->
+                println("LottoDrawResult update failed: ${e.message}")
+            }
+    }
+
     private fun sendCommand(command: String) {
         val updates = hashMapOf<String, Any>(
             "commandKey" to command
         )
         databaseReferenceForRooms?.child(roomId!!)?.child("commands")?.updateChildren(updates)
             ?.addOnSuccessListener {
-            }?.addOnFailureListener { e ->
-            }
+            }?.addOnFailureListener {}
     }
 
     private fun checkOpponentGameCompletion() {

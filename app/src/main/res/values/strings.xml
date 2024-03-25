@@ -78,7 +78,6 @@
     <string name="login">Login</string>
     <string name="name">Please enter your nickname</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="search">Search</string>
     <string name="delete">Delete</string>
     <string name="edit">Edit</string>
@@ -106,6 +105,7 @@
     <string name="free">Free</string>
     <string name="bet_is">Bet is</string>
     <string name="bet">Bet</string>
+    <string name="min_bets">Minimum bet is 100</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

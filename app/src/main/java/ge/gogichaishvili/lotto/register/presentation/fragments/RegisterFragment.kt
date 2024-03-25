@@ -106,11 +106,6 @@ class RegisterFragment : Fragment() {
         })
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        // _binding = null
-    }
-
     private fun register() {
         if (binding.emailInput.text.trim().toString().isEmpty() || binding.passwordInput.text.trim()
                 .toString().isEmpty() || binding.firstnameInput.text.trim().toString().isEmpty()

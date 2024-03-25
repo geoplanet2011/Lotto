@@ -175,7 +175,7 @@ object OpponentCardManager {
                 if (!isCardCompleted) {
                     onOpponentCardCompleteListener?.invoke()
                     isCardCompleted = true
-                    println("ბოტმა მოიგო ავოეეე!!!")
+                    //println("ბოტმა მოიგო ავოეეე!!!")
                 }
             }
 

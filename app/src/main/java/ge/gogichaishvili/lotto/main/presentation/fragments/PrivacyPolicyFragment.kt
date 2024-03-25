@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.KeyEvent
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -14,7 +13,7 @@ import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.activity.OnBackPressedCallback
-import ge.gogichaishvili.lotto.R
+import androidx.fragment.app.Fragment
 import ge.gogichaishvili.lotto.databinding.FragmentPrivacyPolicyBinding
 
 class PrivacyPolicyFragment : Fragment() {
@@ -44,7 +43,7 @@ class PrivacyPolicyFragment : Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
 
         binding.webView.canGoBack()
-        binding.webView.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
+        binding.webView.setOnKeyListener(View.OnKeyListener { _, keyCode, event ->
             if (keyCode == KeyEvent.KEYCODE_BACK
                 && event.action == MotionEvent.ACTION_UP
                 && binding.webView.canGoBack()

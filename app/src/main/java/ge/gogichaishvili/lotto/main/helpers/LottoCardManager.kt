@@ -339,7 +339,7 @@ object LottoCardManager {
 
         if (completedLines == tableLayout.childCount) {
             onCardCompleteListener?.invoke()
-            println("ბილეთი მთლიანად შევსებულია!")
+            //println("ბილეთი მთლიანად შევსებულია!")
         }
     }
 

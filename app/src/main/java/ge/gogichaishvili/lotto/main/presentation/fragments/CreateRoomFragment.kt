@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
-import androidx.lifecycle.Observer
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -50,17 +49,11 @@ class CreateRoomFragment : BaseFragment<CreateRoomViewModel>(CreateRoomViewModel
         binding.etCoin.inputType =
             InputType.TYPE_CLASS_NUMBER
 
+        showUserBalance()
+
         binding.passwordSwitch.setOnCheckedChangeListener { _, isChecked ->
             binding.passwordTextInputLayout.visibility = if (isChecked) View.VISIBLE else View.GONE
             if (!isChecked) binding.etPassword.text?.clear()
-        }
-
-        binding.coinSwitch.setOnCheckedChangeListener { _, isChecked ->
-            binding.coinTextInputLayout.visibility = if (isChecked) View.VISIBLE else View.GONE
-            binding.tvBalance.visibility = if (isChecked) View.VISIBLE else View.GONE
-            binding.tvBalanceTitle.visibility = if (isChecked) View.VISIBLE else View.GONE
-            if (!isChecked) binding.etCoin.text?.clear()
-            showUserBalance()
         }
 
         binding.createRoomButton.setOnClickListener {
@@ -91,17 +84,27 @@ class CreateRoomFragment : BaseFragment<CreateRoomViewModel>(CreateRoomViewModel
 
     private fun createRoom() {
 
-        if (binding.etRoomName.text.toString().isNotEmpty()) {
+        if (binding.etRoomName.text.toString().isNotEmpty() && binding.etCoin.text.toString().isNotEmpty()) {
+
+            hideKeyboard()
+
+            if (binding.etCoin.text.toString().trim().toInt() < 100) {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.min_bets),
+                    Toast.LENGTH_SHORT
+                ).show()
+                return
+            }
 
             showLoader()
-            hideKeyboard()
 
             checkUserMoney(object : MoneyCheckCallback {
                 override fun onCheckSuccess() {
                     val roomName = binding.etRoomName.text.toString().trim()
                     val roomPassword = binding.etPassword.text.toString().trim()
                     val isLocked = binding.passwordSwitch.isChecked
-                    val money = binding.etCoin.text.toString().trim().ifEmpty { "0" }
+                    val money = binding.etCoin.text.toString().trim().ifEmpty { "100" }
                     val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
                     val initialCommands = mapOf("commandKey" to "command1Value")
 
@@ -180,7 +183,7 @@ class CreateRoomFragment : BaseFragment<CreateRoomViewModel>(CreateRoomViewModel
                 .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
                         val userMoney = snapshot.child("coin").value?.toString()
-                        val coin = binding.etCoin.text.toString().trim().ifEmpty { "0" }
+                        val coin = binding.etCoin.text.toString().trim().ifEmpty { "100" }
 
                         if (!userMoney.isNullOrEmpty() && userMoney.toLong() >= coin.toLong()) {
                             callback.onCheckSuccess()
@@ -211,9 +214,13 @@ class CreateRoomFragment : BaseFragment<CreateRoomViewModel>(CreateRoomViewModel
                 .addListenerForSingleValueEvent(object : ValueEventListener {
                     @SuppressLint("SetTextI18n")
                     override fun onDataChange(snapshot: DataSnapshot) {
-                        binding.tvBalance.text =
-                            "${snapshot.child("coin").value?.toString()}"
-                        balance = snapshot.child("coin").value?.toString()
+                        try {
+                            binding.tvBalance.text =
+                                "${snapshot.child("coin").value?.toString()}"
+                            balance = snapshot.child("coin").value?.toString()
+                        } catch (e: Exception) {
+                            println(e.message.toString())
+                        }
                     }
 
                     override fun onCancelled(databaseError: DatabaseError) {}
@@ -252,12 +259,12 @@ class CreateRoomFragment : BaseFragment<CreateRoomViewModel>(CreateRoomViewModel
 
     @SuppressLint("SetTextI18n")
     override fun bindObservers() {
-        mViewModel.inputText.observe(this, Observer { inputText ->
+        mViewModel.inputText.observe(viewLifecycleOwner) { inputText ->
             val currentTextValue = balance?.toLongOrNull() ?: 0
             val editTextValue = inputText.toLongOrNull() ?: 0
             val result = currentTextValue - editTextValue
             binding.tvBalance.text = result.toString()
-        })
+        }
     }
 
 }

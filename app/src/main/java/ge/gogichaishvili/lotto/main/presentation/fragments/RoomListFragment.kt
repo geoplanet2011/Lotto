@@ -138,11 +138,6 @@ class RoomListFragment : BaseFragment<RoomListViewModel>(RoomListViewModel::clas
         })
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        //_binding = null
-    }
-
     private fun onlineUserStatus(status: String) {
         val firebaseUser = FirebaseAuth.getInstance().currentUser
         val databaseReference =

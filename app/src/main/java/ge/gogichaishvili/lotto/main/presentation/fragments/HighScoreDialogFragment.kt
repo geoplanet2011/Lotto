@@ -19,7 +19,6 @@ import android.widget.LinearLayout
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.DialogFragment
 import ge.gogichaishvili.lotto.R
-import ge.gogichaishvili.lotto.app.tools.Utils
 import ge.gogichaishvili.lotto.app.tools.vibratePhone
 import ge.gogichaishvili.lotto.databinding.FragmentHighscoreDialogBinding
 import ge.gogichaishvili.lotto.main.helpers.RatingManager
@@ -148,8 +147,8 @@ class HighScoreDialogFragment : DialogFragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        mediaPlayer?.stop()
-        mediaPlayer?.release()
+        mediaPlayer.stop()
+        mediaPlayer.release()
         _binding = null
     }
 

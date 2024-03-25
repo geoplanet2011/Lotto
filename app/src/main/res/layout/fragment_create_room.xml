@@ -42,71 +42,42 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <LinearLayout
-        android:id="@+id/ll_coin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/room_TextInputLayout">
-
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/coin_switch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="15dp"
-            android:checked="false"
-            android:text="@null"
-            android:thumb="@drawable/switch_thumb_settings"
-            app:track="@drawable/switch_track_settings" />
-
-        <TextView
-            android:id="@+id/tv_coin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/dejavusans"
-            android:text="@string/bet_coins"
-            android:textSize="16sp"
-            tools:ignore="TextContrastCheck" />
-    </LinearLayout>
-
     <TextView
         android:id="@+id/tv_balanceTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:text="@string/your_balance"
         android:textColor="@color/black"
         android:textSize="12sp"
-        android:visibility="invisible"
+        android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ll_coin"
-        tools:visibility="visible" />
+        app:layout_constraintTop_toBottomOf="@+id/room_TextInputLayout" />
 
     <TextView
         android:id="@+id/tv_balance"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
-        tools:text="0"
+        android:layout_marginTop="10dp"
         android:textColor="@color/black"
         android:textSize="12sp"
-        android:visibility="invisible"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/tv_balanceTitle"
-        app:layout_constraintTop_toBottomOf="@+id/ll_coin"
-        tools:visibility="visible" />
+        app:layout_constraintTop_toBottomOf="@+id/room_TextInputLayout"
+        tools:text="0" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/coin_TextInputLayout"
         style="@style/ThemeOverlay.MaterialComponents.TextInputEditText.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:visibility="gone"
+        android:layout_marginTop="10dp"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_balance"
-        tools:visibility="visible">
+        app:layout_constraintTop_toBottomOf="@+id/tv_balance">
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/et_coin"
@@ -114,7 +85,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="1dp"
             android:digits="0123456789"
-            android:hint="@string/bet"
+            android:hint="@string/min_bets"
             android:inputType="number"
             android:maxLines="1"
             android:singleLine="true"

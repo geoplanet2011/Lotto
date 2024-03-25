@@ -100,4 +100,5 @@
     <string name="free">Бесплатно</string>
     <string name="bet_is">Ставка</string>
     <string name="bet">Ставка</string>
+    <string name="min_bets">Минимальная ставка 100</string>
 </resources>

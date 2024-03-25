@@ -1,8 +1,6 @@
 package ge.gogichaishvili.lotto.settings.presentation.fragments
 
-import android.app.Activity
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -13,7 +11,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.google.android.material.snackbar.Snackbar
 import ge.gogichaishvili.lotto.R
-import ge.gogichaishvili.lotto.app.tools.getBackStackTag
 import ge.gogichaishvili.lotto.app.tools.hideKeyboard
 import ge.gogichaishvili.lotto.databinding.FragmentSettingsBinding
 import ge.gogichaishvili.lotto.main.enums.GameSpeedEnum
@@ -169,17 +166,10 @@ class SettingsFragment : BaseFragment<SettingsViewModel>(SettingsViewModel::clas
                 putExtra("openSettingsFragment", true)
             }
             requireActivity().finish()
-            if (Build.VERSION.SDK_INT >= 34) {
-                requireActivity().overrideActivityTransition(
-                    Activity.OVERRIDE_TRANSITION_OPEN, android.R.anim.fade_in,
-                    android.R.anim.fade_out
-                )
-            } else {
                 requireActivity().overridePendingTransition(
                     android.R.anim.fade_in,
                     android.R.anim.fade_out
                 )
-            }
             startActivity(intent)
         }, 200)
     }
