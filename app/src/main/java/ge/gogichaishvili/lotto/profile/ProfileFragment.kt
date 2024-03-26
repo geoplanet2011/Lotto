@@ -1,7 +1,11 @@
 package ge.gogichaishvili.lotto.profile
 
+import android.app.AlertDialog
+import android.content.DialogInterface
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
+import android.graphics.Typeface
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -11,6 +15,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -34,6 +39,7 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.karumi.dexter.listener.single.PermissionListener
 import ge.gogichaishvili.lotto.R
 import ge.gogichaishvili.lotto.databinding.FragmentProfileBinding
+import ge.gogichaishvili.lotto.main.presentation.activities.MainActivity
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.util.UUID
@@ -80,6 +86,10 @@ class ProfileFragment : Fragment() {
             if (requireActivity().supportFragmentManager.backStackEntryCount > 0) {
                 requireActivity().supportFragmentManager.popBackStackImmediate()
             }
+        }
+
+        binding.deleteBtn.setOnClickListener {
+            deleteUser()
         }
 
     }
@@ -383,6 +393,65 @@ class ProfileFragment : Fragment() {
                     override fun onCancelled(p0: DatabaseError) {}
                 })
         }
+    }
+
+    private fun deleteUserFromDatabase(uid: String) {
+        val databaseReference = FirebaseDatabase.getInstance().getReference("Users")
+        databaseReference.child(uid).removeValue().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                deleteUserAccount()
+            } else {
+                Toast.makeText(context, "Failed to delete user data.", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun deleteUserAccount() {
+        val user = FirebaseAuth.getInstance().currentUser
+        user?.delete()?.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                signOutUser()
+            } else {
+                Toast.makeText(context, "Failed to delete user account.", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun signOutUser() {
+        FirebaseAuth.getInstance().signOut()
+        navigateToSignInScreen()
+    }
+
+    private fun navigateToSignInScreen() {
+        val intent = Intent(activity, MainActivity::class.java)
+        startActivity(intent)
+        activity?.finish()
+    }
+
+    private fun deleteUser() {
+        val builder = AlertDialog.Builder(activity)
+        builder.setMessage(getString(R.string.confirm_delete_message))
+            .setCancelable(false)
+            .setPositiveButton(getString(R.string.yes)) { _, _ ->
+                val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
+                if (currentUserUid != null) {
+                    deleteUserFromDatabase(currentUserUid)
+                }
+            }
+            .setNegativeButton(getString(R.string.no)) { dialog, _ ->
+                dialog.dismiss()
+            }
+
+        val alert = builder.create()
+
+        alert.setOnShowListener(DialogInterface.OnShowListener {
+            alert.getButton(AlertDialog.BUTTON_POSITIVE)
+                .setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+            alert.getButton(AlertDialog.BUTTON_POSITIVE).setTypeface(null, Typeface.BOLD)
+            alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTypeface(null, Typeface.BOLD)
+        })
+
+        alert.show()
     }
 
     override fun onDestroyView() {

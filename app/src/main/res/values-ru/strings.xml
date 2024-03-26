@@ -101,4 +101,6 @@
     <string name="bet_is">Ставка</string>
     <string name="bet">Ставка</string>
     <string name="min_bets">Минимальная ставка 100</string>
+    <string name="no">Нет</string>
+    <string name="confirm_delete_message">Вы действительно хотите удалить пользователя?</string>
 </resources>

@@ -101,4 +101,6 @@
     <string name="bet_is">ფსონი არის</string>
     <string name="bet">ფსონი</string>
     <string name="min_bets">მინიმალური ფსონი არის 100</string>
+    <string name="no">არა</string>
+    <string name="confirm_delete_message">ნამდვილად გსურთ მომხმარებლის წაშლა?</string>
 </resources>

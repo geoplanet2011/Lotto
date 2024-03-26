@@ -87,9 +87,23 @@
             android:layout_marginTop="25dp"
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="5dp"
-            android:backgroundTint="@color/green_dark_color"
+            android:backgroundTint="#3F7C41"
             android:padding="12dp"
             android:text="@string/get_coin"
+            android:textColor="@color/white"
+            app:cornerRadius="5dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/ratingBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="5dp"
+            android:backgroundTint="#6341a3"
+            android:padding="12dp"
+            android:text="@string/your_rating"
             android:textColor="@color/white"
             app:cornerRadius="5dp" />
 

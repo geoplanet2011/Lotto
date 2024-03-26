@@ -106,6 +106,8 @@
     <string name="bet_is">Bet is</string>
     <string name="bet">Bet</string>
     <string name="min_bets">Minimum bet is 100</string>
+    <string name="no">No</string>
+    <string name="confirm_delete_message">Do you really want to delete the user?</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->
