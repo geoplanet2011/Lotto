@@ -1,5 +1,6 @@
 package ge.gogichaishvili.lotto.profile
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
@@ -10,6 +11,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +24,12 @@ import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
+import com.google.android.gms.ads.AdError
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.FullScreenContentCallback
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.rewarded.RewardedAd
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -58,6 +66,8 @@ class ProfileFragment : Fragment() {
 
     private var userPhotoLink: String = ""
 
+    private var mRewardedAd: RewardedAd? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -73,6 +83,7 @@ class ProfileFragment : Fragment() {
         databaseReference = database?.reference!!.child("Users")
 
         loadProfile()
+        loadRewardedAd()
 
         binding.galleryBtn.setOnClickListener {
             folderCheckPermission()
@@ -90,6 +101,10 @@ class ProfileFragment : Fragment() {
 
         binding.deleteBtn.setOnClickListener {
             deleteUser()
+        }
+
+        binding.getCoinBtn.setOnClickListener {
+            showRewardedAd()
         }
 
     }
@@ -387,6 +402,9 @@ class ProfileFragment : Fragment() {
                                 .placeholder(R.drawable.male)
                                 .error(R.drawable.male)
                                 .into(binding.pictureIV)
+
+                            binding.tvName.text = p0.child("firstname").value.toString()
+                            binding.tvMoney.text = p0.child("coin").value.toString()
                         }
                     }
 
@@ -453,6 +471,93 @@ class ProfileFragment : Fragment() {
 
         alert.show()
     }
+
+    private fun loadRewardedAd() {
+
+        try {
+            val adRequest = AdRequest.Builder().build()
+
+            RewardedAd.load(
+                requireContext(),
+                "ca-app-pub-4290928451578259/9410286233",
+                adRequest,
+                object : RewardedAdLoadCallback() {
+                    override fun onAdFailedToLoad(adError: LoadAdError) {
+                        mRewardedAd = null
+                        loadRewardedAd()
+                    }
+
+                    override fun onAdLoaded(rewardedAd: RewardedAd) {
+                        mRewardedAd = rewardedAd
+                        mRewardedAd?.fullScreenContentCallback =
+                            object : FullScreenContentCallback() {
+                                override fun onAdDismissedFullScreenContent() {
+                                    mRewardedAd = null
+                                    loadRewardedAd()
+                                }
+
+                                override fun onAdFailedToShowFullScreenContent(p0: AdError) {
+                                    mRewardedAd = null
+                                    loadRewardedAd()
+                                }
+
+                                override fun onAdShowedFullScreenContent() {
+
+                                }
+                            }
+                    }
+                })
+        } catch (e: Exception) {
+            println(e.message.toString())
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun showRewardedAd() {
+        if (mRewardedAd != null) {
+            mRewardedAd!!.show(requireActivity()) {
+                updateUserCoin(it.amount.toLong())
+                if (isAdded) {
+                   Toast.makeText(
+                       requireContext(),
+                       getString(R.string.balance_updated),
+                       Toast.LENGTH_SHORT
+                   ).show()
+               }
+            }
+        } else {
+            Toast.makeText(
+                requireContext(),
+                "The rewarded ad wasn't ready yet.",
+                Toast.LENGTH_SHORT
+            ).show()
+            loadRewardedAd()
+        }
+    }
+
+    private fun updateUserCoin(additionalBalance: Long) {
+        val userUid = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val userRef = FirebaseDatabase.getInstance().getReference("Users").child(userUid)
+
+        userRef.child("coin").get().addOnSuccessListener { dataSnapshot ->
+            val currentBalance = dataSnapshot.value.toString().toLongOrNull() ?: 0L
+            val newBalance = currentBalance + additionalBalance
+
+            userRef.child("coin").setValue(newBalance).addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Log.d("Firebase", "Coin value updated successfully to $newBalance.")
+                    if (isAdded) {
+                        binding.tvMoney.text = newBalance.toString()
+                    }
+                } else {
+                    Log.e("Firebase", "Failed to update coin value.", task.exception)
+                }
+            }
+        }.addOnFailureListener { exception ->
+            Log.e("Firebase", "Error getting current coin value", exception)
+        }
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

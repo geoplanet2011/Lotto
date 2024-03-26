@@ -103,4 +103,6 @@
     <string name="min_bets">მინიმალური ფსონი არის 100</string>
     <string name="no">არა</string>
     <string name="confirm_delete_message">ნამდვილად გსურთ მომხმარებლის წაშლა?</string>
+    <string name="balance_updated">თქვენი ბალანსი განახლდა</string>
+    <string name="get_rating">თქვენი რეიტინგი</string>
 </resources>

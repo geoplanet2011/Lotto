@@ -103,4 +103,6 @@
     <string name="min_bets">Минимальная ставка 100</string>
     <string name="no">Нет</string>
     <string name="confirm_delete_message">Вы действительно хотите удалить пользователя?</string>
+    <string name="balance_updated">Ваш баланс обновлен</string>
+    <string name="get_rating">Ваш рейтинг</string>
 </resources>
