@@ -65,4 +65,5 @@ class CustomDialogFragment : DialogFragment() {
         super.onDestroyView()
         _binding = null
     }
+
 }

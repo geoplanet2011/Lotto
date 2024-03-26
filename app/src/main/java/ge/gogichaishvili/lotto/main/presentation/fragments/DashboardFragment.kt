@@ -586,6 +586,12 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
             })
     }
 
+    private fun navigateBackToRoomList() {
+        if (isAdded) {
+            parentFragmentManager.popBackStackImmediate(RoomListFragment::class.java.name, 0)
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
