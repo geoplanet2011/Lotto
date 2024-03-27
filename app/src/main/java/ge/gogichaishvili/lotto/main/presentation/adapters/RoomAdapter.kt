@@ -63,7 +63,7 @@ class RoomAdapter(private val context: Context, private val roomList: List<Room>
         val builder = AlertDialog.Builder(context)
         builder.setTitle(context.getString(R.string.notification))
             .setCancelable(false)
-            .setIcon(android.R.drawable.ic_dialog_alert)
+            .setIcon(R.drawable.baseline_warning_24)
 
         val input = EditText(context).apply {
             hint = context.getString(R.string.enter_the_password)
