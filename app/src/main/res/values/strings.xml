@@ -110,6 +110,8 @@
     <string name="confirm_delete_message">Do you really want to delete the user?</string>
     <string name="balance_updated">Your balance has been updated</string>
     <string name="get_rating">Your rating</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="top_users">Top 10 user</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

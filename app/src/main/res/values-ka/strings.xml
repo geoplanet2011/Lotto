@@ -105,4 +105,5 @@
     <string name="confirm_delete_message">ნამდვილად გსურთ მომხმარებლის წაშლა?</string>
     <string name="balance_updated">თქვენი ბალანსი განახლდა</string>
     <string name="get_rating">თქვენი რეიტინგი</string>
+    <string name="top_users">ტოპ 10 მომხმარებელი</string>
 </resources>

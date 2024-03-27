@@ -48,6 +48,7 @@ import com.karumi.dexter.listener.single.PermissionListener
 import ge.gogichaishvili.lotto.R
 import ge.gogichaishvili.lotto.databinding.FragmentProfileBinding
 import ge.gogichaishvili.lotto.main.presentation.activities.MainActivity
+import ge.gogichaishvili.lotto.main.presentation.fragments.TopFragment
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.util.UUID
@@ -107,6 +108,13 @@ class ProfileFragment : Fragment() {
             showRewardedAd()
         }
 
+        binding.ratingBtn.setOnClickListener {
+            TopFragment()
+                .apply {
+                    isCancelable = false
+                }
+                .show(parentFragmentManager, null)
+        }
     }
 
     private fun showLoader() {
@@ -290,7 +298,7 @@ class ProfileFragment : Fragment() {
                 .into(binding.pictureIV)
 
             try {  //get bitmap from uri
-                uri?.let {
+                uri.let {
                     val source =
                         ImageDecoder.createSource(requireActivity().contentResolver, uri)
                     val bitmap = ImageDecoder.decodeBitmap(source)
@@ -332,8 +340,8 @@ class ProfileFragment : Fragment() {
                 Toast.makeText(requireContext(), exception.message, Toast.LENGTH_SHORT).show()
             }
             .addOnProgressListener { taskSnapshot ->
-                val progress =
-                    (100.0 * taskSnapshot.bytesTransferred / taskSnapshot.totalByteCount)
+                val progress = (100.0 * taskSnapshot.bytesTransferred / taskSnapshot.totalByteCount)
+
             }
     }
 
@@ -462,12 +470,12 @@ class ProfileFragment : Fragment() {
 
         val alert = builder.create()
 
-        alert.setOnShowListener(DialogInterface.OnShowListener {
+        alert.setOnShowListener {
             alert.getButton(AlertDialog.BUTTON_POSITIVE)
                 .setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
             alert.getButton(AlertDialog.BUTTON_POSITIVE).setTypeface(null, Typeface.BOLD)
             alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTypeface(null, Typeface.BOLD)
-        })
+        }
 
         alert.show()
     }

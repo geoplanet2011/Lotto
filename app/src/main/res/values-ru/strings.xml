@@ -105,4 +105,5 @@
     <string name="confirm_delete_message">Вы действительно хотите удалить пользователя?</string>
     <string name="balance_updated">Ваш баланс обновлен</string>
     <string name="get_rating">Ваш рейтинг</string>
+    <string name="top_users">Топ-10 пользователей</string>
 </resources>
