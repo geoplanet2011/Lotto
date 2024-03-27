@@ -551,7 +551,7 @@ class ProfileFragment : Fragment() {
             val currentBalance = dataSnapshot.value.toString().toLongOrNull() ?: 0L
             val newBalance = currentBalance + additionalBalance
 
-            userRef.child("coin").setValue(newBalance).addOnCompleteListener { task ->
+            userRef.child("coin").setValue(newBalance.toString()).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Log.d("Firebase", "Coin value updated successfully to $newBalance.")
                     if (isAdded) {
