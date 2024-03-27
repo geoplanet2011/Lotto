@@ -29,7 +29,6 @@ class TopFragment : BottomSheetDialogFragment() {
 
     private val viewModel: TopUsersViewModel by viewModel()
 
-    private var userList: MutableList<OnlineUser> = ArrayList()
     private lateinit var adapter: TopUsersAdapter
 
     override fun onCreateView(
@@ -66,12 +65,6 @@ class TopFragment : BottomSheetDialogFragment() {
             height = h
         }
 
-        bindObservers()
-
-        binding.btnClose.setOnClickListener {
-            dismiss()
-        }
-
         binding.rvUsers.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(requireContext()).apply {
@@ -80,7 +73,12 @@ class TopFragment : BottomSheetDialogFragment() {
             addItemDecoration(DividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL))
         }
 
+        binding.btnClose.setOnClickListener {
+            dismiss()
+        }
+
         readUsers()
+        bindObservers()
     }
 
     private fun readUsers() {

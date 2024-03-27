@@ -400,13 +400,13 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
         }
 
         mViewModel.cardCompletionEvent.observe(viewLifecycleOwner) {
-            mViewModel.checkGameResult(GameOverStatusEnum.PLAYER_WIN, requireContext())
             calculateNewBalance(GameOverStatusEnum.PLAYER_WIN)
             if (playerStatus == PlayerStatusEnum.CREATOR) {
                 sendCommand("CREATOR_WIN")
             } else {
                 sendCommand("JOINER_WIN")
             }
+            mViewModel.checkGameResult(GameOverStatusEnum.PLAYER_WIN, requireContext())
             resetGame()
             finishRoom()
         }
@@ -451,24 +451,25 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
 
                             commandKeyValue.equals("CREATOR_WIN") -> {
                                 if (playerStatus == PlayerStatusEnum.JOINER && !isOpponentWin) {
+                                    isOpponentWin = true
+                                    calculateNewBalance(GameOverStatusEnum.OPPONENT_WIN)
                                     mViewModel.checkGameResult(
                                         GameOverStatusEnum.OPPONENT_WIN,
                                         requireContext()
                                     )
-                                    isOpponentWin = true
-                                    calculateNewBalance(GameOverStatusEnum.OPPONENT_WIN)
                                     resetGame()
+                                    finishRoom()
                                 }
                             }
 
                             commandKeyValue.equals("JOINER_WIN") -> {
                                 if (playerStatus == PlayerStatusEnum.CREATOR && !isOpponentWin) {
+                                    isOpponentWin = true
+                                    calculateNewBalance(GameOverStatusEnum.OPPONENT_WIN)
                                     mViewModel.checkGameResult(
                                         GameOverStatusEnum.OPPONENT_WIN,
                                         requireContext()
                                     )
-                                    isOpponentWin = true
-                                    calculateNewBalance(GameOverStatusEnum.OPPONENT_WIN)
                                     resetGame()
                                     finishRoom()
                                 }
@@ -504,13 +505,14 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
 
                             commandKeyValue.equals("Draw") -> {
                                 if (!isDraw) {
+                                    isDraw = true
+                                    calculateNewBalance(GameOverStatusEnum.Draw)
                                     mViewModel.checkGameResult(
                                         GameOverStatusEnum.Draw,
                                         requireContext()
                                     )
-                                    isDraw = true
-                                    calculateNewBalance(GameOverStatusEnum.Draw)
                                     resetGame()
+                                    finishRoom()
                                 }
                             }
 
@@ -567,24 +569,34 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
     private fun finishRoom() {
         databaseReferenceForRooms?.child(roomId!!)?.child("state")?.setValue(RoomSateEnums.FINISH)
             ?.addOnSuccessListener {
+                deleteRoomIfFinished(roomId!!)
             }
             ?.addOnFailureListener {
             }
     }
 
-    fun deleteRoom() {
-        databaseReferenceForRooms?.orderByChild("name")?.equalTo(roomId)
-        ?.addListenerForSingleValueEvent(object : ValueEventListener {
+    private fun deleteRoomIfFinished(roomId: String) {
+        try {
+            val roomRef = FirebaseDatabase.getInstance().getReference("Rooms").child(roomId)
+            roomRef.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    for (roomSnapshot in dataSnapshot.children) {
-                        roomSnapshot.ref.removeValue()
-                            .addOnSuccessListener {}
-                            .addOnFailureListener {}
+                    if (dataSnapshot.exists()) {
+                        val state = dataSnapshot.child("state").getValue(String::class.java)
+                        if (state == RoomSateEnums.FINISH.name) {
+                            roomRef.removeValue()
+                                .addOnSuccessListener {}
+                                .addOnFailureListener {}
+                        }
                     }
                 }
+
                 override fun onCancelled(databaseError: DatabaseError) {}
             })
+        } catch (e: Exception) {
+            println(e.message.toString())
+        }
     }
+
 
     private fun navigateBackToRoomList() {
         if (isAdded) {
