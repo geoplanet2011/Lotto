@@ -2,7 +2,6 @@ package ge.gogichaishvili.lotto.profile
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
@@ -48,7 +47,7 @@ import com.karumi.dexter.listener.single.PermissionListener
 import ge.gogichaishvili.lotto.R
 import ge.gogichaishvili.lotto.databinding.FragmentProfileBinding
 import ge.gogichaishvili.lotto.main.presentation.activities.MainActivity
-import ge.gogichaishvili.lotto.main.presentation.fragments.TopFragment
+import ge.gogichaishvili.lotto.register.presentation.fragments.RegisterFragment
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.util.UUID
@@ -92,6 +91,16 @@ class ProfileFragment : Fragment() {
 
         binding.cameraBtn.setOnClickListener {
             cameraCheckPermission()
+        }
+
+        binding.changePasswordBtn.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(
+                    R.id.fragmentContainerView,
+                    ChangePasswordFragment()
+                ).addToBackStack(
+                    ChangePasswordFragment::class.java.name
+                ).commit()
         }
 
         binding.tvBack.setOnClickListener {

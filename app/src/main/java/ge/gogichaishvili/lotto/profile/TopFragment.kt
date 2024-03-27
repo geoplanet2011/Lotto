@@ -1,4 +1,4 @@
-package ge.gogichaishvili.lotto.main.presentation.fragments
+package ge.gogichaishvili.lotto.profile
 
 import android.app.Dialog
 import android.os.Bundle

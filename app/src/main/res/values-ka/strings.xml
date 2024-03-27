@@ -106,4 +106,8 @@
     <string name="balance_updated">თქვენი ბალანსი განახლდა</string>
     <string name="get_rating">თქვენი რეიტინგი</string>
     <string name="top_users">ტოპ 10 მომხმარებელი</string>
+    <string name="recovery">აღდგენა</string>
+    <string name="enter_new_password">ახალი პაროლი</string>
+    <string name="change_password">პაროლის შეცვლა</string>
+    <string name="delete_user">მომხმარებლის წაშლა</string>
 </resources>

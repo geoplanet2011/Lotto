@@ -106,4 +106,8 @@
     <string name="balance_updated">Ваш баланс обновлен</string>
     <string name="get_rating">Ваш рейтинг</string>
     <string name="top_users">Топ-10 пользователей</string>
+    <string name="recovery">Восстановление</string>
+    <string name="enter_new_password">Новый пароль</string>
+    <string name="change_password">Изменить пароль</string>
+    <string name="delete_user">Удалить пользователя</string>
 </resources>

@@ -23,7 +23,6 @@ import ge.gogichaishvili.lotto.main.presentation.adapters.RoomAdapter
 import ge.gogichaishvili.lotto.main.presentation.fragments.base.BaseFragment
 import ge.gogichaishvili.lotto.main.presentation.viewmodels.RoomListViewModel
 import ge.gogichaishvili.lotto.profile.ProfileFragment
-import ge.gogichaishvili.lotto.register.presentation.fragments.RegisterFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -96,7 +95,7 @@ class RoomListFragment : BaseFragment<RoomListViewModel>(RoomListViewModel::clas
                 ).commit()
         }
 
-        loadProfile()
+        //loadProfile()
         onlineUserStatus("Online")
         deleteFinishedRooms()
 

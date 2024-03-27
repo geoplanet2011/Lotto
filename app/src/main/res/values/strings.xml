@@ -112,6 +112,12 @@
     <string name="get_rating">Your rating</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="top_users">Top 10 user</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="recovery">Recovery</string>
+    <string name="enter_new_password">Please enter your new password</string>
+    <string name="change_password">Change password</string>
+    <string name="delete_user">Delete user</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->
