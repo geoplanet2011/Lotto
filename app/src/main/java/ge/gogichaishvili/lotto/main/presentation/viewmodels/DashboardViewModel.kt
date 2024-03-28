@@ -28,6 +28,9 @@ class DashboardViewModel(
     private val _requestStateStonesLiveData = SingleLiveEvent<LottoDrawResult>()
     val requestStateStonesLiveData: LiveData<LottoDrawResult> get() = _requestStateStonesLiveData
 
+    private val _dismissLiveData = SingleLiveEvent<Unit>()
+    val dismissLiveData: LiveData<Unit> get() = _dismissLiveData
+
     fun getNumberFromBag() {
         viewModelScope.launch(Dispatchers.Main.immediate) {
             val result = lottoManager.getNumberFromBag()
@@ -49,7 +52,9 @@ class DashboardViewModel(
 
     fun checkGameResult(gameOverStatus: GameOverStatusEnum, context: Context) {
         val gameManager = GameManager()
-        gameManager.checkGameResult(gameOverStatus, context)
+        gameManager.checkGameResult(gameOverStatus, context) {
+            _dismissLiveData.postValue(Unit)
+        }
     }
 
     fun isHintEnabled(): Boolean {

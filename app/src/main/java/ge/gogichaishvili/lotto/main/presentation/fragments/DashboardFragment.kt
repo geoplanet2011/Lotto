@@ -12,6 +12,7 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.fragment.app.FragmentManager
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -159,16 +160,17 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
     private fun loadProfile() {
         userReference?.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
+                if (isAdded) {
+                    Glide.with(requireActivity())
+                        .load(p0.child("photo").value.toString())
+                        .placeholder(R.drawable.male)
+                        .error(R.drawable.male)
+                        .into(binding.ivPlayer)
 
-                Glide.with(requireActivity())
-                    .load(p0.child("photo").value.toString())
-                    .placeholder(R.drawable.male)
-                    .error(R.drawable.male)
-                    .into(binding.ivPlayer)
-
-                binding.tvPlayerOneName.text = p0.child("firstname").value.toString()
-                binding.tvPlayerOneScore.text = p0.child("coin").value.toString()
-                balance = p0.child("coin").value.toString().toLongOrNull()
+                    binding.tvPlayerOneName.text = p0.child("firstname").value.toString()
+                    binding.tvPlayerOneScore.text = p0.child("coin").value.toString()
+                    balance = p0.child("coin").value.toString().toLongOrNull()
+                }
             }
 
             override fun onCancelled(p0: DatabaseError) {}
@@ -179,14 +181,16 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
         databaseReferenceForRooms?.child(roomId!!)?.child("players")
             ?.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    val players = dataSnapshot.children.mapNotNull { it.value as? String }
-                    if (players.size == 2) {
-                        binding.progressBar.visibility = View.GONE
-                        closeRoom()
-                        val otherPlayerId = players.firstOrNull { it != uid }
-                        if (otherPlayerId != null) {
-                            loadOpponentProfile(otherPlayerId)
-                            startGame()
+                    if (isAdded) {
+                        val players = dataSnapshot.children.mapNotNull { it.value as? String }
+                        if (players.size == 2) {
+                            binding.progressBar.visibility = View.GONE
+                            closeRoom()
+                            val otherPlayerId = players.firstOrNull { it != uid }
+                            if (otherPlayerId != null) {
+                                loadOpponentProfile(otherPlayerId)
+                                startGame()
+                            }
                         }
                     }
                 }
@@ -198,16 +202,17 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
     private fun loadOpponentProfile(otherPlayerId: String) {
         databaseReference?.child(otherPlayerId)?.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
+                if (isAdded) {
+                    Glide.with(requireActivity())
+                        .load(p0.child("photo").value.toString())
+                        .placeholder(R.drawable.male)
+                        .error(R.drawable.male)
+                        .into(binding.ivOpponent)
 
-                Glide.with(requireActivity())
-                    .load(p0.child("photo").value.toString())
-                    .placeholder(R.drawable.male)
-                    .error(R.drawable.male)
-                    .into(binding.ivOpponent)
-
-                binding.ivOpponent.visibility = View.VISIBLE
-                binding.tvPlayerTwoName.text = p0.child("firstname").value.toString()
-                binding.tvPlayerTwoScore.text = p0.child("coin").value.toString()
+                    binding.ivOpponent.visibility = View.VISIBLE
+                    binding.tvPlayerTwoName.text = p0.child("firstname").value.toString()
+                    binding.tvPlayerTwoScore.text = p0.child("coin").value.toString()
+                }
             }
 
             override fun onCancelled(p0: DatabaseError) {}
@@ -360,6 +365,12 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
     }
 
     override fun bindObservers() {
+
+        mViewModel.dismissLiveData.observe(viewLifecycleOwner) {
+            if (isAdded) {
+                navigateBackToRoomList()
+            }
+        }
 
         mViewModel.requestStateStonesLiveData.observe(viewLifecycleOwner) {
             sendLottoDrawResultToOpponent(it)
@@ -599,9 +610,19 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
 
 
     private fun navigateBackToRoomList() {
-        if (isAdded) {
-            parentFragmentManager.popBackStackImmediate(RoomListFragment::class.java.name, 0)
+        requireActivity().runOnUiThread {
+            if (isAdded && context != null) {
+                parentFragmentManager.popBackStackImmediate(RoomListFragment::class.java.name, 0)
+            }
         }
+        /*requireActivity().runOnUiThread {
+            if (isAdded && context != null) {
+                if (requireActivity().supportFragmentManager.backStackEntryCount > 0) {
+                    requireActivity().supportFragmentManager.popBackStackImmediate()
+                }
+            }
+        }*/
+
     }
 
     override fun onDestroyView() {

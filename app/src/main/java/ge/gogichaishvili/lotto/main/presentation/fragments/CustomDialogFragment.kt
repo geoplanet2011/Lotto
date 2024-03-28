@@ -1,5 +1,6 @@
 package ge.gogichaishvili.lotto.main.presentation.fragments
 
+import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -19,6 +20,16 @@ class CustomDialogFragment : DialogFragment() {
 
     private var _binding: FragmentCustomDialogBinding? = null
     private val binding get() = _binding!!
+
+    private var onDialogDismissListener: (() -> Unit)? = null
+
+    fun setOnDialogDismissListener(listener: () -> Unit) {
+        onDialogDismissListener = listener
+    }
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        onDialogDismissListener?.invoke()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
