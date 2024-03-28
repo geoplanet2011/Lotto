@@ -3,6 +3,8 @@ package ge.gogichaishvili.lotto.main.presentation.fragments
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -91,12 +93,19 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
         uid = firebaseUser?.uid!!
         userReference = databaseReference?.child(uid!!)
 
+        binding.llCards.post {
+            mViewModel.generateCard(requireContext(), binding.llCards)
+        }
+
+        loadProfile()
+
         if (playerStatus == PlayerStatusEnum.JOINER) {
             addPlayerToRoom(uid!!)
         }
 
-        loadProfile()
-        waitForOpponent()
+        Handler(Looper.getMainLooper()).postDelayed({
+            waitForOpponent()
+        }, 2000)
 
     }
 
@@ -220,7 +229,7 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
     }
 
     private fun startGame() {
-        mViewModel.generateCard(requireContext(), binding.llCards)
+
         if (playerStatus == PlayerStatusEnum.CREATOR) {
             getLottoStones()
         }
@@ -615,14 +624,6 @@ class DashboardFragment : BaseFragment<DashboardViewModel>(DashboardViewModel::c
                 parentFragmentManager.popBackStackImmediate(RoomListFragment::class.java.name, 0)
             }
         }
-        /*requireActivity().runOnUiThread {
-            if (isAdded && context != null) {
-                if (requireActivity().supportFragmentManager.backStackEntryCount > 0) {
-                    requireActivity().supportFragmentManager.popBackStackImmediate()
-                }
-            }
-        }*/
-
     }
 
     override fun onDestroyView() {

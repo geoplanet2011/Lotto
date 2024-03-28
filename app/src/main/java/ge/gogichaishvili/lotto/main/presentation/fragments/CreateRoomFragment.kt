@@ -128,18 +128,19 @@ class CreateRoomFragment : BaseFragment<CreateRoomViewModel>(CreateRoomViewModel
                                         RoomSateEnums.OPEN,
                                         money,
                                         mutableListOf(currentUserUid),
-                                        initialCommands
+                                        initialCommands,
+                                        System.currentTimeMillis()
                                     )
 
                                     reference.child(roomName).setValue(room)
                                         .addOnCompleteListener { task ->
                                             hideLoader()
                                             if (task.isSuccessful) {
-                                                Toast.makeText(
+                                                /*Toast.makeText(
                                                     requireContext(),
                                                     getString(R.string.room_created),
                                                     Toast.LENGTH_SHORT
-                                                ).show()
+                                                ).show()*/
                                                 /*if (requireActivity().supportFragmentManager.backStackEntryCount > 0) {
                                                     requireActivity().supportFragmentManager.popBackStackImmediate()
                                                 }*/

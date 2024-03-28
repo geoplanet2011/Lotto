@@ -23,22 +23,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintGuide_end="5dp" />
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:layout_gravity="center"
-        android:elevation="2dp"
-        android:focusable="false"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:focusableInTouchMode="false"
-        android:indeterminateTint="@color/green_dark_color"
-        android:translationZ="2dp"
-        android:visibility="visible" />
-
     <com.mikhaellopez.circularimageview.CircularImageView
         android:id="@+id/iv_player"
         android:layout_width="70dp"
@@ -73,6 +57,22 @@
         android:textSize="14sp"
         app:layout_constraintStart_toStartOf="@+id/tv_playerOneName"
         app:layout_constraintTop_toBottomOf="@+id/tv_playerOneName" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_gravity="center"
+        android:elevation="2dp"
+        android:focusable="false"
+        android:layout_marginTop="25dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/iv_player"
+        android:focusableInTouchMode="false"
+        android:indeterminateTint="@color/green_dark_color"
+        android:translationZ="2dp"
+        android:visibility="visible" />
 
     <com.mikhaellopez.circularimageview.CircularImageView
         android:id="@+id/iv_opponent"
@@ -133,4 +133,5 @@
         app:layout_constraintEnd_toStartOf="@id/rightGuide"
         app:layout_constraintStart_toEndOf="@id/leftGuide"
         app:layout_constraintTop_toBottomOf="@id/ll_stones" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
